@@ -1,0 +1,21 @@
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    
+    <div class="navbar-header">
+      <%= link_to raw("<i class='fa fa-bookmark'></i> StoryTime"), root_path, class: 'navbar-brand' %>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="<%= active_link_class?('timing') %>"><%= link_to raw("Do Work! <i class='fa fa-fire'></i>"), timing_index_path %></li>
+        <li class="<%= active_link_class?('users') %>"><%= link_to 'My Profile', edit_user_path(current_user) %></a></li>
+        <li class="<%= active_link_class?('reports') %>"><%= link_to raw("Reports <i class='fa fa-paper-plane-o'></i>"), reports_index_path %>
+      </ul>
+      
+      <ul class="nav navbar-nav navbar-right">
+        <%= render 'layouts/login_options' %>
+      </ul>
+    </div>
+    
+  </div>
+</nav>

@@ -17,7 +17,7 @@ module PivotalTracker
       https_get_request("#{@base_api_url}/projects/#{project_id}/epics")
     end
     
-    def get_iterations(project_id, scope='current_backlog', limit=2)
+    def get_iterations(project_id, scope='current_backlog', limit=3)
       # Scope: done, current, backlog, current_backlog
       https_get_request("#{@base_api_url}/projects/#{project_id}/iterations?scope=#{scope}&limit=#{limit}")
     end

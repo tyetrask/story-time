@@ -3,9 +3,10 @@ StoryTime::Application.routes.draw do
   resources :users
   
   get "page/index"
-  root :to => "page#index"
-  
   get "timing/index"
+  get "reports/index"
+  
+  root :to => "timing#index"
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
