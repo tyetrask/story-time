@@ -1,0 +1,11 @@
+<br />
+<br />
+project: <%= @pivotal_project['name'] %><br />
+<br />
+<% @pivotal_iterations.each do |pivotal_iteration| %>
+  Iteration: <%= pivotal_iteration['number'] %><br />
+  <% pivotal_iteration['stories'].each do |pivotal_story| %>
+	  - <%= pivotal_story['id'] %> - <%= pivotal_story['name'] %><br />
+  <% end %>
+  <br /><br />
+<% end %>
