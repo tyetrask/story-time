@@ -1,0 +1,35 @@
+<h1>Listing work_time_units</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Pivotal story</th>
+      <th>Started at</th>
+      <th>Finished at</th>
+      <th>Total time in seconds</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @work_time_units.each do |work_time_unit| %>
+      <tr>
+        <td><%= work_time_unit.user_id %></td>
+        <td><%= work_time_unit.pivotal_story_id %></td>
+        <td><%= work_time_unit.started_at %></td>
+        <td><%= work_time_unit.finished_at %></td>
+        <td><%= work_time_unit.total_time_in_seconds %></td>
+        <td><%= link_to 'Show', work_time_unit %></td>
+        <td><%= link_to 'Edit', edit_work_time_unit_path(work_time_unit) %></td>
+        <td><%= link_to 'Destroy', work_time_unit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Work time unit', new_work_time_unit_path %>

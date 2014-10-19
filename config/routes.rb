@@ -1,4 +1,6 @@
 StoryTime::Application.routes.draw do
+  resources :work_time_units
+
   devise_for :users
   resources :users
   

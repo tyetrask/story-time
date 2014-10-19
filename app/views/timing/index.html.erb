@@ -2,9 +2,9 @@
   <div class='col-sm-1'></div>
   
   <div class='col-sm-5'>
-    <div class='panel panel-success'>
+    <div class='panel panel-primary'>
       <div class='panel-heading'>
-        <strong>Project:</strong> <%= @pivotal_project['name'] %>
+        <strong>Project:</strong> <%= @pivotal_project['name'] %><span class='pull-right'><strong>Me:</strong> <%= @me['id'] %></span>
       </div>
     </div>
     
@@ -13,12 +13,7 @@
         <strong>My Work:</strong>
       </div>
       <div class="list-group">
-        <% [].each do |pivotal_story| %>
-      	  <a href="#" class="list-group-item">
-            <h6 class="list-group-item-heading"><%= pivotal_story['id'] %> - <%= pivotal_story['name'] %></h4>
-            <p class="list-group-item-text">...</p>
-          </a>
-        <% end %>
+        <%= render partial: 'pivotal_story', collection: @my_work %>
       </div>
     </div>
    
@@ -29,12 +24,7 @@
         </div>
         
         <div class="list-group">
-          <% pivotal_iteration['stories'].each do |pivotal_story| %>
-        	  <a href="#" class="list-group-item">
-              <h6 class="list-group-item-heading"><%= pivotal_story['id'] %> - <%= pivotal_story['name'] %></h4>
-              <p class="list-group-item-text">...</p>
-            </a>
-          <% end %>
+          <%= render partial: 'pivotal_story', collection: pivotal_iteration['stories'] %>
         </div>
       </div>
       <br /><br />
@@ -44,7 +34,9 @@
   <div class='col-sm-5'>
     <div class='panel panel-primary'>
       <div class='panel-heading'>
-        Clockydoo.
+        Magic Clock
+      </div>
+      <div id='clock-container' class='panel-body'>
       </div>
     </div>
   </div>
