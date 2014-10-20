@@ -1,8 +1,46 @@
-body.body {
-  font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial;
+html, body {
+  height: 100%;
 }
 
+body.body {
+  font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial;
+  background: #f6f8f8;
+  overflow: hidden;
+}
+
+
+
+/*
+Colory-doos.
+lightest orange: #F2C641
+lighter orange: #F29D35
+orange: F26E22
+burnt red: A63B14
+dark dark red: 260D08
+*/
+
+
+
+/* General Classes */
+
+
+
+/* Navigation Styling */
+
+#navigation-container {
+  margin-bottom: 0px;
+}
+
+
+
 /* Pivotal Story Styling */
+#stories-container {
+  overflow: auto;
+}
+
+a.pivotal-story {
+  cursor: pointer;
+}
 
 a.pivotal-story.accepted {
   color: #3c763d;
@@ -16,7 +54,72 @@ a.pivotal-story.started {
   border-color: #faebcc;
 }
 
+a.pivotal-story.started.active, a.pivotal-story.accepted.active {
+  color: white;
+  background-color: #428bca;
+  border-color: #428bca;
+}
 
+
+
+/* Control Panel Styling */
+
+#control-panel-toggle a {
+  cursor: pointer;
+}
+
+#control-panel-container {
+  display: none;
+  margin-bottom: 20px;
+}
+
+
+
+
+/* Form Styling */
+
+input.simple {
+  font-weight: 500;
+  margin: 0;
+  -webkit-appearance: none;
+  width: 100%;
+  font-size: 1.5em;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 100%;
+  border: none;
+  padding: 1rem 1.3rem;
+  color: #2a5669;
+  border-left: 0.3rem solid #fff;
+  display: block;
+  outline: none;
+}
+
+input:focus.simple {
+  border-left: 0.3rem solid #F2C641;
+}
+
+input[type='submit'].simple {
+  font-weight: 500;
+  -webkit-transition: background 300ms ease-in-out, color 300ms ease-in-out;
+  transition: background 300ms ease-in-out, color 300ms ease-in-out;
+  background: #F2C641;
+  border: none;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  color: #FFFFFF;
+  display: block;
+  font-size: 1.3em;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  width: 100%;
+  padding: 1rem 1.5rem;
+}
+
+input[type='submit']:hover.simple {
+  background: #F29D35;
+}
 
 
 
