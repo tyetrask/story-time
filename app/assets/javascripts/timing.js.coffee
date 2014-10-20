@@ -1,15 +1,22 @@
 class Timing
   
+  screen_height: 0
+  
   me: null
+  current_project: null
   my_work_stories: []
   upcoming_stories: []
+  all_pivotal_projects: []
   
   focus_pivotal_story: null
   focus_work_time_units: []
   
   pivotal_story_template = _.template("<a data-pivotal-story-id='<%= pivotal_story['id'] %>' class='list-group-item pivotal-story <%= pivotal_story_state_class %>'><span class='pull-right'><i class='fa fa-clock-o'></i> <%= pivotal_story['estimate'] %></span><p><%= pivotal_story['name'] %></p></a>")
-  clock_story_template = _.template("<a class='list-group-item'><p><%= pivotal_story['name'] %></p><p><%= pivotal_story['description'] %></p><p>Estimation: <%= pivotal_story['estimate'] %></p></a><a class='list-group-item no-padding'><input class='simple' placeholder='comment'/></a><a id='work-time-unit-loading-placeholder' class='list-group-item'><p>loading work records <i class='fa fa-refresh fa-spin'></i></p></a><a class='list-group-item no-padding'><input type='submit' class='simple' value='Start Work'/></a>")
-  work_time_unit_template = _.template("<a class='list-group-item work-time-unit'><p>Developer: <%= work_time_unit.user_id %><span class='pull-right'><span class='time-range'><%= work_time_unit.started_at %> - <%= work_time_unit.finished_at %></span><%= work_time_unit.total_time_in_seconds %></span></p></a>")
+  clock_story_template = _.template("<a class='list-group-item'><p><%= pivotal_story['name'] %></p><p><%= pivotal_story['description'] %></p><p>Estimation: <%= pivotal_story['estimate'] %></p></a><a class='list-group-item no-padding'><input class='simple' placeholder='comment'/></a><a id='work-time-unit-loading-placeholder' class='list-group-item'><p>loading work records <i class='fa fa-refresh fa-spin'></i></p></a><a class='list-group-item no-padding'><input id='start-work-button' type='submit' class='simple' value='Start Work'/></a>")
+  stop_work_button_template = _.template("<a class='list-group-item no-padding'><input id='stop-work-button' type='submit' class='simple' value='Stop Work'/></a>")
+  work_time_unit_template = _.template("<a class='list-group-item work-time-unit'><p>Developer: <%= work_time_unit.user_id %><span class='pull-right'><span class='time-range'><%= started_at_formatted %> - <%= finished_at_formatted %></span><%= work_time_unit.total_time_in_seconds %></span></p></a>")
+  
+  
   
   constructor: ->
     _this = @
@@ -32,15 +39,11 @@ class Timing
   setSizeOfStoryContainer: ->
     window_height = $(window).height()
     navigation_height = $('#navigation-container').height()
-    $('#stories-container').css('height', (window_height - navigation_height))
+    @screen_height = (window_height - navigation_height)
+    $('#stories-container').css('height', @screen_height)
   
   
   # Load Functions
-  
-  populateProjectsList: ->
-    [].map (project_object) ->
-      $('#project-list').append("<li><a>#{project_object['name']}</a></li>")
-  
   
   loadPivotalData: ->
     _this = @
@@ -50,19 +53,36 @@ class Timing
       url: '/timing/index'
       success: (data) ->
         _this.me = data.me
+        _this.current_project = data.pivotal_project
         data.my_work.map (pivotal_story) ->
           _this.my_work_stories.push(pivotal_story)
         data.pivotal_iterations.map (iteration) ->
           iteration['stories'].map (pivotal_story) ->
             _this.upcoming_stories.push(pivotal_story)
+        data.pivotal_projects.map (pivotal_project) ->
+          _this.all_pivotal_projects.push(pivotal_project)
+        
         _this.populateMyWork()
         _this.populateUpcoming()
         _this.attackStoryClickHandlers()
+        _this.populateMe()
+        _this.populateProjectsList()
       error: (jqXHR, textStatus, errorThrown) ->
         console.log "ajax call error: #{errorThrown}"
   
   
   # Initial Display Functions
+  
+  populateMe: ->
+    $('#control-panel-me').html("<strong>Me:</strong> #{@me['id']}")
+  
+  populateProjectsList: ->
+    _this = @
+    # TODO: this is broken
+    # $('#control-panel-project-name').html("#{@current_project['name']}")
+    @all_pivotal_projects.map (project_object) ->
+      $('#project-list').append("<li><a>#{project_object['name']}</a></li>")
+  
   
   populateMyWork: ->
     _this = @
@@ -114,21 +134,27 @@ class Timing
     @focus_work_time_units = []
   
   
+  redrawFocusedPivotalStory: ->
+    _this = @
+    return false unless @focus_pivotal_story
+    $("a.pivotal-story[data-pivotal-story-id='" + @focus_pivotal_story['id'] + "']").click()
+  
+  
   focusOnPivotalStory: (clicked_story) ->
     _this = @
     @clearStoryFocus()
     clicked_story.addClass('active')
     if clicked_story.closest("div").attr("id") is 'my-work-story-list'
-      pivotal_story = _.where(_this.my_work_stories, {id: parseInt(clicked_story.attr('data-pivotal-story-id')) })[0]
+      @focus_pivotal_story = _.where(_this.my_work_stories, {id: parseInt(clicked_story.attr('data-pivotal-story-id')) })[0]
     else
-      pivotal_story = _.where(_this.upcoming_stories, {id: parseInt(clicked_story.attr('data-pivotal-story-id')) })[0]
+      @focus_pivotal_story = _.where(_this.upcoming_stories, {id: parseInt(clicked_story.attr('data-pivotal-story-id')) })[0]
     work_html_unit_html = ''
     clock_story_html = clock_story_template
-      pivotal_story: pivotal_story
+      pivotal_story: @focus_pivotal_story
     $('#clock-container div.panel div.list-group').empty().append(clock_story_html)
     jsonData =
       work_time_unit:
-        pivotal_story_id: pivotal_story['id']
+        pivotal_story_id: @focus_pivotal_story['id']
     $.ajax
       type: 'get'
       dataType: 'json'
@@ -140,10 +166,82 @@ class Timing
         _this.focus_work_time_units.map (work_time_unit) ->
           work_html_unit_html += work_time_unit_template
             work_time_unit: work_time_unit
+            started_at_formatted: moment(work_time_unit.started_at).format('h:mm a')
+            finished_at_formatted: if work_time_unit.finished_at then moment(work_time_unit.finished_at).format('h:mm a') else 'still working'
         $('#work-time-unit-loading-placeholder').replaceWith(work_html_unit_html)
+        if _this.focus_work_time_units.length is 0 or _this.focus_work_time_units[_this.focus_work_time_units.length-1].finished_at
+          $('#start-work-button').click (e) ->
+            _this.startWorkTimeUnit()
+            e.preventDefault()
+          $('#clock-container').css('height', _this.screen_height)
+        else
+          stop_work_button_html = stop_work_button_template
+          $('#start-work-button').replaceWith(stop_work_button_html)
+          $('#stop-work-button').click (e) ->
+            _this.stopWorkTimeUnit()
+            e.preventDefault()
       error: (jqXHR, textStatus, errorThrown) ->
         console.log "ajax call error: #{errorThrown}"
         $('#work-time-unit-loading-placeholder').html("<p>error loading work time unit records</p>")
+  
+    
+  startWorkTimeUnit: ->
+    _this = @
+    return false unless @focus_pivotal_story
+    started_at_date = new Date()
+    jsonData =
+      work_time_unit:
+        user_id: @me['id']
+        pivotal_story_id: @focus_pivotal_story['id']
+        started_at: started_at_date
+    $.ajax
+      type: 'post'
+      dataType: 'json'
+      data: jsonData
+      url: '/work_time_units/'
+      success: (data) ->
+        _this.focus_work_time_units.push(data)
+        work_html_unit_html = work_time_unit_template
+          work_time_unit: data
+          started_at_formatted: moment(data.started_at).format('h:mm a')
+          finished_at_formatted: 'still working'
+        $('#start-work-button').before(work_html_unit_html)
+        stop_work_button_html = stop_work_button_template
+        $('#start-work-button').replaceWith(stop_work_button_html)
+        $('#stop-work-button').click (e) ->
+          _this.stopWorkTimeUnit()
+          e.preventDefault()
+      error: (jqXHR, textStatus, errorThrown) ->
+        $('#start-work-button').val("Error: #{errorThrown}")
+        console.log "ajax call error: #{errorThrown}"
+  
+  
+  stopWorkTimeUnit: ->
+    _this = @
+    return false unless @focus_pivotal_story
+    last_work_time_unit = @focus_work_time_units[@focus_work_time_units.length-1]
+    finished_at_date = new Date()
+    jsonData =
+      id: last_work_time_unit.id
+      work_time_unit:
+        finished_at: finished_at_date
+    $.ajax
+      type: 'patch'
+      dataType: 'json'
+      data: jsonData
+      url: "/work_time_units/#{last_work_time_unit.id}"
+      success: (data) ->
+        _this.focus_work_time_units[_this.focus_work_time_units.length-1].finished_at = finished_at_date
+        _this.redrawFocusedPivotalStory()
+      error: (jqXHR, textStatus, errorThrown) ->
+        $('#stop-work-button').val("Error: #{errorThrown}")
+        console.log "ajax call error: #{errorThrown}"
+  
+  
+  deleteWorkTimeUnit: ->
+    console.log 'jimmy'
+  
+  
   
   
 
