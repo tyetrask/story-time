@@ -2,8 +2,8 @@
   
   <div id='stories-container' class='col-sm-4'>
     <div class='panel panel-default'>
-      <div class='panel-heading'>
-        <strong>My Work:</strong>
+      <div class='panel-heading text-center'>
+        <strong>My Work</strong>
       </div>
       <div class="list-group">
         <%= render partial: 'pivotal_story', collection: @my_work %>
@@ -12,7 +12,7 @@
    
     <% @pivotal_iterations.each do |pivotal_iteration| %>
       <div class='panel panel-default'>
-        <div class='panel-heading'>
+        <div class='panel-heading text-center'>
           <strong>Iteration:</strong> <%= pivotal_iteration['number'] %>
         </div>
         
@@ -26,8 +26,8 @@
   
   <div class='col-sm-6'>
     <div class='panel panel-primary'>
-      <div class='panel-heading'>
-        Magic Clock
+      <div class='panel-heading text-center'>
+        Clock
       </div>
       <div id='clock-container' class='panel-body'>
       </div>
