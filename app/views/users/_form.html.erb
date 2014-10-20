@@ -11,21 +11,19 @@
     </div>
   <% end %>
 
-  <div class="form-group">
-    <label><%= f.label :email %></label>
-    <%= f.text_field :email, class: 'form-control', placeholder: 'Enter Email Address...' %>
+  <div>
+    <%= f.text_field :email, class: 'simple', placeholder: 'email' %>
   </div>
   
-  <div class="form-group">
-    <label><%= f.label :password %></label>
-    <%= f.text_field :password, class: 'form-control', placeholder: 'Enter Password...' %>
+  <div>
+    <%= f.text_field :password, class: 'simple', placeholder: 'password' %>
   </div>
   
-  <div class="form-group">
-    <label><%= f.label :pivotal_api_token %></label>
-    <%= f.text_field :pivotal_api_token, class: 'form-control', placeholder: 'Enter Pivotal API Token...' %>
+  <div>
+    <%= f.text_field :pivotal_api_token, class: 'simple', placeholder: 'pivotal api token' %>
   </div>
-  <div class="actions">
-    <%= f.submit 'Update', class: 'btn btn-success' %>
+  
+  <div>
+    <%= f.submit 'Update', class: 'simple' %>
   </div>
 <% end %>

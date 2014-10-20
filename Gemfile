@@ -8,6 +8,7 @@ gem 'sqlite3'
 
 # Use LESS for stylesheets
 gem 'less-rails'
+gem 'therubyracer'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'

@@ -1,35 +1,31 @@
 <div class='row'>
   
-  <div id='stories-container' class='col-sm-4'>
+  <div id='stories-container' class='col-xs-4'>
     <div class='panel panel-default'>
       <div class='panel-heading text-center'>
         <strong>My Work</strong>
       </div>
-      <div class="list-group">
-        <%= render partial: 'pivotal_story', collection: @my_work %>
+      <div id='my-work-story-list' class="list-group">
+        
       </div>
     </div>
    
-    <% @pivotal_iterations.each do |pivotal_iteration| %>
-      <div class='panel panel-default'>
-        <div class='panel-heading text-center'>
-          <strong>Iteration:</strong> <%= pivotal_iteration['number'] %>
-        </div>
-        
-        <div class="list-group">
-          <%= render partial: 'pivotal_story', collection: pivotal_iteration['stories'] %>
-        </div>
+    <div class='panel panel-default'>
+      <div class='panel-heading text-center'>
+        <strong>Upcoming</strong>
       </div>
-      <br /><br />
-    <% end %>
+      <div id='upcoming-story-list' class='list-group'>
+        
+      </div>
+    </div>
   </div>
   
-  <div class='col-sm-6'>
+  <div id='clock-container' class='col-xs-6'>
     <div class='panel panel-primary'>
       <div class='panel-heading text-center'>
         Clock
       </div>
-      <div id='clock-container' class='panel-body'>
+      <div class='list-group'>
       </div>
     </div>
   </div>

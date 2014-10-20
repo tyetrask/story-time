@@ -10,15 +10,12 @@ body.body {
 
 
 
-/*
-Colory-doos.
-lightest orange: #F2C641
-lighter orange: #F29D35
-orange: #F26E22
-burnt red: #A63B14
-dark dark red: #260D08
-*/
-
+/* Colory-doos. */
+@lightest: #F2C641;
+@light: #F29D35;
+@medium: #F26E22;
+@dark: #A63B14;
+@darkest: #260D08;
 
 
 /* General Classes */
@@ -34,6 +31,7 @@ dark dark red: #260D08
 
 
 /* Pivotal Story Styling */
+
 #stories-container {
   overflow: auto;
 }
@@ -50,17 +48,35 @@ a.pivotal-story.accepted {
 }
 
 a.pivotal-story.started {
-  color: #8a6d3b;
-  background-color: #F2C641;
-  border-color: #faebcc;
+  color: darken(@dark, 10%);
+  background-color: lighten(@lightest, 15%);
+  border-color: darken(lighten(@lightest, 15%), 7%);
 }
 
 a.pivotal-story.started.active, a.pivotal-story.accepted.active {
   color: white;
-  background-color: #F26E22;
-  border-color: #428bca;
+  background-color: lighten(@medium, 20%);
+  border-color: darken(lighten(@medium, 20%), 7%);
 }
 
+
+
+/* Clock Styling */
+#clock-container {
+  div.panel.panel-primary {
+    border-color: darken(lighten(@medium, 20%), 7%);
+    
+    div.panel-heading {
+      color: white;
+      background-color: lighten(@medium, 20%);
+      border-color: darken(lighten(@medium, 20%), 7%);
+    }
+    
+    div.list-group a.list-group-item.no-padding {
+      padding: 0px;
+    }
+  }
+}
 
 
 /* Control Panel Styling */
@@ -98,14 +114,14 @@ input.simple {
 }
 
 input:focus.simple {
-  border-left: 0.3rem solid #F2C641;
+  border-left: 0.3rem solid lighten(@medium, 20%);
 }
 
 input[type='submit'].simple {
   font-weight: 500;
   -webkit-transition: background 300ms ease-in-out, color 300ms ease-in-out;
   transition: background 300ms ease-in-out, color 300ms ease-in-out;
-  background: #F2C641;
+  background: lighten(@medium, 30%);
   border: none;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -120,7 +136,7 @@ input[type='submit'].simple {
 }
 
 input[type='submit']:hover.simple {
-  background: #F29D35;
+  background: lighten(@medium, 20%);
 }
 
 

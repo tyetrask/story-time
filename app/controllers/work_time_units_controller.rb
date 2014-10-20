@@ -1,10 +1,11 @@
 class WorkTimeUnitsController < ApplicationController
+  before_action :set_scope, only: [:index]
   before_action :set_work_time_unit, only: [:show, :edit, :update, :destroy]
 
   # GET /work_time_units
   # GET /work_time_units.json
   def index
-    @work_time_units = WorkTimeUnit.all
+    @work_time_units
   end
 
   # GET /work_time_units/1
@@ -65,6 +66,11 @@ class WorkTimeUnitsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_work_time_unit
       @work_time_unit = WorkTimeUnit.find(params[:id])
+    end
+    
+    def set_scope
+      @work_time_units = WorkTimeUnit.all
+      @work_time_units = @work_time_units.where(pivotal_story_id: work_time_unit_params[:pivotal_story_id]) if work_time_unit_params[:pivotal_story_id]
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
