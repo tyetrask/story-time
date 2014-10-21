@@ -2,14 +2,22 @@
 
 window.TimingSharedStory = React.createClass
   
-  focusOnStory: ->
-    console.log 'doo!'
+  handleClickedStory: ->
+    @props.setSelectedStory(@props.story)
   
   stateClass: ->
-    "list-group-item pivotal-story started"
+    base_class = "list-group-item pivotal-story"
+    base_class = base_class + ' active' if @props.selected_story is @props.story
+    return "#{base_class} started" if @props.story.current_state is 'started'
+    return "#{base_class} started" if @props.story.current_state is 'delivered'
+    return "#{base_class} started" if @props.story.current_state is 'finished'
+    return "#{base_class} started" if @props.story.current_state is 'rejected'
+    return "#{base_class} accepted" if @props.story.current_state is 'accepted'
+    return base_class
+    
   
   render: ->
-    `<a data-pivotal-story-id={this.props.story.id} className={this.stateClass()} onClick={this.focusOnStory}>
+    `<a className={this.stateClass()} onClick={this.handleClickedStory}>
       <span className='pull-right'><i className='fa fa-clock-o'></i> {this.props.story.estimate}</span>
       <p>{this.props.story.name}</p>
      </a>
