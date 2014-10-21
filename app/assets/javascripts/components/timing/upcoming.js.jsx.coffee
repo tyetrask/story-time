@@ -1,9 +1,6 @@
 ###* @jsx React.DOM ###
 
-StoryTime.React.TimingUpcoming = React.createClass
-  
-  app: ->
-    window.StoryTime
+window.TimingUpcoming = React.createClass
   
   render: ->
     `<div className="panel panel-default">

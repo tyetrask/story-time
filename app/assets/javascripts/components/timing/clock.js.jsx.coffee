@@ -1,9 +1,6 @@
 ###* @jsx React.DOM ###
 
-StoryTime.React.TimingClock = React.createClass
-  
-  app: ->
-    window.StoryTime
+window.TimingClock = React.createClass
   
   render: ->
     `<div id="clock-container" className="col-xs-6">

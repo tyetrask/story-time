@@ -8,6 +8,7 @@
   
   <%= stylesheet_link_tag    "application", media: "all" %>
   <%= javascript_include_tag "application" %>
+  
   <%= csrf_meta_tags %>
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -19,5 +20,8 @@
   <%= render 'layouts/control_panel' if controller_name == 'timing' %>
   <%= render 'layouts/notices' %>
   <%= yield %>
+  <%= javascript_tag do %>
+    <%= yield :javascript %>
+  <% end %>
 </body>
 </html>

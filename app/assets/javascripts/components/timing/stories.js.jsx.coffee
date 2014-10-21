@@ -1,12 +1,9 @@
 ###* @jsx React.DOM ###
 
-StoryTime.React.TimingStories = React.createClass
-  
-  app: ->
-    window.StoryTime
+window.TimingStories = React.createClass
   
   render: ->
     `<div id="stories-container" className="col-xs-4 col-xs-offset-1">
-       <TimingMyWork />
+       <TimingMyWork my_work={this.props.my_work} />
        <TimingUpcoming />
      </div>`

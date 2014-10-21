@@ -3,7 +3,3 @@
 //
 //= require_self
 //= require_tree ./components
-
-if (typeof StoryTime === 'undefined' || StoryTime === null) {
-  window.StoryTime = { React: {} };
-}

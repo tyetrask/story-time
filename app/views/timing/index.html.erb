@@ -1,1 +1,7 @@
 <div id='timing-container' class='row'></div>
+
+<%- content_for :javascript do -%>
+  $(document).ready(function(){
+    React.renderComponent(Timing(null), document.getElementById('timing-container'));
+  });
+<%- end -%>
