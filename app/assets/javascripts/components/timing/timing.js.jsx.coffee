@@ -46,6 +46,7 @@ window.Timing = React.createClass
   
   
   loadStories: ->
+    _this = @
     # Load 'my work'
     $.ajax
       type: 'get'

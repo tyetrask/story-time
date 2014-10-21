@@ -83,7 +83,7 @@ module PivotalTracker
       request["X-TrackerToken"] = @api_token
 
       # Perform Request, Return JSON
-      JSON.parse(http.request(request).body).symbolize_keys!
+      parsed_json = JSON.parse(http.request(request).body, symbolize_names: true)
     end
   
     def https_post_request(url)
