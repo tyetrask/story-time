@@ -35,9 +35,9 @@ module PivotalTracker
     end
     
     def get_my_work(project_id)
-      my_id = get_me['id']
+      my_id = get_me.id
       my_work = []
-      current_backlog_stories = get_iterations(project_id, 'current_backlog', 1)[0]['stories']
+      current_backlog_stories = get_iterations(project_id, 'current_backlog', 1)[0].stories
       current_backlog_stories.each do |story|
         my_work << story if story['owner_ids'] && story['owner_ids'].include?(my_id)
       end
@@ -83,12 +83,12 @@ module PivotalTracker
       request["X-TrackerToken"] = @api_token
 
       # Perform Request, Return JSON
-      JSON.parse(http.request(request).body)
+      JSON.parse(http.request(request).body).symbolize_keys!
     end
   
     def https_post_request(url)
       # TODO: Implement POST
-      return false
+      raise StandardError, 'Not Implemented!'
     end
   
     def generate_query_string_from_hash(query_options)
