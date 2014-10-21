@@ -92,6 +92,11 @@ GEM
     rake (10.3.2)
     rdoc (4.1.2)
       json (~> 1.4)
+    react-rails (0.11.1.0)
+      execjs
+      rails (>= 3.1)
+      react-source (= 0.11.1)
+    react-source (0.11.1)
     ref (1.0.5)
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
@@ -136,6 +141,7 @@ DEPENDENCIES
   less-rails
   pry
   rails (= 4.0.0)
+  react-rails (~> 0.11.1.0)
   sdoc
   sqlite3
   therubyracer
