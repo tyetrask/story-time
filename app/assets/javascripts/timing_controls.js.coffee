@@ -1,4 +1,4 @@
-class Timing
+class TimingControls
   
   screen_height: 0
   
@@ -22,6 +22,7 @@ class Timing
   
   
   constructor: ->
+    @reactRender()
     return true
     _this = @
     
@@ -54,6 +55,10 @@ class Timing
   
   
   # Load Functions
+  
+  reactRender: ->
+    React.renderComponent(StoryTime.React.Timing(null), document.getElementById("timing-container"))
+  
   
   loadMe: ->
     _this = @
@@ -304,8 +309,8 @@ class Timing
 
 
 ready = ->
-  if $('#clock-container').length > 0
-    StoryTime.timing = new Timing
+  if $('#timing-container').length > 0
+    StoryTime.timing_controls = new TimingControls
 
 $(document).ready(ready)
 $(document).on('page:load', ready)

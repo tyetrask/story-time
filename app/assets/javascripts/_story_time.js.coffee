@@ -9,7 +9,7 @@ class StoryTimeApp
       window[componentName] = @React[componentName] if not window[componentName]?
 
 
-if window.StoryTime? and window.StoryTime.React?
-  window.StoryTime = new StoryTimeApp { React: window.StoryTime.React }
-else
-  window.StoryTime = new StoryTimeApp
+#if window.StoryTime? and window.StoryTime.React?
+#  window.StoryTime = new StoryTimeApp { React: window.StoryTime.React }
+#else
+#  window.StoryTime = new StoryTimeApp
