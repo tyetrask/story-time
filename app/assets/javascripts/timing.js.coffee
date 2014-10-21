@@ -22,6 +22,7 @@ class Timing
   
   
   constructor: ->
+    return true
     _this = @
     
     # TODO: Later, we'll set this in the user record, I think.
