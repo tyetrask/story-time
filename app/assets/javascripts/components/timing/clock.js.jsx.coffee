@@ -59,13 +59,31 @@ window.TimingClock = React.createClass
       data: {id: last_work_time_unit.id,work_time_unit: {finished_at: finished_at_date}}
       url: "/work_time_units/#{last_work_time_unit.id}"
       success: (data) ->
-        _this.focus_work_time_units[_this.focus_work_time_units.length-1].finished_at = finished_at_date
         work_time_units = _.clone(_this.state.work_time_units)
-        work_time_units[work_time_units.length-1].finished_at = finished_at_date
+        work_time_units.pop()
+        work_time_units.push(data)
         _this.setState({work_time_units: work_time_units})
       error: (jqXHR, textStatus, errorThrown) ->
         console.log "ajax call error: #{errorThrown}"
   
+  
+  deleteWorkTimeUnit: (work_time_unit) ->
+    _this = @
+    $.ajax
+      type: 'delete'
+      dataType: 'json'
+      data: {id: work_time_unit.id}
+      url: "/work_time_units/#{work_time_unit.id}"
+      success: (data) ->
+        work_time_units = _.clone(_this.state.work_time_units)
+        work_time_units = _.without(work_time_units, work_time_unit)
+        _this.setState({work_time_units: work_time_units})
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log "ajax call error: #{errorThrown}"
+  
+  
+  handleGoToStory: ->
+    @props.setSelectedStory(@props.working_story)
   
   
   render: ->
@@ -73,11 +91,11 @@ window.TimingClock = React.createClass
     if @props.selected_story
       work_time_units = []
       @state.work_time_units.map (work_time_unit_object) ->
-        work_time_units.push `<TimingClockWorkTimeUnit key={work_time_unit_object.id} work_time_unit={work_time_unit_object} />`
+        work_time_units.push `<TimingClockWorkTimeUnit key={work_time_unit_object.id} work_time_unit={work_time_unit_object} deleteWorkTimeUnit={_this.deleteWorkTimeUnit} />`
       if @props.working_story is @props.selected_story
         start_stop_work_button = `<a onClick={_this.handleStopWork} className="list-group-item no-padding"><input type="submit" className="simple" value="Stop Work" /></a>`
       else if @props.working_story
-        start_stop_work_button = `<a className="list-group-item no-padding"><input type="submit" className="simple" value="(Please Stop Work On Other Story)" /></a>`
+        start_stop_work_button = `<a onClick={_this.handleGoToStory} className="list-group-item no-padding"><input type="submit" className="simple" value="(Go To Currently Open Story)" /></a>`
       else
         start_stop_work_button = `<a onClick={_this.handleStartWork} className="list-group-item no-padding"><input type="submit" className="simple" value="Start Work" /></a>`
       `<div id="clock-container" className="col-xs-6">

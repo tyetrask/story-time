@@ -7,20 +7,7 @@ window.TimingClockWorkTimeUnit = React.createClass
   
   
   handleDeleteClick: ->
-    console.log 'delete!'
-    _this = @
-    return false # TODO: implement.
-    jsonData =
-      id: work_time_unit_id
-    $.ajax
-      type: 'delete'
-      dataType: 'json'
-      data: jsonData
-      url: "/work_time_units/#{work_time_unit_id}"
-      success: (data) ->
-        _this.redrawFocusedPivotalStory()
-      error: (jqXHR, textStatus, errorThrown) ->
-        console.log "ajax call error: #{errorThrown}"
+    @props.deleteWorkTimeUnit(@props.work_time_unit)
   
   
   startedAtFormatted: ->
@@ -28,7 +15,10 @@ window.TimingClockWorkTimeUnit = React.createClass
   
   
   finishedAtFormatted: ->
-    moment(@props.work_time_unit.finished_at).format('h:mm a')
+    if @props.work_time_unit.finished_at
+      moment(@props.work_time_unit.finished_at).format('h:mm a')
+    else
+      'still working'
   
   
   totalTimeInSecondsFormatted: ->

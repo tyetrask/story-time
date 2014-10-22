@@ -44,7 +44,7 @@ class WorkTimeUnitsController < ApplicationController
     respond_to do |format|
       if @work_time_unit.update(work_time_unit_params)
         format.html { redirect_to @work_time_unit, notice: 'Work time unit was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json: @work_time_unit }
       else
         format.html { render action: 'edit' }
         format.json { render json: @work_time_unit.errors, status: :unprocessable_entity }
@@ -71,6 +71,7 @@ class WorkTimeUnitsController < ApplicationController
     def set_scope
       @work_time_units = WorkTimeUnit.all
       @work_time_units = @work_time_units.where(pivotal_story_id: work_time_unit_params[:pivotal_story_id]) if work_time_unit_params[:pivotal_story_id]
+      @work_time_units = @work_time_units.where(finished_at: nil, user_id: work_time_unit_params[:user_id]) if params[:open_work_time_units]
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
