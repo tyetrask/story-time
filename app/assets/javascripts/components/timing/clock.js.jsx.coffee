@@ -8,15 +8,16 @@ window.TimingClock = React.createClass
     }
   
   
-  componentWillReceiveProps: ->
+  componentWillReceiveProps: (nextProps) ->
     _this = @
-    if @props.selected_story
+    if nextProps.selected_story
       $.ajax
         type: 'get'
         dataType: 'json'
-        data: {work_time_unit: {pivotal_story_id: _this.props.selected_story.id} }
+        data: {work_time_unit: {pivotal_story_id: nextProps.selected_story.id} }
         url: '/work_time_units/'
         success: (data) ->
+          console.log data.length
           _this.setState({work_time_units: data})
         error: (jqXHR, textStatus, errorThrown) ->
           console.log "ajax call error: #{errorThrown}"

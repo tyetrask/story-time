@@ -48,7 +48,7 @@ window.Timing = React.createClass
   calculateScreenHeight: ->
     window_height = $(window).height()
     navigation_height = $('#navigation-container').height()
-    @setState({screen_height: (window_height - navigation_height - 20)}) # 20 pixels padding-top on #timing-container
+    @setState({screen_height: (window_height - navigation_height - 20)}) # 20 pixels height for div.spacer-sm
     $('#stories-container').css('height', @state.screen_height)
     $('#clock-container').css('height', @state.screen_height)
   

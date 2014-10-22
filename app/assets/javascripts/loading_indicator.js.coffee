@@ -1,8 +1,9 @@
 $ ->
+  loading_indicator = $('#loading-indicator')
   $(document)
     .ajaxStop((->
-      $('#loading-indicator').removeClass('la-animate')
+      loading_indicator.removeClass('la-animate')
       ).bind(@))
     .ajaxStart((->
-      $('#loading-indicator').addClass('la-animate')
+      loading_indicator.addClass('la-animate')
       ).bind(@))
