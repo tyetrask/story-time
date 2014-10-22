@@ -16,7 +16,8 @@ window.Timing = React.createClass
       my_work: [],
       upcoming: [],
       selected_project: null,
-      selected_story: null
+      selected_story: null,
+      working_story: null
     }
   
   componentWillMount: ->
@@ -91,6 +92,10 @@ window.Timing = React.createClass
   
   setSelectedStory: (story) ->
     @setState({selected_story: story})
+  
+  
+  setWorkingStory: (story) ->
+    @setState({working_story: story})
 
   
   render: ->
@@ -98,5 +103,5 @@ window.Timing = React.createClass
       <TimingControlPanel selected_project={this.state.selected_project} setSelectedProject={this.setSelectedProject} projects={this.props.projects} completed_stories_visible={this.state.completed_stories_visible} />
       <div className='spacer-sm'></div>
       <TimingStories my_work={this.state.my_work} upcoming={this.state.upcoming} selected_story={this.state.selected_story} setSelectedStory={this.setSelectedStory} />
-      <TimingClock selected_story={this.state.selected_story} />
+      <TimingClock me={this.props.me} selected_story={this.state.selected_story} working_story={this.state.working_story} setWorkingStory={this.setWorkingStory} />
      </div>`

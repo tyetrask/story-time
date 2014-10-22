@@ -2,7 +2,7 @@
 
 window.TimingControlPanelProjectOption = React.createClass
   
-  handleProjectSelect: (e) ->
+  handleProjectSelect: ->
     @props.setSelectedProject(@props.project)
   
   
