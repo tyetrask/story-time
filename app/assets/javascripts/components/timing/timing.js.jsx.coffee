@@ -10,7 +10,6 @@ window.Timing = React.createClass
   
   getInitialState: ->
     {
-      is_loading: true,
       resource_interface: 'pivotal_tracker',
       screen_height: 1000,
       completed_stories_visible: false,
@@ -44,13 +43,6 @@ window.Timing = React.createClass
   componentDidMount: ->
     @calculateScreenHeight()
     @attachControlPanelHandler()
-    $(document)
-      .ajaxStop((->
-        @setState { is_loading: false }
-        ).bind(@))
-      .ajaxStart((->
-        @setState { is_loading: true }
-        ).bind(@))
   
   
   calculateScreenHeight: ->
@@ -70,7 +62,7 @@ window.Timing = React.createClass
   
   loadStories: ->
     _this = @
-    @setState({my_work: [], upcoming: [], is_loading: true})
+    @setState({my_work: [], upcoming: []})
     $.ajax
       type: 'get'
       dataType: 'json'
@@ -107,5 +99,4 @@ window.Timing = React.createClass
       <div className='spacer-sm'></div>
       <TimingStories my_work={this.state.my_work} upcoming={this.state.upcoming} selected_story={this.state.selected_story} setSelectedStory={this.setSelectedStory} />
       <TimingClock selected_story={this.state.selected_story} />
-      <TimingLoadingIndicator is_loading={this.state.is_loading} />
      </div>`

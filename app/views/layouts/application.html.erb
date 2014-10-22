@@ -19,6 +19,7 @@
   <%= render 'layouts/navigation' %>
   <%= render 'layouts/notices' %>
   <%= yield %>
+  <div id='loading-indicator' class='loading-animation'></div>
   <%= javascript_tag do %>
     <%= yield :javascript %>
   <% end %>
