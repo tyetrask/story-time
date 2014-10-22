@@ -10,7 +10,6 @@ window.TimingClock = React.createClass
   
   componentWillReceiveProps: ->
     _this = @
-    # Load 'work time units'
     if @props.selected_story
       $.ajax
         type: 'get'

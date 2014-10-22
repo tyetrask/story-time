@@ -4,43 +4,53 @@ window.Timing = React.createClass
   
   getDefaultProps: ->
     {
-      resource_interface: 'pivotal_tracker',
-      screen_height: 1000,
       me: {name: 'Developer'},
-      projects: [],
-      my_work: [],
-      upcoming: []
+      projects: []
     }
   
   getInitialState: ->
     {
+      is_loading: true,
+      resource_interface: 'pivotal_tracker',
+      screen_height: 1000,
+      completed_stories_visible: false,
+      my_work: [],
+      upcoming: [],
       selected_project: null,
       selected_story: null
     }
   
-  componentDidMount: ->
-    @calculateScreenHeight()
-    @junkToReactify()
+  componentWillMount: ->
     _this = @
-    # Load 'me'
     $.ajax
       type: 'get'
       dataType: 'json'
-      url: "/story_interface/#{_this.props.resource_interface}/me"
+      url: "/story_interface/#{_this.state.resource_interface}/me"
       success: (data) ->
         _this.setProps({me: data})
       error: (jqXHR, textStatus, errorThrown) ->
         console.log "ajax call error: #{errorThrown}"
-    # Load 'projects'
     $.ajax
       type: 'get'
       dataType: 'json'
-      url: "/story_interface/#{_this.props.resource_interface}/projects"
+      url: "/story_interface/#{_this.state.resource_interface}/projects"
       success: (data) ->
         _this.setProps({projects: data})
         _this.setSelectedProject(_this.props.projects[1])
       error: (jqXHR, textStatus, errorThrown) ->
         console.log "ajax call error: #{errorThrown}"
+  
+  
+  componentDidMount: ->
+    @calculateScreenHeight()
+    @attachControlPanelHandler()
+    $(document)
+      .ajaxStop((->
+        @setState { is_loading: false }
+        ).bind(@))
+      .ajaxStart((->
+        @setState { is_loading: true }
+        ).bind(@))
   
   
   calculateScreenHeight: ->
@@ -51,59 +61,51 @@ window.Timing = React.createClass
     $('#clock-container').css('height', @state.screen_height)
   
   
-  junkToReactify: ->
-    console.log 'Hey dummy. This stuff needs to be reactified at some point.'
+  attachControlPanelHandler: ->
+    # Probably reactify this a bit more at some point.
     $('#control-panel-toggle a').click (e) ->
       $('#control-panel-container').slideToggle()
-      if $('#control-panel-container').is(":visible")
-        $('#control-panel-toggle').addClass('active')
-      else
-        $('#control-panel-toggle').removeClass('active')
-    
-    $('#control-panel-me').html("<strong>Me:</strong> #{@props.me.id}")
-    
-    $('#control-panel-project-name').html("a PROJECT NAME lol")
-    @props.projects.map (project_object) ->
-      $('#project-list').append("<li><a>#{project_object.name}</a></li>")
-  
-  
-  setSelectedProject: (pivotal_project) ->
-    @setState({selected_project: pivotal_project})
-    @loadStories()
-  
-  
-  setSelectedStory: (story) ->
-    @setState({selected_story: story})
+      $('#control-panel-toggle').toggleClass('active')
   
   
   loadStories: ->
     _this = @
-    # Load 'my work'
+    @setState({my_work: [], upcoming: [], is_loading: true})
     $.ajax
       type: 'get'
       dataType: 'json'
-      url: "/story_interface/#{_this.props.resource_interface}/projects/#{_this.state.selected_project.id}/my_work"
+      url: "/story_interface/#{_this.state.resource_interface}/projects/#{_this.state.selected_project.id}/my_work"
       success: (data) ->
-        _this.setProps({my_work: data})
+        _this.setState({my_work: data})
       error: (jqXHR, textStatus, errorThrown) ->
         console.log "ajax call error: #{errorThrown}"
-    # Load 'upcoming'
     $.ajax
       type: 'get'
       dataType: 'json'
-      url: "/story_interface/#{_this.props.resource_interface}/projects/#{_this.state.selected_project.id}/iterations"
+      url: "/story_interface/#{_this.state.resource_interface}/projects/#{_this.state.selected_project.id}/iterations"
       success: (data) ->
         upcoming_stories = []
         data.map (iteration) ->
           iteration.stories.map (pivotal_story) ->
             upcoming_stories.push(pivotal_story)
-        _this.setProps({upcoming: upcoming_stories})
+        _this.setState({upcoming: upcoming_stories})
       error: (jqXHR, textStatus, errorThrown) ->
         console.log "ajax call error: #{errorThrown}"
+  
+  
+  setSelectedProject: (project) ->
+    @setState({selected_project: project, selected_story: null}, @loadStories)
+  
+  
+  setSelectedStory: (story) ->
+    @setState({selected_story: story})
 
   
   render: ->
     `<div>
-      <TimingStories my_work={this.props.my_work} upcoming={this.props.upcoming} selected_story={this.state.selected_story} setSelectedStory={this.setSelectedStory} />
+      <TimingControlPanel selected_project={this.state.selected_project} setSelectedProject={this.setSelectedProject} projects={this.props.projects} completed_stories_visible={this.state.completed_stories_visible} />
+      <div className='spacer-sm'></div>
+      <TimingStories my_work={this.state.my_work} upcoming={this.state.upcoming} selected_story={this.state.selected_story} setSelectedStory={this.setSelectedStory} />
       <TimingClock selected_story={this.state.selected_story} />
+      <TimingLoadingIndicator is_loading={this.state.is_loading} />
      </div>`
