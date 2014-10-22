@@ -13,8 +13,8 @@ class WorkTimeUnit < ActiveRecord::Base
   
   validate :cannot_have_multiple_open_work_time_records_for_given_story
   def cannot_have_multiple_open_work_time_records_for_given_story
-    @open_work_time_units = WorkTimeUnit.where(pivotal_story_id: pivotal_story_id, finished_at: nil)
-    errors.add(:started_at, "can't be set because another record for this story is already open.") if @open_work_time_units.size > 1
+    @open_work_time_units = WorkTimeUnit.where(user_id: user_id, pivotal_story_id: pivotal_story_id, finished_at: nil)
+    errors.add(:started_at, "can't be set because this developer is already working on another story.") if @open_work_time_units.size > 1
   end
   
 end
