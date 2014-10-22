@@ -2,6 +2,16 @@
 
 window.TimingControlPanel = React.createClass
   
+  completedStoriesButtonClass: ->
+    @props.completed_stories_visible ? 'active' : ''
+  
+  
+  handleShowCompletedStoriesClick: ->
+    if @props.completed_stories_visible
+      @props.setCompletedStoriesVisibility(false)
+    else
+      @props.setCompletedStoriesVisibility(true)
+  
   render: ->
     _this = @
     if @props.selected_project
@@ -22,8 +32,11 @@ window.TimingControlPanel = React.createClass
                 {projects}
               </ul>
             </li>
+            
+            <li className={this.completedStoriesButtonClass()}><a onClick={this.handleShowCompletedStoriesClick}>Show Completed Stories</a></li>
           </ul>
         
         </div>
+        
       </div>
     </nav>`

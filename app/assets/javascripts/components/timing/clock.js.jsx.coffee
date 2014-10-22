@@ -92,6 +92,9 @@ window.TimingClock = React.createClass
       work_time_units = []
       @state.work_time_units.map (work_time_unit_object) ->
         work_time_units.push `<TimingClockWorkTimeUnit key={work_time_unit_object.id} work_time_unit={work_time_unit_object} deleteWorkTimeUnit={_this.deleteWorkTimeUnit} />`
+      labels = []
+      @props.selected_story.labels.map (label_object) ->
+        labels.push `<span key={label_object.id} className='label label-default'>{label_object.name}</span>`
       if @props.working_story is @props.selected_story
         start_stop_work_button = `<a onClick={_this.handleStopWork} className="list-group-item no-padding"><input type="submit" className="simple" value="Stop Work" /></a>`
       else if @props.working_story
@@ -107,7 +110,7 @@ window.TimingClock = React.createClass
              <a className="list-group-item">
                <p>{this.props.selected_story.name}</p>
                <p><small>{this.props.selected_story.description}</small></p>
-               <p>Estimation: {this.props.selected_story.estimate}</p>
+               <p>Estimation: {this.props.selected_story.estimate} <span className='pull-right'>{labels}</span></p>
              </a>
              <a className="list-group-item no-padding">
                <input className="simple" placeholder="comment" />

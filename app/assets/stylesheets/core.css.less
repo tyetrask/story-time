@@ -41,7 +41,6 @@ a.pivotal-story {
 }
 
 a.pivotal-story.accepted {
-  display: none;
   color: #3c763d;
   background-color: #dff0d8;
   border-color: #d6e9c6;
@@ -59,12 +58,20 @@ a.pivotal-story.started.active, a.pivotal-story.accepted.active {
   border-color: darken(lighten(@medium, 20%), 7%);
 }
 
+a.pivotal-story.hidden {
+  display: none;
+}
+
 
 
 /* Clock Styling */
 
 #clock-container {
   overflow: auto;
+  
+  span.label {
+    margin-right: 3px;
+  }
   
   div.panel.panel-primary {
     border-color: darken(lighten(@medium, 20%), 7%);
