@@ -4,12 +4,14 @@ window.TimingClock = React.createClass
   
   getInitialState: ->
     {
-      work_time_units: []
+      work_time_units: [],
+      editing_work_time_unit: null
     }
   
   
   componentWillReceiveProps: (nextProps) ->
     _this = @
+    @setState({editing_work_time_unit: null})
     if nextProps.selected_story
       $.ajax
         type: 'get'
@@ -19,7 +21,7 @@ window.TimingClock = React.createClass
         success: (data) ->
           _this.setState({work_time_units: data})
         error: (jqXHR, textStatus, errorThrown) ->
-          console.log "ajax call error: #{errorThrown}"
+          _this.props.pushNotification("We're sorry. There was an error loading work time units. #{errorThrown}")
   
   
   handleStartWork: ->
@@ -40,7 +42,7 @@ window.TimingClock = React.createClass
         new_work_time_units.push(data)
         _this.setState({work_time_units: new_work_time_units})
       error: (jqXHR, textStatus, errorThrown) ->
-        console.log "ajax call error: #{errorThrown}"
+        _this.props.pushNotification("We're sorry. There was an error creating a work time unit. #{errorThrown}")
         _this.props.setWorkingStory(null)
   
   
@@ -64,7 +66,7 @@ window.TimingClock = React.createClass
         work_time_units.push(data)
         _this.setState({work_time_units: work_time_units})
       error: (jqXHR, textStatus, errorThrown) ->
-        console.log "ajax call error: #{errorThrown}"
+        _this.props.pushNotification("We're sorry. There was an error closing the work time unit. #{errorThrown}")
   
   
   deleteWorkTimeUnit: (work_time_unit) ->
@@ -79,11 +81,18 @@ window.TimingClock = React.createClass
         work_time_units = _.without(work_time_units, work_time_unit)
         _this.setState({work_time_units: work_time_units})
       error: (jqXHR, textStatus, errorThrown) ->
-        console.log "ajax call error: #{errorThrown}"
+        _this.props.pushNotification("We're sorry. There was an error deleting the work time unit. #{errorThrown}")
   
   
   handleGoToStory: ->
     @props.setSelectedStory(@props.working_story)
+  
+  
+  setEditingWorkTimeUnit: (work_time_unit) ->
+    if @state.editing_work_time_unit is work_time_unit
+      @setState({editing_work_time_unit: null})
+    else
+      @setState({editing_work_time_unit: work_time_unit})
   
   
   render: ->
@@ -91,7 +100,7 @@ window.TimingClock = React.createClass
     if @props.selected_story
       work_time_units = []
       @state.work_time_units.map (work_time_unit_object) ->
-        work_time_units.push `<TimingClockWorkTimeUnit key={work_time_unit_object.id} work_time_unit={work_time_unit_object} deleteWorkTimeUnit={_this.deleteWorkTimeUnit} />`
+        work_time_units.push `<TimingClockWorkTimeUnit key={work_time_unit_object.id} work_time_unit={work_time_unit_object} editing_work_time_unit={_this.state.editing_work_time_unit} deleteWorkTimeUnit={_this.deleteWorkTimeUnit} setEditingWorkTimeUnit={_this.setEditingWorkTimeUnit} />`
       labels = []
       @props.selected_story.labels.map (label_object) ->
         labels.push `<span key={label_object.id} className='label label-default'>{label_object.name}</span>`

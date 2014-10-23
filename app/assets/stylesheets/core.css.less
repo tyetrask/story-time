@@ -130,6 +130,35 @@ div.spacer-sm {
   margin: 0px;
 }
 
+/* Notifications */
+
+#notification-container {
+  position: fixed;
+  bottom: 0;
+  left: 5%;
+  padding: 5px;
+  width: 220px;
+  opacity: 0.8;
+  
+  border: 1px solid @dark;
+  color: @medium;
+  background: white;
+  font-weight: bold;
+  
+  p.notification-text {
+    padding: 20px 20px 5px 20px;
+  }
+  
+  i.fa-times {
+    cursor: pointer;
+  }
+  
+  &.hidden {
+    display: none;
+  }
+}
+
+
 
 /* Loading Indicator */
 

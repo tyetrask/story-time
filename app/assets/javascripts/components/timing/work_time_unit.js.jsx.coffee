@@ -3,7 +3,11 @@
 window.TimingClockWorkTimeUnit = React.createClass
   
   handleEditClick: ->
-    console.log 'edit!'
+    @props.setEditingWorkTimeUnit(@props.work_time_unit)
+  
+  
+  handleEditSaveClick: ->
+    console.log 'save this!'
   
   
   handleDeleteClick: ->
@@ -37,10 +41,15 @@ window.TimingClockWorkTimeUnit = React.createClass
   
   
   render: ->
+    if @props.work_time_unit is @props.editing_work_time_unit
+      editing_html = `<p>Editing Controls Go Here!</p>`
+    else
+      editing_html = null
     `<a className='list-group-item work-time-unit'>
       <p><i onClick={this.handleEditClick} className='fa fa-pencil'></i> <i onClick={this.handleDeleteClick} className='fa fa-trash'></i> Developer: {this.props.work_time_unit.user_id}
         <span className='pull-right'>
           {this.startedAtFormatted()} - {this.finishedAtFormatted()} <small>{this.totalTimeInSecondsFormatted()}</small>
         </span>
       </p>
+      {editing_html}
     </a>`

@@ -10,6 +10,7 @@ window.Timing = React.createClass
   
   getInitialState: ->
     {
+      notifications: []
       resource_interface: 'pivotal_tracker',
       screen_height: 1000,
       completed_stories_visible: false,
@@ -29,7 +30,7 @@ window.Timing = React.createClass
       success: (data) ->
         _this.setProps({me: data})
       error: (jqXHR, textStatus, errorThrown) ->
-        console.log "ajax call error: #{errorThrown}"
+        _this.pushNotification("We're sorry. There was an error loading your account. #{errorThrown}")
     $.ajax
       type: 'get'
       dataType: 'json'
@@ -38,7 +39,7 @@ window.Timing = React.createClass
         _this.setProps({projects: data})
         _this.setSelectedProject(_this.props.projects[1])
       error: (jqXHR, textStatus, errorThrown) ->
-        console.log "ajax call error: #{errorThrown}"
+        _this.pushNotification("We're sorry. There was an error loading projects. #{errorThrown}")
   
   
   componentDidMount: ->
@@ -72,7 +73,7 @@ window.Timing = React.createClass
         _this.setState({my_work: data})
         _this.loadOpenWorkTimeUnit()
       error: (jqXHR, textStatus, errorThrown) ->
-        console.log "ajax call error: #{errorThrown}"
+        _this.pushNotification("We're sorry. There was an error loading your work stories. #{errorThrown}")
     $.ajax
       type: 'get'
       dataType: 'json'
@@ -84,7 +85,7 @@ window.Timing = React.createClass
             upcoming_stories.push(pivotal_story)
         _this.setState({upcoming: upcoming_stories})
       error: (jqXHR, textStatus, errorThrown) ->
-        console.log "ajax call error: #{errorThrown}"
+        _this.pushNotification("We're sorry. There was an error loading upcoming stories. #{errorThrown}")
   
   
   loadOpenWorkTimeUnit: ->
@@ -107,7 +108,7 @@ window.Timing = React.createClass
             # TODO: Implement switching to another project's story
             _this.setState({working_story: {hey: 'the princess(working story) is in another castle(project)'}})
       error: (jqXHR, textStatus, errorThrown) ->
-        console.log "ajax call error: #{errorThrown}"
+        _this.pushNotification("We're sorry. There was an error loading the open work time unit. #{errorThrown}")
   
   
   setSelectedProject: (project) ->
@@ -124,6 +125,18 @@ window.Timing = React.createClass
   
   setCompletedStoriesVisibility: (are_completed_stories_visible) ->
     @setState({completed_stories_visible: are_completed_stories_visible})
+  
+  
+  pushNotification: (notification_text) ->
+    notification_set = _.clone(@state.notifications)
+    notification_set.push(notification_text)
+    @setState({notifications: notification_set})
+  
+  
+  dismissNotification: ->
+    notification_set = _.clone(@state.notifications)
+    notification_set.shift()
+    @setState({notifications: notification_set})
 
   
   render: ->
@@ -131,5 +144,6 @@ window.Timing = React.createClass
       <TimingControlPanel selected_project={this.state.selected_project} setSelectedProject={this.setSelectedProject} projects={this.props.projects} completed_stories_visible={this.state.completed_stories_visible} setCompletedStoriesVisibility={this.setCompletedStoriesVisibility} />
       <div className='spacer-sm'></div>
       <TimingStories my_work={this.state.my_work} upcoming={this.state.upcoming} selected_story={this.state.selected_story} setSelectedStory={this.setSelectedStory} completed_stories_visible={this.state.completed_stories_visible} />
-      <TimingClock me={this.props.me} selected_story={this.state.selected_story} working_story={this.state.working_story} setWorkingStory={this.setWorkingStory} setSelectedStory={this.setSelectedStory} />
+      <TimingClock me={this.props.me} selected_story={this.state.selected_story} working_story={this.state.working_story} setWorkingStory={this.setWorkingStory} setSelectedStory={this.setSelectedStory} pushNotification={this.pushNotification} />
+      <Notifications notifications={this.state.notifications} dismissNotification={this.dismissNotification} />
      </div>`

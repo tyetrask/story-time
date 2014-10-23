@@ -29,4 +29,5 @@ StoryTime::Application.configure do
 
   # Uses big ol' ReactJS version for extra info during development.
   config.react.variant = :development
+  config.react.addons = true
 end

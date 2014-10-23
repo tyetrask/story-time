@@ -80,4 +80,5 @@ StoryTime::Application.configure do
   
   # Minified ReactJS
   config.react.variant = :production
+  config.react.addons = true
 end
