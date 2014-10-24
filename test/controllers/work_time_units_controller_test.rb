@@ -18,7 +18,7 @@ class WorkTimeUnitsControllerTest < ActionController::TestCase
 
   test "should create work_time_unit" do
     assert_difference('WorkTimeUnit.count') do
-      post :create, work_time_unit: { finished_at: @work_time_unit.finished_at, pivotal_story_id: @work_time_unit.pivotal_story_id, started_at: @work_time_unit.started_at, total_time_in_seconds: @work_time_unit.total_time_in_seconds, user_id: @work_time_unit.user_id }
+      post :create, work_time_unit: { finished_at: @work_time_unit.finished_at, story_id: @work_time_unit.story_id, started_at: @work_time_unit.started_at, total_time_in_seconds: @work_time_unit.total_time_in_seconds, user_id: @work_time_unit.user_id }
     end
 
     assert_redirected_to work_time_unit_path(assigns(:work_time_unit))
@@ -35,7 +35,7 @@ class WorkTimeUnitsControllerTest < ActionController::TestCase
   end
 
   test "should update work_time_unit" do
-    patch :update, id: @work_time_unit, work_time_unit: { finished_at: @work_time_unit.finished_at, pivotal_story_id: @work_time_unit.pivotal_story_id, started_at: @work_time_unit.started_at, total_time_in_seconds: @work_time_unit.total_time_in_seconds, user_id: @work_time_unit.user_id }
+    patch :update, id: @work_time_unit, work_time_unit: { finished_at: @work_time_unit.finished_at, story_id: @work_time_unit.story_id, started_at: @work_time_unit.started_at, total_time_in_seconds: @work_time_unit.total_time_in_seconds, user_id: @work_time_unit.user_id }
     assert_redirected_to work_time_unit_path(assigns(:work_time_unit))
   end
 

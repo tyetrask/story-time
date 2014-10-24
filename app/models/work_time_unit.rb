@@ -2,7 +2,7 @@ class WorkTimeUnit < ActiveRecord::Base
   belongs_to :user
   
   validates :user_id, presence: true
-  validates :pivotal_story_id, presence: true
+  validates :story_id, presence: true
   validates :started_at, presence: true
   
   before_save :store_total_time_in_seconds

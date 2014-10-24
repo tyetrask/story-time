@@ -16,7 +16,7 @@ window.TimingClock = React.createClass
       $.ajax
         type: 'get'
         dataType: 'json'
-        data: {work_time_unit: {pivotal_story_id: nextProps.selected_story.id} }
+        data: {work_time_unit: {story_id: nextProps.selected_story.id} }
         url: '/work_time_units/'
         success: (data) ->
           _this.setState({work_time_units: data})
@@ -35,7 +35,7 @@ window.TimingClock = React.createClass
     $.ajax
       type: 'post'
       dataType: 'json'
-      data: {work_time_unit: {user_id: _this.props.me.id, pivotal_story_id: _this.props.selected_story.id, started_at: started_at_date}}
+      data: {work_time_unit: {user_id: _this.props.me.id, story_id: _this.props.selected_story.id, started_at: started_at_date}}
       url: '/work_time_units/'
       success: (data) ->
         new_work_time_units = _.clone(_this.state.work_time_units)

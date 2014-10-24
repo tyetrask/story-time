@@ -2,14 +2,14 @@
 
 one:
   user_id: MyString
-  pivotal_story_id: 1
+  story_id: 1
   started_at: 
   finished_at: 
   total_time_in_seconds: 1
 
 two:
   user_id: MyString
-  pivotal_story_id: 1
+  story_id: 1
   started_at: 
   finished_at: 
   total_time_in_seconds: 1

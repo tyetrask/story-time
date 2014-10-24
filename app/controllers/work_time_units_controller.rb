@@ -70,12 +70,12 @@ class WorkTimeUnitsController < ApplicationController
     
     def set_scope
       @work_time_units = WorkTimeUnit.all
-      @work_time_units = @work_time_units.where(pivotal_story_id: work_time_unit_params[:pivotal_story_id]) if work_time_unit_params[:pivotal_story_id]
+      @work_time_units = @work_time_units.where(story_id: work_time_unit_params[:story_id]) if work_time_unit_params[:story_id]
       @work_time_units = @work_time_units.where(finished_at: nil, user_id: work_time_unit_params[:user_id]) if params[:open_work_time_units]
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def work_time_unit_params
-      params.require(:work_time_unit).permit(:user_id, :pivotal_story_id, :started_at, :finished_at, :total_time_in_seconds)
+      params.require(:work_time_unit).permit(:user_id, :story_id, :started_at, :finished_at, :total_time_in_seconds)
     end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141018225711) do
+ActiveRecord::Schema.define(version: 20141024033409) do
 
   create_table "users", force: true do |t|
     t.string   "email"
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 20141018225711) do
 
   create_table "work_time_units", force: true do |t|
     t.string   "user_id"
-    t.integer  "pivotal_story_id"
+    t.integer  "story_id"
     t.datetime "started_at"
     t.datetime "finished_at"
     t.integer  "total_time_in_seconds"

@@ -101,7 +101,7 @@ window.Timing = React.createClass
         else if data.length == 1
           open_work_time_unit = data[0]
           all_stories = _.union(_this.state.my_work, _this.state.upcoming)
-          working_story = _.find(all_stories, {id: open_work_time_unit.pivotal_story_id })
+          working_story = _.find(all_stories, {id: open_work_time_unit.story_id })
           if working_story
             _this.setState({working_story: working_story})
           else
