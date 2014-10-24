@@ -1,0 +1,12 @@
+<%- if alert && alert.length > 0 -%>
+  <div id="notification-container">
+    <span className='pull-right'><i className='fa fa-times'></i></span>
+    <p className='notification-text'><%= alert %></p>
+  </div>
+<% end %>
+<%- if notice && notice.length > 0 -%>
+  <div id="notification-container">
+    <span className='pull-right'><i className='fa fa-times'></i></span>
+    <p className='notification-text'><%= notice %></p>
+  </div>
+<% end %>
