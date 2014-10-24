@@ -22,7 +22,11 @@ StoryTime::Application.routes.draw do
   
   resources :timing, only: [:index]
   
-  resources :users
+  resources :users do
+    collection do
+      get :me
+    end
+  end
   
   resources :work_time_units
   

@@ -4,7 +4,8 @@ window.Timing = React.createClass
   
   getDefaultProps: ->
     {
-      me: {name: 'Developer'},
+      me: {name: 'Developer'}
+      me_external: {name: 'Developer'},
       projects: []
     }
   
@@ -26,11 +27,19 @@ window.Timing = React.createClass
     $.ajax
       type: 'get'
       dataType: 'json'
-      url: "/story_interface/#{_this.state.resource_interface}/me"
+      url: "/users/me"
       success: (data) ->
         _this.setProps({me: data})
       error: (jqXHR, textStatus, errorThrown) ->
         _this.pushNotification("We're sorry. There was an error loading your account. #{errorThrown}")
+    $.ajax
+      type: 'get'
+      dataType: 'json'
+      url: "/story_interface/#{_this.state.resource_interface}/me"
+      success: (data) ->
+        _this.setProps({me_external: data})
+      error: (jqXHR, textStatus, errorThrown) ->
+        _this.pushNotification("We're sorry. There was an error loading your external account. #{errorThrown}")
     $.ajax
       type: 'get'
       dataType: 'json'
@@ -93,7 +102,7 @@ window.Timing = React.createClass
     $.ajax
       type: 'get'
       dataType: 'json'
-      data: {open_work_time_units: true, work_time_unit: {user_id: _this.props.me.id} }
+      data: {open_work_time_units: true, work_time_unit: {user_id: _this.props.me_external.id} }
       url: "/work_time_units"
       success: (data) ->
         if data.length > 1

@@ -16,6 +16,9 @@
         <% if controller_name == 'timing' %>
           <li id='control-panel-toggle'><a>Options</a></li>
         <% end %>
+        <% if current_user.is_admin %>
+        <li><%= link_to 'Admin Panel', users_path %></li>
+        <% end %>
         <%= render 'layouts/login_options' %>
       </ul>
     </div>
