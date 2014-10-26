@@ -8,7 +8,7 @@
     <% if user_signed_in? %>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class="<%= active_link_class?('timing') %>"><%= link_to raw("Do Work! <i class='fa fa-fire burning-animation'></i>"), timing_index_path %></li>
+        <li class="<%= active_link_class?('timing') %>"><%= link_to raw("Do Work! <i class='fa fa-fire'></i>"), timing_index_path %></li>
         <li class="<%= active_link_class?('reports') %>"><%= link_to raw("Reports <i class='fa fa-paper-plane-o'></i>"), reports_path %>
         <li class="<%= active_link_class?('users') %>"><%= link_to raw("Me <i class='fa fa-space-shuttle fa-rotate-270'></i>"), edit_user_path(current_user) %></a></li>
       </ul>

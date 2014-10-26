@@ -106,18 +106,17 @@ window.Timing = React.createClass
       url: "/work_time_units"
       success: (data) ->
         if data.length > 1
-          console.log "more than one working story detected. danger!"
+          _this.pushNotification("We're sorry. More than one open working story was detected. #{errorThrown}")
         else if data.length == 1
           open_work_time_unit = data[0]
-          all_stories = _.union(_this.state.my_work, _this.state.upcoming)
-          working_story = _.find(all_stories, {id: open_work_time_unit.story_id })
-          if working_story
-            _this.setState({working_story: working_story})
+          if open_work_time_unit.project_id is _this.state.selected_project.id
+            working_story = _.find(_.union(_this.state.my_work, _this.state.upcoming), {id: data[0].story_id})
+            _this.setWorkingStory(working_story)
           else
-            # TODO: Implement switching to another project's story
-            _this.setState({working_story: {hey: 'the princess(working story) is in another castle(project)'}})
+            open_project = _.find(_this.props.projects, {id: open_work_time_unit.project_id})
+            _this.pushNotification("You are currently working on a story in another Project. (#{open_project.name})")          
       error: (jqXHR, textStatus, errorThrown) ->
-        _this.pushNotification("We're sorry. There was an error loading the open work time unit. #{errorThrown}")
+        _this.pushNotification("We're sorry. There was an error loading the open working story. #{errorThrown}")
   
   
   setSelectedProject: (project) ->
@@ -130,6 +129,7 @@ window.Timing = React.createClass
   
   setWorkingStory: (story) ->
     @setState({working_story: story})
+    if story then $('i.fa-fire').addClass('burning-animation') else $('i.fa-fire').removeClass('burning-animation')
   
   
   setCompletedStoriesVisibility: (are_completed_stories_visible) ->
@@ -153,6 +153,6 @@ window.Timing = React.createClass
       <TimingControlPanel selected_project={this.state.selected_project} setSelectedProject={this.setSelectedProject} projects={this.props.projects} completed_stories_visible={this.state.completed_stories_visible} setCompletedStoriesVisibility={this.setCompletedStoriesVisibility} />
       <div className='spacer-sm'></div>
       <TimingStories my_work={this.state.my_work} upcoming={this.state.upcoming} selected_story={this.state.selected_story} setSelectedStory={this.setSelectedStory} completed_stories_visible={this.state.completed_stories_visible} />
-      <TimingClock me={this.props.me} selected_story={this.state.selected_story} working_story={this.state.working_story} setWorkingStory={this.setWorkingStory} setSelectedStory={this.setSelectedStory} pushNotification={this.pushNotification} />
+      <TimingClock me_external={this.props.me_external} selected_story={this.state.selected_story} selected_project={this.state.selected_project} working_story={this.state.working_story} setWorkingStory={this.setWorkingStory} setSelectedStory={this.setSelectedStory} pushNotification={this.pushNotification} />
       <Notifications notifications={this.state.notifications} dismissNotification={this.dismissNotification} />
      </div>`
