@@ -57,6 +57,16 @@ class StoryInterfaceController < ApplicationController
     end
   end
   
+  def patch_story
+    respond_to do |format|
+      if @story = @resource_interface.patch_story(story_interface_params[:project_id], story_interface_params[:story_id], params[:new_story_params])
+        format.json { render json: @story }
+      else
+        format.json { render json: [], status: :unprocessable_entity }
+      end
+    end
+  end
+  
   private
   
     def set_resource_interface

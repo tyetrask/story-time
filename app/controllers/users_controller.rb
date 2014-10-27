@@ -11,6 +11,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    redirect_to edit_user_path(@user)
   end
   
   def me
@@ -74,7 +75,7 @@ class UsersController < ApplicationController
     
     def check_policy
       return true if current_user.is_admin
-      redirect_to root_path, notice: 'You do not have permission to modify users.' if current_user.id != @user.id
+      redirect_to root_path, notice: 'You do not have permission to modify users.' if !@user || current_user.id != @user.id
     end
     
     # Use callbacks to share common setup or constraints between actions.

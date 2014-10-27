@@ -17,6 +17,7 @@ StoryTime::Application.routes.draw do
       get ':resource_interface/projects/:project_id/my_work', to: 'story_interface#my_work'
       get ':resource_interface/projects/:project_id/stories', to: 'story_interface#stories'
       get ':resource_interface/projects/:project_id/stories/:story_id', to: 'story_interface#story'
+      patch ':resource_interface/projects/:project_id/stories/:story_id', to: 'story_interface#patch_story'
     end
   end
   

@@ -52,17 +52,8 @@ module PivotalTracker
       https_get_request("#{@base_api_url}/my/notifications")
     end
   
-    def put_story(project_id)
-      # Parameters:
-      # name
-      # description
-      # story_type [feature, bug, chore, release]
-      # current_state [accepted, delivered, finished, started, rejected, planned, unstarted, unscheduled]
-      # estimate
-      # requested_by_id
-      # owner_ids []
-      # label_ids []
-      https_post_request("#{@base_api_url}/projects/#{project_id}/stories")
+    def patch_story(project_id, story_id, params)
+      https_put_request("#{@base_api_url}/projects/#{project_id}/stories/#{story_id}", params)
     end
   
   
@@ -86,9 +77,22 @@ module PivotalTracker
       parsed_json = JSON.parse(http.request(request).body, symbolize_names: true)
     end
   
-    def https_post_request(url)
-      # TODO: Implement POST
-      raise StandardError, 'Not Implemented!'
+    def https_put_request(url, params)
+      # Parse URL
+      uri = URI.parse(url)
+    
+      # Configure HTTPS Request
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    
+      # Build Put Request, Set Pivotal API Token in Header
+      request = Net::HTTP::Put.new(uri.request_uri)
+      request.set_form_data(params)
+      request["X-TrackerToken"] = @api_token
+
+      # Perform Request, Return JSON
+      parsed_json = JSON.parse(http.request(request).body, symbolize_names: true)
     end
   
     def generate_query_string_from_hash(query_options)

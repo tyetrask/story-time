@@ -17,6 +17,7 @@ window.Timing = React.createClass
       completed_stories_visible: false,
       my_work: [],
       upcoming: [],
+      epic_list: [],
       selected_project: null,
       selected_story: null,
       working_story: null
@@ -92,9 +93,18 @@ window.Timing = React.createClass
         data.map (iteration) ->
           iteration.stories.map (pivotal_story) ->
             upcoming_stories.push(pivotal_story)
-        _this.setState({upcoming: upcoming_stories})
+        _this.setState({upcoming: upcoming_stories}, _this.buildEpicList)
       error: (jqXHR, textStatus, errorThrown) ->
         _this.pushNotification("We're sorry. There was an error loading upcoming stories. #{errorThrown}")
+  
+  
+  buildEpicList: ->
+    epic_list = []
+    @state.upcoming.map (story) ->
+      story.labels.map (label_object) ->
+        epic_list.push label_object.name
+    epic_list = _.uniq(epic_list)
+    @setState({epic_list: epic_list})
   
   
   loadOpenWorkTimeUnit: ->
@@ -132,6 +142,18 @@ window.Timing = React.createClass
     if story then $('i.fa-fire').addClass('burning-animation') else $('i.fa-fire').removeClass('burning-animation')
   
   
+  updateStoryState: (story, new_state) ->
+    $.ajax
+      type: 'patch'
+      dataType: 'json'
+      data: {new_story_params: {current_state: new_state}}
+      url: "/story_interface/#{_this.state.resource_interface}/projects/#{story.project_id}/stories/#{story.id}"
+      success: (data) ->
+        _this.setState({upcoming: upcoming_stories}, _this.buildEpicList)
+      error: (jqXHR, textStatus, errorThrown) ->
+        _this.pushNotification("We're sorry. There was an error updating the story state. #{errorThrown}")
+  
+  
   setCompletedStoriesVisibility: (are_completed_stories_visible) ->
     @setState({completed_stories_visible: are_completed_stories_visible})
   
@@ -152,7 +174,7 @@ window.Timing = React.createClass
     `<div>
       <TimingControlPanel selected_project={this.state.selected_project} setSelectedProject={this.setSelectedProject} projects={this.props.projects} completed_stories_visible={this.state.completed_stories_visible} setCompletedStoriesVisibility={this.setCompletedStoriesVisibility} />
       <div className='spacer-sm'></div>
-      <TimingStories my_work={this.state.my_work} upcoming={this.state.upcoming} selected_story={this.state.selected_story} setSelectedStory={this.setSelectedStory} completed_stories_visible={this.state.completed_stories_visible} />
+      <TimingStories my_work={this.state.my_work} upcoming={this.state.upcoming} epic_list={this.state.epic_list} selected_story={this.state.selected_story} setSelectedStory={this.setSelectedStory} completed_stories_visible={this.state.completed_stories_visible} />
       <TimingClock me_external={this.props.me_external} selected_story={this.state.selected_story} selected_project={this.state.selected_project} working_story={this.state.working_story} setWorkingStory={this.setWorkingStory} setSelectedStory={this.setSelectedStory} pushNotification={this.pushNotification} />
       <Notifications notifications={this.state.notifications} dismissNotification={this.dismissNotification} />
      </div>`

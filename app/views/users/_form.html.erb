@@ -23,6 +23,13 @@
     <%= f.text_field :pivotal_api_token, class: 'simple', placeholder: 'pivotal api token' %>
   </div>
   
+  <% if current_user.is_admin %>
+  <div>
+    <p class='simple-divider'><%= f.check_box :approved %> <small>approved?</small></p>
+  </div>
+  <br />
+  <% end %>
+  
   <div>
     <%= f.submit 'Update', class: 'simple' %>
   </div>

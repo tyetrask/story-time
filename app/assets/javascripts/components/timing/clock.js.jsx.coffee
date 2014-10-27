@@ -95,12 +95,21 @@ window.TimingClock = React.createClass
       @setState({editing_work_time_unit: work_time_unit})
   
   
+  updateWorkTimeUnitAfterEdit: (work_time_unit, new_started_at_date, new_finished_at_date, new_total_time_in_seconds) ->
+    work_time_units = _.clone(@state.work_time_units)
+    work_time_unit_to_update = _.find(work_time_units, {id: work_time_unit.id})
+    work_time_unit_to_update.started_at = new_started_at_date
+    work_time_unit_to_update.finished_at = new_finished_at_date
+    work_time_unit_to_update.total_time_in_seconds = new_total_time_in_seconds
+    @setState({work_time_units: work_time_units})
+  
+  
   render: ->
     _this = @
     if @props.selected_story
       work_time_units = []
       @state.work_time_units.map (work_time_unit_object) ->
-        work_time_units.push `<TimingClockWorkTimeUnit key={work_time_unit_object.id} work_time_unit={work_time_unit_object} editing_work_time_unit={_this.state.editing_work_time_unit} deleteWorkTimeUnit={_this.deleteWorkTimeUnit} setEditingWorkTimeUnit={_this.setEditingWorkTimeUnit} />`
+        work_time_units.push `<TimingClockWorkTimeUnit key={work_time_unit_object.id} work_time_unit={work_time_unit_object} editing_work_time_unit={_this.state.editing_work_time_unit} deleteWorkTimeUnit={_this.deleteWorkTimeUnit} setEditingWorkTimeUnit={_this.setEditingWorkTimeUnit} updateWorkTimeUnitAfterEdit={_this.updateWorkTimeUnitAfterEdit} pushNotification={_this.pushNotification} />`
       labels = []
       @props.selected_story.labels.map (label_object) ->
         labels.push `<span key={label_object.id} className='label label-default'>{label_object.name}</span>`

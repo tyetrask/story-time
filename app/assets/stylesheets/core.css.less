@@ -62,6 +62,12 @@ a.pivotal-story.hidden {
   display: none;
 }
 
+div.panel-heading {
+  li, a.dropdown-toggle {
+    cursor: pointer;
+  }
+}
+
 
 
 /* Clock Styling */
@@ -208,6 +214,7 @@ div.spacer-sm {
 /* Form Styling */
 
 input.simple {
+  display: block;
   font-weight: 500;
   margin: 0;
   -webkit-appearance: none;
@@ -220,8 +227,20 @@ input.simple {
   padding: 1rem 1.3rem;
   color: #2a5669;
   border-left: 0.3rem solid #fff;
-  display: block;
   outline: none;
+  &.small {
+    display: inline-block;
+    width: 12%;
+  }
+}
+
+p.simple-divider, span.simple-divider {
+  font-weight: 500;
+  margin: 0;
+  font-size: 1.5em;
+  height: 100%;
+  padding: 1rem 1.3rem;
+  color: #2a5669;
 }
 
 input:focus.simple {
@@ -244,6 +263,10 @@ input[type='submit'].simple {
   cursor: pointer;
   width: 100%;
   padding: 1rem 1.5rem;
+  &.small {
+    display: inline-block;
+    width: 14%;
+  }
 }
 
 input[type='submit']:hover.simple {

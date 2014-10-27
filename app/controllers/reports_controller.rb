@@ -10,7 +10,7 @@ class ReportsController < ApplicationController
     def set_scope
       # TODO: Default range of one week, accept date params.
       return true
-      @accepted_stories = @resource_interface.get_stories(story_interface_params[:project_id], {accepted_after: Date.now, accepted_before: Date.now})
+      @accepted_stories = @resource_interface.get_stories(story_interface_params[:project_id], {accepted_after: (Date.now - 7), accepted_before: Date.now})
     end
   
 end
