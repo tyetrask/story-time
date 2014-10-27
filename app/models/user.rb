@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
   
   has_many :work_time_units
   
+  serialize :settings, Hash
+  
   def active_for_authentication? 
     super && approved? 
   end 
