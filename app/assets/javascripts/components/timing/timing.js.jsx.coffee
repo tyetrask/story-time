@@ -143,13 +143,26 @@ window.Timing = React.createClass
   
   
   updateStoryState: (story, new_state) ->
+    # TODO: Add user to the list of owner_ids for the story, if going from unstarted -> started
+    _this = @
     $.ajax
       type: 'patch'
       dataType: 'json'
       data: {new_story_params: {current_state: new_state}}
       url: "/story_interface/#{_this.state.resource_interface}/projects/#{story.project_id}/stories/#{story.id}"
       success: (data) ->
-        _this.setState({upcoming: upcoming_stories}, _this.buildEpicList)
+        modified_story = _.clone(story)
+        modified_story.current_state = new_state
+        if _.contains(_this.state.my_work, story)
+          story_set = _.clone(_this.state.my_work)
+          story_set[story_set.indexOf(story)] = modified_story
+          _this.setState({my_work: story_set})
+        if _.contains(_this.state.upcoming, story)
+          story_set = _.clone(_this.upcoming.my_work)
+          story_set[story_set.indexOf(story)] = modified_story
+          _this.setState({upcoming: story_set})
+        if story is _this.state.selected_story
+          _this.setState({selected_story: modified_story})
       error: (jqXHR, textStatus, errorThrown) ->
         _this.pushNotification("We're sorry. There was an error updating the story state. #{errorThrown}")
   
@@ -175,6 +188,6 @@ window.Timing = React.createClass
       <TimingControlPanel selected_project={this.state.selected_project} setSelectedProject={this.setSelectedProject} projects={this.props.projects} completed_stories_visible={this.state.completed_stories_visible} setCompletedStoriesVisibility={this.setCompletedStoriesVisibility} />
       <div className='spacer-sm'></div>
       <TimingStories my_work={this.state.my_work} upcoming={this.state.upcoming} epic_list={this.state.epic_list} selected_story={this.state.selected_story} setSelectedStory={this.setSelectedStory} completed_stories_visible={this.state.completed_stories_visible} />
-      <TimingClock me_external={this.props.me_external} selected_story={this.state.selected_story} selected_project={this.state.selected_project} working_story={this.state.working_story} setWorkingStory={this.setWorkingStory} setSelectedStory={this.setSelectedStory} pushNotification={this.pushNotification} />
+      <TimingClock me_external={this.props.me_external} selected_story={this.state.selected_story} selected_project={this.state.selected_project} working_story={this.state.working_story} setWorkingStory={this.setWorkingStory} setSelectedStory={this.setSelectedStory} updateStoryState={this.updateStoryState} pushNotification={this.pushNotification} />
       <Notifications notifications={this.state.notifications} dismissNotification={this.dismissNotification} />
      </div>`

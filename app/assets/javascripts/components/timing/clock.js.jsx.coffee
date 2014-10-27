@@ -88,6 +88,10 @@ window.TimingClock = React.createClass
     @props.setSelectedStory(@props.working_story)
   
   
+  handleChangeStoryState: ->
+    @props.updateStoryState(@props.selected_story, 'started')
+  
+  
   setEditingWorkTimeUnit: (work_time_unit) ->
     if @state.editing_work_time_unit is work_time_unit
       @setState({editing_work_time_unit: null})

@@ -1,7 +1,7 @@
 module PivotalTracker
   class APIV5
   
-    attr_accessor :api_token
+    attr_accessor :api_token, :base_api_url
   
     def initialize(api_token)
       raise StandardError, 'API Token Must Be Supplied' if !api_token
