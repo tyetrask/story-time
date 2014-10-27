@@ -4,13 +4,12 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.0'
 
 # Use postgresql as the database for Active Record
-group :production, :staging do
-  gem "pg"
-end
-
-group :development do
-  gem "sqlite3"
-end
+#group :production, :staging do
+#  gem "pg"
+#end
+#group :development do
+gem "sqlite3"
+#end
 
 # Use ReactJS
 gem 'react-rails', '~> 0.11.1.0'
