@@ -126,7 +126,7 @@ window.Timing = React.createClass
   
   setSelectedProject: (project) ->
     @setState({selected_project: project, selected_story: null}, @loadStories)
-    @updateUserSettings({last_viewed_project_id: project.id}) unless parseInt(@props.me.settings.last_viewed_project_id) is project.id
+    @updateUserSettings({last_viewed_project_id: project.id})
   
   
   setSelectedStory: (story) ->
