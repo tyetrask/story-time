@@ -35,7 +35,6 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(user_params)
-
     respond_to do |format|
       if @user.save
         format.html { redirect_to @user, notice: 'User was successfully created.' }
@@ -51,7 +50,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1.json
   def update
     respond_to do |format|
-      if @user.update(user_params)
+      if @user.update(user_params_with_settings)
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
         format.json { head :no_content }
       else
@@ -85,6 +84,13 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:email, :password, :pivotal_api_token, :concentration_mode, :approved)
+      params.require(:user).permit(:email, :password, :pivotal_api_token, :concentration_mode, :approved, :settings)
+    end
+    
+    def user_params_with_settings
+      user_params_clean = params[:user]
+      # TODO: don't allow scary params for user.settings
+      user_params_clean[:settings] = user_params_clean[:settings].symbolize_keys if user_params_clean[:settings]
+      user_params_clean.symbolize_keys
     end
 end

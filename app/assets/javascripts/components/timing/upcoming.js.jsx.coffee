@@ -20,7 +20,8 @@ window.TimingUpcoming = React.createClass
   render: ->
     _this = @
     epic_options = @props.epic_list.map (epic_name) ->
-      `<li><a onClick={_this.handleEpicSelect} data-epic={epic_name}>{epic_name}</a></li>`
+      epic_key = "epic-#{epic_name}"
+      `<li key={epic_key}><a onClick={_this.handleEpicSelect} data-epic={epic_name}>{epic_name}</a></li>`
     stories = @props.upcoming.map (story_object) ->
       if _this.state.epic_filter_value is null or _.find(story_object.labels, {name: _this.state.epic_filter_value})
         `<TimingSharedStory key={story_object.id} story={story_object} selected_story={_this.props.selected_story} setSelectedStory={_this.props.setSelectedStory} completed_stories_visible={_this.props.completed_stories_visible} />`

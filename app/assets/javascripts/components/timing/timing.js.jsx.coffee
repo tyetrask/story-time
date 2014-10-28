@@ -4,7 +4,6 @@ window.Timing = React.createClass
   
   getDefaultProps: ->
     {
-      me: {name: 'Developer'}
       me_external: {name: 'Developer'},
       projects: []
     }
@@ -28,14 +27,6 @@ window.Timing = React.createClass
     $.ajax
       type: 'get'
       dataType: 'json'
-      url: "/users/me"
-      success: (data) ->
-        _this.setProps({me: data})
-      error: (jqXHR, textStatus, errorThrown) ->
-        _this.pushNotification("We're sorry. There was an error loading your account. #{errorThrown}")
-    $.ajax
-      type: 'get'
-      dataType: 'json'
       url: "/story_interface/#{_this.state.resource_interface}/me"
       success: (data) ->
         _this.setProps({me_external: data})
@@ -47,7 +38,11 @@ window.Timing = React.createClass
       url: "/story_interface/#{_this.state.resource_interface}/projects"
       success: (data) ->
         _this.setProps({projects: data})
-        _this.setSelectedProject(_this.props.projects[1])
+        if _this.props.me.settings.last_viewed_project_id
+          last_viewed_project = _.find(_this.props.projects, {id: parseInt(_this.props.me.settings.last_viewed_project_id)})
+          _this.setSelectedProject(last_viewed_project)
+        else
+          _this.setSelectedProject(_this.props.projects[0])
       error: (jqXHR, textStatus, errorThrown) ->
         _this.pushNotification("We're sorry. There was an error loading projects. #{errorThrown}")
   
@@ -131,6 +126,7 @@ window.Timing = React.createClass
   
   setSelectedProject: (project) ->
     @setState({selected_project: project, selected_story: null}, @loadStories)
+    @updateUserSettings({last_viewed_project_id: project.id}) unless parseInt(@props.me.settings.last_viewed_project_id) is project.id
   
   
   setSelectedStory: (story) ->
@@ -144,6 +140,7 @@ window.Timing = React.createClass
   
   updateStoryState: (story, new_state) ->
     # TODO: Add user to the list of owner_ids for the story, if going from unstarted -> started
+    return false # Remove when ready to implement.
     _this = @
     $.ajax
       type: 'patch'
@@ -166,6 +163,22 @@ window.Timing = React.createClass
       error: (jqXHR, textStatus, errorThrown) ->
         _this.pushNotification("We're sorry. There was an error updating the story state. #{errorThrown}")
   
+  
+  updateUserSettings: (user_settings) ->
+    # TODO: Don't steamroll user settings whenever this is called. merge?
+    _this = @
+    $.ajax
+      type: 'patch'
+      dataType: 'json'
+      data: {user: {settings: user_settings}}
+      url: "/users/#{_this.props.me.id}"
+      success: (data) ->
+        user = _.clone(_this.props.me)
+        user.settings = user_settings
+        _this.setProps({me: user})
+      error: (jqXHR, textStatus, errorThrown) ->
+        _this.pushNotification("We're sorry. There was an error updating your user settings. #{errorThrown}")
+    
   
   setCompletedStoriesVisibility: (are_completed_stories_visible) ->
     @setState({completed_stories_visible: are_completed_stories_visible})
