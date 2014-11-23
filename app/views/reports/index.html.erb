@@ -1,12 +1,7 @@
-<br />
-<div class='row'>
-  <div class='col-sm-8 col-sm-offset-2'>
-    <div class='panel panel-default'>
-      <div class='panel-heading'>
-        <h1>Report</h1>
-      </div>
-      <div class='panel-body'>
-        <p class='text-center'>No Accepted Stories This Week.</p>
-      </div>
-  </div>
-</div>
+<div id='reports-container'></div>
+
+<%- content_for :javascript do -%>
+  $(document).ready(function(){
+    React.renderComponent(Reports(<%= core_props_for_react %>), document.getElementById('reports-container'));
+  });
+<%- end -%>

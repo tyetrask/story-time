@@ -113,7 +113,7 @@ window.TimingClock = React.createClass
     if @props.selected_story
       work_time_units = []
       @state.work_time_units.map (work_time_unit_object) ->
-        work_time_units.push `<TimingClockWorkTimeUnit key={work_time_unit_object.id} work_time_unit={work_time_unit_object} editing_work_time_unit={_this.state.editing_work_time_unit} deleteWorkTimeUnit={_this.deleteWorkTimeUnit} setEditingWorkTimeUnit={_this.setEditingWorkTimeUnit} updateWorkTimeUnitAfterEdit={_this.updateWorkTimeUnitAfterEdit} pushNotification={_this.pushNotification} />`
+        work_time_units.push `<TimingClockWorkTimeUnit key={work_time_unit_object.id} work_time_unit={work_time_unit_object} editing_work_time_unit={_this.state.editing_work_time_unit} deleteWorkTimeUnit={_this.deleteWorkTimeUnit} setEditingWorkTimeUnit={_this.setEditingWorkTimeUnit} updateWorkTimeUnitAfterEdit={_this.updateWorkTimeUnitAfterEdit} pushNotification={_this.props.pushNotification} />`
       labels = []
       @props.selected_story.labels.map (label_object) ->
         labels.push `<span key={label_object.id} className='label label-default'>{label_object.name}</span>`
