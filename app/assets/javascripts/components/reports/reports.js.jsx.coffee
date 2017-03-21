@@ -1,7 +1,5 @@
-###* @jsx React.DOM ###
-
 window.Reports = React.createClass
-  
+
   render: ->
     `<div>
       <br />

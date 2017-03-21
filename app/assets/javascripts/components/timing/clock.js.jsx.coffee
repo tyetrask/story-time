@@ -1,14 +1,12 @@
-###* @jsx React.DOM ###
-
 window.TimingClock = React.createClass
-  
+
   getInitialState: ->
     {
       work_time_units: [],
       editing_work_time_unit: null
     }
-  
-  
+
+
   componentWillReceiveProps: (nextProps) ->
     _this = @
     @setState({editing_work_time_unit: null})
@@ -22,13 +20,13 @@ window.TimingClock = React.createClass
           _this.setState({work_time_units: data})
         error: (jqXHR, textStatus, errorThrown) ->
           _this.props.pushNotification("We're sorry. There was an error loading work time units. #{errorThrown}")
-  
-  
+
+
   handleStartWork: ->
     @props.setWorkingStory(@props.selected_story)
     @openWorkTimeUnit()
-  
-  
+
+
   openWorkTimeUnit: ->
     _this = @
     started_at_date = new Date()
@@ -44,13 +42,13 @@ window.TimingClock = React.createClass
       error: (jqXHR, textStatus, errorThrown) ->
         _this.props.pushNotification("We're sorry. There was an error creating a work time unit. #{errorThrown}")
         _this.props.setWorkingStory(null)
-  
-  
+
+
   handleStopWork: ->
     @props.setWorkingStory(null)
     @closeWorkTimeUnit()
-  
-  
+
+
   closeWorkTimeUnit: ->
     _this = @
     last_work_time_unit = @state.work_time_units[@state.work_time_units.length-1]
@@ -67,8 +65,8 @@ window.TimingClock = React.createClass
         _this.setState({work_time_units: work_time_units})
       error: (jqXHR, textStatus, errorThrown) ->
         _this.props.pushNotification("We're sorry. There was an error closing the work time unit. #{errorThrown}")
-  
-  
+
+
   deleteWorkTimeUnit: (work_time_unit) ->
     _this = @
     $.ajax
@@ -82,23 +80,23 @@ window.TimingClock = React.createClass
         _this.setState({work_time_units: work_time_units})
       error: (jqXHR, textStatus, errorThrown) ->
         _this.props.pushNotification("We're sorry. There was an error deleting the work time unit. #{errorThrown}")
-  
-  
+
+
   handleGoToStory: ->
     @props.setSelectedStory(@props.working_story)
-  
-  
+
+
   handleChangeStoryState: ->
     @props.updateStoryState(@props.selected_story, 'started')
-  
-  
+
+
   setEditingWorkTimeUnit: (work_time_unit) ->
     if @state.editing_work_time_unit is work_time_unit
       @setState({editing_work_time_unit: null})
     else
       @setState({editing_work_time_unit: work_time_unit})
-  
-  
+
+
   updateWorkTimeUnitAfterEdit: (work_time_unit, new_started_at_date, new_finished_at_date, new_total_time_in_seconds) ->
     work_time_units = _.clone(@state.work_time_units)
     work_time_unit_to_update = _.find(work_time_units, {id: work_time_unit.id})
@@ -106,8 +104,8 @@ window.TimingClock = React.createClass
     work_time_unit_to_update.finished_at = new_finished_at_date
     work_time_unit_to_update.total_time_in_seconds = new_total_time_in_seconds
     @setState({work_time_units: work_time_units})
-  
-  
+
+
   render: ->
     _this = @
     if @props.selected_story

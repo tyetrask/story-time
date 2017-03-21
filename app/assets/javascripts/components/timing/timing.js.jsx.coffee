@@ -1,13 +1,11 @@
-###* @jsx React.DOM ###
-
 window.Timing = React.createClass
-  
+
   getDefaultProps: ->
     {
       me_external: {name: 'Developer'},
       projects: []
     }
-  
+
   getInitialState: ->
     {
       notifications: []
@@ -21,7 +19,7 @@ window.Timing = React.createClass
       selected_story: null,
       working_story: null
     }
-  
+
   componentWillMount: ->
     _this = @
     $.ajax
@@ -45,28 +43,28 @@ window.Timing = React.createClass
           _this.setSelectedProject(_this.props.projects[0])
       error: (jqXHR, textStatus, errorThrown) ->
         _this.pushNotification("We're sorry. There was an error loading projects. #{errorThrown}")
-  
-  
+
+
   componentDidMount: ->
     @calculateScreenHeight()
     @attachControlPanelHandler()
-  
-  
+
+
   calculateScreenHeight: ->
     window_height = $(window).height()
     navigation_height = $('#navigation-container').height()
     @setState({screen_height: (window_height - navigation_height - 20)}) # 20 pixels height for div.spacer-sm
     $('#stories-container').css('height', @state.screen_height)
     $('#clock-container').css('height', @state.screen_height)
-  
-  
+
+
   attachControlPanelHandler: ->
     # TODO: Probably reactify this a bit more at some point.
     $('#control-panel-toggle a').click (e) ->
       $('#control-panel-container').slideToggle()
       $('#control-panel-toggle').toggleClass('active')
-  
-  
+
+
   loadStories: ->
     _this = @
     @setState({my_work: [], upcoming: []})
@@ -91,8 +89,8 @@ window.Timing = React.createClass
         _this.setState({upcoming: upcoming_stories}, _this.buildEpicList)
       error: (jqXHR, textStatus, errorThrown) ->
         _this.pushNotification("We're sorry. There was an error loading upcoming stories. #{errorThrown}")
-  
-  
+
+
   buildEpicList: ->
     epic_list = []
     @state.upcoming.map (story) ->
@@ -100,8 +98,8 @@ window.Timing = React.createClass
         epic_list.push label_object.name
     epic_list = _.uniq(epic_list)
     @setState({epic_list: epic_list})
-  
-  
+
+
   loadOpenWorkTimeUnit: ->
     _this = @
     $.ajax
@@ -119,25 +117,25 @@ window.Timing = React.createClass
             _this.setWorkingStory(working_story)
           else
             open_project = _.find(_this.props.projects, {id: open_work_time_unit.project_id})
-            _this.pushNotification("You are currently working on a story in another Project. (#{open_project.name})")          
+            _this.pushNotification("You are currently working on a story in another Project. (#{open_project.name})")
       error: (jqXHR, textStatus, errorThrown) ->
         _this.pushNotification("We're sorry. There was an error loading the open working story. #{errorThrown}")
-  
-  
+
+
   setSelectedProject: (project) ->
     @setState({selected_project: project, selected_story: null}, @loadStories)
     @updateUserSettings({last_viewed_project_id: project.id})
-  
-  
+
+
   setSelectedStory: (story) ->
     @setState({selected_story: story})
-  
-  
+
+
   setWorkingStory: (story) ->
     @setState({working_story: story})
     if story then $('i.fa-fire').addClass('burning-animation') else $('i.fa-fire').removeClass('burning-animation')
-  
-  
+
+
   updateStoryState: (story, new_state) ->
     # TODO: Add user to the list of owner_ids for the story, if going from unstarted -> started
     return false # Remove when ready to implement.
@@ -162,8 +160,8 @@ window.Timing = React.createClass
           _this.setState({selected_story: modified_story})
       error: (jqXHR, textStatus, errorThrown) ->
         _this.pushNotification("We're sorry. There was an error updating the story state. #{errorThrown}")
-  
-  
+
+
   updateUserSettings: (user_settings) ->
     # TODO: Don't steamroll user settings whenever this is called. merge?
     _this = @
@@ -178,24 +176,24 @@ window.Timing = React.createClass
         _this.setProps({me: user})
       error: (jqXHR, textStatus, errorThrown) ->
         _this.pushNotification("We're sorry. There was an error updating your user settings. #{errorThrown}")
-    
-  
+
+
   setCompletedStoriesVisibility: (are_completed_stories_visible) ->
     @setState({completed_stories_visible: are_completed_stories_visible})
-  
-  
+
+
   pushNotification: (notification_text) ->
     notification_set = _.clone(@state.notifications)
     notification_set.push(notification_text)
     @setState({notifications: notification_set})
-  
-  
+
+
   dismissNotification: ->
     notification_set = _.clone(@state.notifications)
     notification_set.shift()
     @setState({notifications: notification_set})
 
-  
+
   render: ->
     `<div>
       <TimingControlPanel selected_project={this.state.selected_project} setSelectedProject={this.setSelectedProject} projects={this.props.projects} completed_stories_visible={this.state.completed_stories_visible} setCompletedStoriesVisibility={this.setCompletedStoriesVisibility} />

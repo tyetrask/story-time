@@ -1,16 +1,14 @@
-###* @jsx React.DOM ###
-
 window.TimingControlPanel = React.createClass
-  
+
   completedStoriesToggleText: ->
     if @props.completed_stories_visible then 'Hide' else 'Show'
-  
+
   handleShowCompletedStoriesClick: ->
     if @props.completed_stories_visible
       @props.setCompletedStoriesVisibility(false)
     else
       @props.setCompletedStoriesVisibility(true)
-  
+
   render: ->
     _this = @
     if @props.selected_project
@@ -23,7 +21,7 @@ window.TimingControlPanel = React.createClass
     `<nav id='control-panel-container' className="navbar navbar-default" role="navigation">
       <div className="container-fluid">
         <div className="collapse navbar-collapse">
-          
+
           <ul className="nav navbar-nav">
             <li className="dropdown">
               {project_dropdown}
@@ -31,11 +29,11 @@ window.TimingControlPanel = React.createClass
                 {projects}
               </ul>
             </li>
-            
+
             <li><a onClick={this.handleShowCompletedStoriesClick}>{this.completedStoriesToggleText()} Completed Stories</a></li>
           </ul>
-        
+
         </div>
-        
+
       </div>
     </nav>`

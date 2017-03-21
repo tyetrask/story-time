@@ -1,7 +1,5 @@
-###* @jsx React.DOM ###
-
 window.TimingMyWork = React.createClass
-  
+
   render: ->
     _this = @
     stories = []

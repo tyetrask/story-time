@@ -1,7 +1,5 @@
-###* @jsx React.DOM ###
-
 window.TimingClockWorkTimeUnit = React.createClass
-  
+
   getInitialState: ->
     {
       date_month_edit: null
@@ -14,8 +12,8 @@ window.TimingClockWorkTimeUnit = React.createClass
       finished_at_minute_edit: null
       finished_at_ampm_edit: null
     }
-  
-  
+
+
   handleEditClick: ->
     return if not @props.work_time_unit.finished_at
     @setState({
@@ -30,53 +28,53 @@ window.TimingClockWorkTimeUnit = React.createClass
       finished_at_ampm_edit: moment(this.props.work_time_unit.finished_at).format('a')
     })
     @props.setEditingWorkTimeUnit(@props.work_time_unit)
-  
-  
+
+
   handleEditDateMonthOnChange: (e) ->
     return unless _.contains(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'], e.target.value)
     @setState({date_month_edit: e.target.value})
-  
-  
+
+
   handleEditDateDayOnChange: (e) ->
     return unless _.contains(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'], e.target.value)
     @setState({date_day_edit: e.target.value})
-  
-  
+
+
   handleEditDateYearOnChange: (e) ->
     return unless _.contains(['201', '2014', '2015', '2016', '2017', '2018', '2019'], e.target.value)
     @setState({date_year_edit: e.target.value})
-  
-  
+
+
   handleEditStartedAtHourOnChange: (e) ->
     return unless _.contains(['', '0', '1', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'], e.target.value)
     @setState({started_at_hour_edit: e.target.value})
-  
-  
+
+
   handleEditStartedAtMinuteOnChange: (e) ->
     return unless _.contains(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'], e.target.value)
     @setState({started_at_minute_edit: e.target.value})
-  
-  
+
+
   handleEditStartedAtAMPMOnChange: (e) ->
     return unless _.contains(['', 'a', 'am', 'p', 'pm'], e.target.value)
     @setState({started_at_ampm_edit: e.target.value})
-  
-  
+
+
   handleEditFinishedAtHourOnChange: (e) ->
     return unless _.contains(['', '0', '1', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'], e.target.value)
     @setState({finished_at_hour_edit: e.target.value})
-  
-  
+
+
   handleEditFinishedAtMinuteOnChange: (e) ->
     return unless _.contains(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'], e.target.value)
     @setState({finished_at_minute_edit: e.target.value})
-  
-  
+
+
   handleEditFinishedAtAMPMOnChange: (e) ->
     return unless _.contains(['', 'a', 'am', 'p', 'pm'], e.target.value)
     @setState({finished_at_ampm_edit: e.target.value})
-  
-  
+
+
   handleEditSaveClick: ->
     _this = @
     month = parseInt(@state.date_month_edit) - 1
@@ -113,24 +111,24 @@ window.TimingClockWorkTimeUnit = React.createClass
       finished_at_minute_edit: null
       finished_at_ampm_edit: null
     })
-  
-  
+
+
   handleDeleteClick: ->
     return if not @props.work_time_unit.finished_at
     @props.deleteWorkTimeUnit(@props.work_time_unit)
-  
-  
+
+
   startedAtFormatted: ->
     moment(@props.work_time_unit.started_at).format('h:mm a')
-  
-  
+
+
   finishedAtFormatted: ->
     if @props.work_time_unit.finished_at
       moment(@props.work_time_unit.finished_at).format('h:mm a')
     else
       'still working'
-  
-  
+
+
   totalTimeInSecondsFormatted: ->
     if @props.work_time_unit.total_time_in_seconds > 3600
       "(#{@roundNumber((@props.work_time_unit.total_time_in_seconds / 60 / 60))} hours)"
@@ -140,20 +138,20 @@ window.TimingClockWorkTimeUnit = React.createClass
       "(#{@roundNumber((@props.work_time_unit.total_time_in_seconds))} seconds)"
     else
       ""
-  
-  
+
+
   roundNumber: (number) ->
     Math.round( number * 10) / 10
-  
-  
+
+
   buttonClass: (button_type) ->
     css_class = 'fa'
     css_class += ' fa-pencil' if button_type is 'edit'
     css_class += ' fa-trash' if button_type is 'delete'
     css_class += ' disabled' if not @props.work_time_unit.finished_at
     css_class
-  
-  
+
+
   render: ->
     if @props.work_time_unit is @props.editing_work_time_unit
       editing_html = `<div>

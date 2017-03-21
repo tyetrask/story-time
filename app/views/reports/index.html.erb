@@ -2,6 +2,6 @@
 
 <%- content_for :javascript do -%>
   $(document).ready(function(){
-    React.renderComponent(Reports(<%= core_props_for_react %>), document.getElementById('reports-container'));
+    React.render(React.createElement(Reports, <%= core_props_for_react %>), document.getElementById('reports-container'));
   });
 <%- end -%>

@@ -14,7 +14,7 @@ gem "sqlite3"
 #end
 
 # Use ReactJS
-gem 'react-rails', '~> 0.11.1.0'
+gem 'react-rails', '~> 0.12.2.0'
 
 # Use LESS for stylesheets
 gem 'sass-rails'

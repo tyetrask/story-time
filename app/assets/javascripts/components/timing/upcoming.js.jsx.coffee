@@ -1,22 +1,20 @@
-###* @jsx React.DOM ###
-
 window.TimingUpcoming = React.createClass
-  
+
   getInitialState: ->
     {epic_filter_value: null}
-  
-  
+
+
   handleEpicSelect: (e) ->
     @setState({epic_filter_value: $(e.target).attr('data-epic')})
-  
-  
+
+
   handleClearEpicFilter: ->
     @setState({epic_filter_value: null})
-  
-  
+
+
   filterMenuDisplayText: ->
     if @state.epic_filter_value then "Filter: #{@state.epic_filter_value}" else 'Filter'
-  
+
   render: ->
     _this = @
     epic_options = @props.epic_list.map (epic_name) ->
