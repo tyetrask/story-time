@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '2.3.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.8'
+gem 'rails', '4.2.7'
 
 # Use postgresql as the database for Active Record
 #group :production, :staging do
@@ -48,3 +48,7 @@ gem 'devise'
 
 # Use pry for debugging!
 gem 'pry', group: [:development, :test]
+
+group :development do
+  gem 'web-console', '~> 2.0'
+end
