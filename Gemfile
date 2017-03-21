@@ -1,7 +1,9 @@
 source 'https://rubygems.org'
 
+ruby '2.3.3'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0'
+gem 'rails', '4.0.6'
 
 # Use postgresql as the database for Active Record
 #group :production, :staging do
@@ -15,7 +17,7 @@ gem "sqlite3"
 gem 'react-rails', '~> 0.11.1.0'
 
 # Use LESS for stylesheets
-gem 'less-rails'
+gem 'sass-rails'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -25,7 +27,7 @@ gem 'coffee-rails', '~> 4.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # For LESS
-gem 'therubyracer', platforms: :ruby
+# gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

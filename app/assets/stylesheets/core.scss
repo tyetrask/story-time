@@ -11,11 +11,11 @@ body.body {
 
 
 /* Colory-doos. */
-@lightest: #E8D988;
-@light: #EAB536;
-@medium: #D98809;
-@dark: #D46704;
-@darkest: #D95600;
+$lightest: #E8D988;
+$light: #EAB536;
+$medium: #D98809;
+$dark: #D46704;
+$darkest: #D95600;
 
 
 /* General Classes */
@@ -54,15 +54,15 @@ a.pivotal-story.accepted {
 }
 
 a.pivotal-story.started {
-  color: darken(@dark, 10%);
-  background-color: lighten(@lightest, 15%);
-  border-color: darken(lighten(@lightest, 15%), 7%);
+  color: darken($dark, 10%);
+  background-color: lighten($lightest, 15%);
+  border-color: darken(lighten($lightest, 15%), 7%);
 }
 
 a.pivotal-story.started.active, a.pivotal-story.accepted.active {
   color: white;
-  background-color: lighten(@medium, 20%);
-  border-color: darken(lighten(@medium, 20%), 7%);
+  background-color: lighten($medium, 20%);
+  border-color: darken(lighten($medium, 20%), 7%);
 }
 
 a.pivotal-story.hidden {
@@ -81,20 +81,20 @@ div.panel-heading {
 
 #clock-container {
   overflow: auto;
-  
+
   span.label {
     margin-right: 3px;
   }
-  
+
   div.panel.panel-primary {
-    border-color: darken(lighten(@medium, 20%), 7%);
-    
+    border-color: darken(lighten($medium, 20%), 7%);
+
     div.panel-heading {
       color: white;
-      background-color: lighten(@medium, 20%);
-      border-color: darken(lighten(@medium, 20%), 7%);
+      background-color: lighten($medium, 20%);
+      border-color: darken(lighten($medium, 20%), 7%);
     }
-    
+
     div.list-group a.list-group-item.no-padding {
       padding: 0px;
     }
@@ -113,7 +113,7 @@ a.work-time-unit {
     transition: color 0.5s;
   }
   i:hover {
-    color: @medium;
+    color: $medium;
   }
   i.fa.disabled {
     cursor: not-allowed;
@@ -135,7 +135,7 @@ a.work-time-unit {
   display: none;
   margin-bottom: 0px;
   min-height: 0px;
-  
+
   a.dropdown-toggle {
     cursor: pointer;
   }
@@ -160,20 +160,20 @@ div.spacer-sm {
   padding: 15px;
   width: 400px;
   opacity: 0.8;
-  
-  border: 1px solid @dark;
-  color: @medium;
+
+  border: 1px solid $dark;
+  color: $medium;
   background: white;
   font-size: 120%;
-  
+
   p.notification-text {
     padding: 20px 20px 5px 20px;
   }
-  
+
   i.fa-times {
     cursor: pointer;
   }
-  
+
   &.hidden {
     display: none;
   }
@@ -190,11 +190,11 @@ div.spacer-sm {
 	z-index: -1;
 	width: 100%;
 	height: 3px;
-	background: @light;
+	background: $light;
 	-webkit-transform: translate3d(-100%, 0, 0);
 	transform: translate3d(-100%, 0, 0);
 	pointer-events: none;
-  
+
   &.la-animate {
   	z-index: 100;
   	opacity: 0;
@@ -210,8 +210,8 @@ div.spacer-sm {
 	right: 0;
 	width: 100px;
 	height: 100%;
-	background: @light;
-	box-shadow: 0 0 15px @light, 0 0 5px @light;
+	background: $light;
+	box-shadow: 0 0 15px $light, 0 0 5px $light;
 	content: '';
 	opacity: 0;
 	-webkit-transition: opacity 0.2s, box-shadow 2s 4s;
@@ -220,7 +220,7 @@ div.spacer-sm {
 	transform: rotate(2deg) translateY(-2px);
 }
 .loading-animation.la-animate::after {
-	box-shadow: 0 0 3px @light, 0 0 1px @light;
+	box-shadow: 0 0 3px $light, 0 0 1px $light;
 	opacity: 1;
 }
 
@@ -258,14 +258,14 @@ p.simple-divider, span.simple-divider {
 }
 
 input:focus.simple {
-  border-left: 0.3rem solid lighten(@medium, 20%);
+  border-left: 0.3rem solid lighten($medium, 20%);
 }
 
 input[type='submit'].simple {
   font-weight: 500;
   -webkit-transition: background 300ms ease-in-out, color 300ms ease-in-out;
   transition: background 300ms ease-in-out, color 300ms ease-in-out;
-  background: lighten(@medium, 30%);
+  background: lighten($medium, 30%);
   border: none;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -284,7 +284,7 @@ input[type='submit'].simple {
 }
 
 input[type='submit']:hover.simple {
-  background: lighten(@medium, 20%);
+  background: lighten($medium, 20%);
 }
 
 
