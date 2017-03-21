@@ -16,20 +16,29 @@ window.TimingUpcoming = React.createClass
     if @state.epic_filter_value then "Filter: #{@state.epic_filter_value}" else 'Filter'
 
   render: ->
-    _this = @
-    epic_options = @props.epic_list.map (epic_name) ->
+    epic_options = @props.epic_list.map(((epic_name) ->
       epic_key = "epic-#{epic_name}"
-      `<li key={epic_key}><a onClick={_this.handleEpicSelect} data-epic={epic_name}>{epic_name}</a></li>`
-    stories = @props.upcoming.map (story_object) ->
-      if _this.state.epic_filter_value is null or _.find(story_object.labels, {name: _this.state.epic_filter_value})
-        `<TimingSharedStory key={story_object.id} story={story_object} selected_story={_this.props.selected_story} setSelectedStory={_this.props.setSelectedStory} completed_stories_visible={_this.props.completed_stories_visible} />`
+      `<li key={epic_key}>
+        <a onClick={this.handleEpicSelect} data-epic={epic_name}>{epic_name}</a>
+      </li>`
+      ).bind(@))
+    stories = @props.upcoming.map(((story_object) ->
+      if @state.epic_filter_value is null or _.find(story_object.labels, {name: @state.epic_filter_value})
+        `<TimingSharedStory
+          key={story_object.id}
+          story={story_object}
+          selected_story={this.props.selected_story}
+          setSelectedStory={this.props.setSelectedStory}
+          completed_stories_visible={this.props.completed_stories_visible}
+         />`
+      ).bind(@))
     `<div className="panel panel-default">
        <div className="panel-heading text-center">
          <strong>Upcoming</strong>
          <div className="dropdown pull-right">
            <a className="dropdown-toggle" data-toggle="dropdown">{this.filterMenuDisplayText()} <b className="caret"></b></a>
            <ul className="dropdown-menu" role="menu">
-             <li><a onClick={_this.handleClearEpicFilter}>(Clear Filter)</a></li>
+             <li><a onClick={this.handleClearEpicFilter}>(Clear Filter)</a></li>
              {epic_options}
            </ul>
          </div>

@@ -76,7 +76,6 @@ window.TimingClockWorkTimeUnit = React.createClass
 
 
   handleEditSaveClick: ->
-    _this = @
     month = parseInt(@state.date_month_edit) - 1
     day = parseInt(@state.date_day_edit)
     year = parseInt(@state.date_year_edit)
@@ -93,12 +92,13 @@ window.TimingClockWorkTimeUnit = React.createClass
     $.ajax
       type: 'patch'
       dataType: 'json'
-      data: {id: _this.props.work_time_unit.id, work_time_unit: {started_at: new_started_at, finished_at: new_finished_at}}
-      url: "/work_time_units/#{_this.props.work_time_unit.id}"
+      data: {id: @props.work_time_unit.id, work_time_unit: {started_at: new_started_at, finished_at: new_finished_at}}
+      url: "/work_time_units/#{@props.work_time_unit.id}"
+      context: @
       success: (data) ->
-        _this.props.updateWorkTimeUnitAfterEdit(_this.props.work_time_unit, new_started_at, new_finished_at, data.total_time_in_seconds)
+        @props.updateWorkTimeUnitAfterEdit(@props.work_time_unit, new_started_at, new_finished_at, data.total_time_in_seconds)
       error: (jqXHR, textStatus, errorThrown) ->
-        _this.props.pushNotification("We're sorry. There was an error saving your update to the work time unit. #{errorThrown}")
+        @props.pushNotification("We're sorry. There was an error saving your update to the work time unit. #{errorThrown}")
     @props.setEditingWorkTimeUnit(null)
     @setState({
       date_month_edit: null
