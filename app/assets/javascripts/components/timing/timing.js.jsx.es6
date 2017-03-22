@@ -21,7 +21,9 @@ class Timing extends React.Component {
       'setSelectedProject',
       'setSelectedStory',
       'setWorkingStory',
-      'setCompletedStoriesVisibility'
+      'setCompletedStoriesVisibility',
+      'pushNotification',
+      'dismissNotification'
     ]
     methods.forEach((method) => { this[method] = this[method].bind(this); });
   }
