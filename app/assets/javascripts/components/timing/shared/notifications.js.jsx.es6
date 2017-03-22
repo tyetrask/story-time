@@ -35,7 +35,7 @@ class Notifications extends React.Component {
   render() {
     if (this.props.notifications.length > 0) {
       return <div id="notification-container">
-         <span onClick={this.handleDismissNotification} className='pull-right'><i className='fa fa-times'></i></span>
+         <span onClick={this.handleDismissNotification.bind(this)} className='pull-right'><i className='fa fa-times'></i></span>
          <p className='notification-text'>{this.props.notifications[0]}</p>
        </div>;
     } else {

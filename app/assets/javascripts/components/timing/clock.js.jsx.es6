@@ -16,7 +16,7 @@ class TimingClock extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({editingWorkTimeUnit: null});
-    if (nextProps.selectedStory) {
+    if (this.props.selectedStory != nextProps.selectedStory) {
       return $.ajax({
         type: 'get',
         dataType: 'json',
@@ -142,7 +142,6 @@ class TimingClock extends React.Component {
                                     pushNotification={this.props.pushNotification}
                                   />);
         }));
-       [];
       let labels = this.props.selectedStory.labels.map(label => <span key={label.id} className='label label-default'>{label.name}</span>);
       if (this.props.workingStory === this.props.selectedStory) {
         startStopWorkButton = <a onClick={this.handleStopWork.bind(this)} className="list-group-item no-padding">
@@ -157,7 +156,7 @@ class TimingClock extends React.Component {
                                 <input type="submit" className="simple" value="Start Work" />
                               </a>;
       }
-      return (<div id="clock-container" className="col-xs-6">
+      return (<div key="clock-container-full" id="clock-container" className="col-xs-6">
                <div className="panel panel-primary">
                  <div className="panel-heading text-center">
                    Clock
@@ -177,7 +176,7 @@ class TimingClock extends React.Component {
                </div>
              </div>);
     } else {
-      return (<div id="clock-container" className="col-xs-6">
+      return (<div key="clock-container-empty" id="clock-container" className="col-xs-6">
                <div className="panel panel-primary">
                  <div className="panel-heading text-center">Clock</div>
                  <div className="list-group"></div>
