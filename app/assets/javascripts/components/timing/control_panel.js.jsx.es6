@@ -18,10 +18,10 @@ class TimingControlPanel extends React.Component {
     } else {
       projectDropdown = <a className="dropdown-toggle" data-toggle="dropdown">loading projects <span className="caret"></span></a>;
     }
-    let projects = this.props.projects.map((project_object => {
+    let projects = this.props.projects.map((project => {
       return (<TimingControlPanelProjectOption
-              key={project_object.id}
-              project={project_object}
+              key={project.id}
+              project={project}
               setSelectedProject={this.props.setSelectedProject}
              />);
       }));

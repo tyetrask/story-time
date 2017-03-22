@@ -57,7 +57,6 @@ class Timing extends React.Component {
       url: `/story_interface/${this.state.resourceInterface}/me`,
       context: this,
       success(data) {
-        console.log(data)
         return this.setState({meExternal: data}, this.loadProjects);
       },
       error(jqXHR, textStatus, errorThrown) {
@@ -88,9 +87,9 @@ class Timing extends React.Component {
   }
 
   calculateScreenHeight() {
-    let window_height = $(window).height();
-    let navigation_height = $('#navigation-container').height();
-    this.setState({screenHeight: (window_height - navigation_height - 20)}); // 20 pixels height for div.spacer-sm
+    let windowHeight = $(window).height();
+    let navigationHeight = $('#navigation-container').height();
+    this.setState({screenHeight: (windowHeight - navigationHeight - 20)}); // 20 pixels height for div.spacer-sm
     $('#stories-container').css('height', this.state.screenHeight);
     return $('#clock-container').css('height', this.state.screenHeight);
   }
@@ -124,11 +123,11 @@ class Timing extends React.Component {
       url: `/story_interface/${this.state.resourceInterface}/projects/${this.state.selectedProject.id}/iterations`,
       context: this,
       success(data) {
-        let upcoming_stories = [];
+        let upcomingStories = [];
         data.map(iteration =>
-          iteration.stories.map(pivotal_story => upcoming_stories.push(pivotal_story))
+          iteration.stories.map(pivotal_story => upcomingStories.push(pivotal_story))
         );
-        return this.setState({upcoming: upcoming_stories}, this.buildEpicList);
+        return this.setState({upcoming: upcomingStories}, this.buildEpicList);
       },
       error(jqXHR, textStatus, errorThrown) {
         return this.pushNotification(`We're sorry. There was an error loading upcoming stories. ${errorThrown}`);
@@ -139,7 +138,7 @@ class Timing extends React.Component {
   buildEpicList() {
     let epicList = [];
     this.state.upcoming.map(story =>
-      story.labels.map(label_object => epicList.push(label_object.name))
+      story.labels.map(label => epicList.push(label.name))
     );
     epicList = _.uniq(epicList);
     return this.setState({epicList});
@@ -156,13 +155,13 @@ class Timing extends React.Component {
         if (data.length > 1) {
           return this.pushNotification(`We're sorry. More than one open working story was detected. ${errorThrown}`);
         } else if (data.length === 1) {
-          let open_work_time_unit = data[0];
-          if (open_work_time_unit.project_id === this.state.selectedProject.id) {
+          let openWorkTimeUnit = data[0];
+          if (openWorkTimeUnit.project_id === this.state.selectedProject.id) {
             let workingStory = _.find(_.union(this.state.myWork, this.state.upcoming), {id: data[0].story_id});
             return this.setWorkingStory(workingStory);
           } else {
-            let open_project = _.find(this.state.projects, {id: open_work_time_unit.project_id});
-            return this.pushNotification(`You are currently working on a story in another Project. (${open_project.name})`);
+            let openProject = _.find(this.state.projects, {id: openWorkTimeUnit.project_id});
+            return this.pushNotification(`You are currently working on a story in another Project. (${openProject.name})`);
           }
         }
       },
@@ -186,31 +185,31 @@ class Timing extends React.Component {
     if (story) { return $('i.fa-fire').addClass('burning-animation'); } else { return $('i.fa-fire').removeClass('burning-animation'); }
   }
 
-  updateStoryState(story, new_state) {
+  updateStoryState(story, newState) {
     // TODO: Add user to the list of owner_ids for the story, if going from unstarted -> started
     return false; // Remove when ready to implement.
     return $.ajax({
       type: 'patch',
       dataType: 'json',
-      data: {new_story_params: {current_state: new_state}},
+      data: {new_story_params: {current_state: newState}},
       url: `/story_interface/${this.state.resourceInterface}/projects/${story.project_id}/stories/${story.id}`,
       context: this,
       success(data) {
-        let story_set;
-        let modified_story = _.clone(story);
-        modified_story.current_state = new_state;
+        let storySet;
+        let modifiedStory = _.clone(story);
+        modifiedStory.current_state = newState;
         if (_.contains(this.state.myWork, story)) {
-          story_set = _.clone(this.state.myWork);
-          story_set[story_set.indexOf(story)] = modified_story;
-          this.setState({myWork: story_set});
+          storySet = _.clone(this.state.myWork);
+          storySet[storySet.indexOf(story)] = modifiedStory;
+          this.setState({myWork: storySet});
         }
         if (_.contains(this.state.upcoming, story)) {
-          story_set = _.clone(this.upcoming.myWork);
-          story_set[story_set.indexOf(story)] = modified_story;
-          this.setState({upcoming: story_set});
+          storySet = _.clone(this.upcoming.myWork);
+          storySet[storySet.indexOf(story)] = modifiedStory;
+          this.setState({upcoming: storySet});
         }
         if (story === this.state.selectedStory) {
-          return this.setState({selectedStory: modified_story});
+          return this.setState({selectedStory: modifiedStory});
         }
       },
       error(jqXHR, textStatus, errorThrown) {
@@ -219,17 +218,17 @@ class Timing extends React.Component {
     });
   }
 
-  updateUserSettings(user_settings) {
+  updateUserSettings(userSettings) {
     // TODO: Don't steamroll user settings whenever this is called. merge?
     return $.ajax({
       type: 'patch',
       dataType: 'json',
-      data: {user: {settings: user_settings}},
+      data: {user: {settings: userSettings}},
       url: `/users/${this.state.me.id}`,
       context: this,
       success(data) {
         let user = _.clone(this.state.me);
-        user.settings = user_settings;
+        user.settings = userSettings;
         return this.setState({me: user});
       },
       error(jqXHR, textStatus, errorThrown) {
@@ -242,16 +241,16 @@ class Timing extends React.Component {
     return this.setState({areCompletedStoriesVisible: areCompletedStoriesVisible});
   }
 
-  pushNotification(notification_text) {
-    let notification_set = _.clone(this.state.notifications);
-    notification_set.push(notification_text);
-    return this.setState({notifications: notification_set});
+  pushNotification(notificationText) {
+    let notificationSet = _.clone(this.state.notifications);
+    notificationSet.push(notificationText);
+    return this.setState({notifications: notificationSet});
   }
 
   dismissNotification() {
-    let notification_set = _.clone(this.state.notifications);
-    notification_set.shift();
-    return this.setState({notifications: notification_set});
+    let notificationSet = _.clone(this.state.notifications);
+    notificationSet.shift();
+    return this.setState({notifications: notificationSet});
   }
 
   render() {

@@ -1,10 +1,10 @@
 class TimingMyWork extends React.Component {
 
   render() {
-    let stories = this.props.myWork.map((story_object => {
+    let stories = this.props.myWork.map((story => {
       return (<TimingSharedStory
-              key={story_object.id}
-              story={story_object}
+              key={story.id}
+              story={story}
               selectedStory={this.props.selectedStory}
               setSelectedStory={this.props.setSelectedStory}
               areCompletedStoriesVisible={this.props.areCompletedStoriesVisible}

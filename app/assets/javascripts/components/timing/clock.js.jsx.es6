@@ -143,7 +143,7 @@ class TimingClock extends React.Component {
                                   />);
         }));
        [];
-      let labels = this.props.selectedStory.labels.map(labelObject => <span key={labelObject.id} className='label label-default'>{labelObject.name}</span>);
+      let labels = this.props.selectedStory.labels.map(label => <span key={label.id} className='label label-default'>{label.name}</span>);
       if (this.props.workingStory === this.props.selectedStory) {
         startStopWorkButton = <a onClick={this.handleStopWork.bind(this)} className="list-group-item no-padding">
                                 <input type="submit" className="simple" value="Stop Work" />

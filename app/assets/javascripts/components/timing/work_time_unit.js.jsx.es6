@@ -95,24 +95,24 @@ class TimingClockWorkTimeUnit extends React.Component {
     let month = parseInt(this.state.dateMonthFormValue) - 1;
     let day = parseInt(this.state.dateDayFormValue);
     let year = parseInt(this.state.dateYearFormValue);
-    let new_started_at = new Date(this.props.workTimeUnit.started_at);
-    let new_finished_at = new Date(this.props.workTimeUnit.finished_at);
-    new_started_at.setFullYear(year, month, day);
-    new_finished_at.setFullYear(year, month, day);
-    new_started_at.setHours(parseInt(this.state.startedAtHourFormValue) + (this.state.startedAtAMPMFormValue === 'pm' ? 12 : 0));
-    let new_started_at_minutes = (this.state.startedAtMinuteFormValue === '' ? 0 : parseInt(this.state.startedAtMinuteFormValue));
-    new_started_at.setMinutes(new_started_at_minutes);
-    new_finished_at.setHours(parseInt(this.state.finishedAtHourFormValue) + (this.state.finishedAtAMPMFormValue === 'pm' ? 12 : 0));
-    let new_finished_at_minutes = (this.state.finishedAtMinuteFormValue === '' ? 0 : parseInt(this.state.finishedAtMinuteFormValue));
-    new_finished_at.setMinutes(new_finished_at_minutes);
+    let newStartedAt = new Date(this.props.workTimeUnit.started_at);
+    let newFinishedAt = new Date(this.props.workTimeUnit.finished_at);
+    newStartedAt.setFullYear(year, month, day);
+    newFinishedAt.setFullYear(year, month, day);
+    newStartedAt.setHours(parseInt(this.state.startedAtHourFormValue) + (this.state.startedAtAMPMFormValue === 'pm' ? 12 : 0));
+    let newStartedAtMinutes = (this.state.startedAtMinuteFormValue === '' ? 0 : parseInt(this.state.startedAtMinuteFormValue));
+    newStartedAt.setMinutes(newStartedAtMinutes);
+    newFinishedAt.setHours(parseInt(this.state.finishedAtHourFormValue) + (this.state.finishedAtAMPMFormValue === 'pm' ? 12 : 0));
+    let newFinishedAtMinutes = (this.state.finishedAtMinuteFormValue === '' ? 0 : parseInt(this.state.finishedAtMinuteFormValue));
+    newFinishedAt.setMinutes(newFinishedAtMinutes);
     $.ajax({
       type: 'patch',
       dataType: 'json',
-      data: {id: this.props.workTimeUnit.id, work_time_unit: {started_at: new_started_at, finished_at: new_finished_at}},
+      data: {id: this.props.workTimeUnit.id, work_time_unit: {started_at: newStartedAt, finished_at: newFinishedAt}},
       url: `/work_time_units/${this.props.workTimeUnit.id}`,
       context: this,
       success(data) {
-        return this.props.updateWorkTimeUnitAfterEdit(this.props.workTimeUnit, new_started_at, new_finished_at, data.total_time_in_seconds);
+        return this.props.updateWorkTimeUnitAfterEdit(this.props.workTimeUnit, newStartedAt, newFinishedAt, data.total_time_in_seconds);
       },
       error(jqXHR, textStatus, errorThrown) {
         return this.props.pushNotification(`We're sorry. There was an error saving your update to the work time unit. ${errorThrown}`);

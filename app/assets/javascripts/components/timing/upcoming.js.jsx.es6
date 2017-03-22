@@ -24,11 +24,11 @@ class TimingUpcoming extends React.Component {
                <a onClick={this.handleEpicSelect.bind(this)} data-epic={epicName}>{epicName}</a>
              </li>;
       }));
-    let stories = this.props.upcoming.map((story_object => {
-      if ((this.state.epicFilterValue === null) || _.find(story_object.labels, {name: this.state.epicFilterValue})) {
+    let stories = this.props.upcoming.map((story => {
+      if ((this.state.epicFilterValue === null) || _.find(story.labels, {name: this.state.epicFilterValue})) {
         return <TimingSharedStory
-                key={story_object.id}
-                story={story_object}
+                key={story.id}
+                story={story}
                 selectedStory={this.props.selectedStory}
                 setSelectedStory={this.props.setSelectedStory}
                 areCompletedStoriesVisible={this.props.areCompletedStoriesVisible}
