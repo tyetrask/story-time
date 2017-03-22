@@ -177,6 +177,7 @@ class TimingClockWorkTimeUnit extends React.Component {
     let editForm;
     if (this.props.workTimeUnit === this.props.editingWorkTimeUnit) {
       editForm = <div>
+                  <Blueprint.Core.TimePicker precision={Blueprint.Core.TimePickerPrecision.SECOND} showArrowButtons={true} />
                   <div>
                     <input className="simple small" placeholder="mm" onChange={this.handleEditDateMonthOnChange} value={this.state.dateMonthFormValue} />
                     <input className="simple small" placeholder="dd" onChange={this.handleEditDateDayOnChange} value={this.state.dateDayFormValue} />
@@ -196,14 +197,14 @@ class TimingClockWorkTimeUnit extends React.Component {
     } else {
       editForm = null;
     }
-    return <a className='list-group-item work-time-unit'>
-      <p><i onClick={this.handleEditClick} className={this.buttonClass('edit')}></i> <i onClick={this.handleDeleteClick} className={this.buttonClass('delete')}></i> Developer: {this.props.workTimeUnit.user_id}
-        <span className='pull-right'>
-          {this.startedAtFormatted()} - {this.finishedAtFormatted()} <small>{this.totalTimeInSecondsFormatted()}</small>
-        </span>
-      </p>
-      {editForm}
-    </a>;
+    return <div className='pt-card pt-elevation-1 work-time-unit'>
+            <p><i onClick={this.handleEditClick} className={this.buttonClass('edit')}></i> <i onClick={this.handleDeleteClick} className={this.buttonClass('delete')}></i> Developer: {this.props.workTimeUnit.user_id}
+              <span className='pull-right'>
+                {this.startedAtFormatted()} - {this.finishedAtFormatted()} <small>{this.totalTimeInSecondsFormatted()}</small>
+              </span>
+            </p>
+            {editForm}
+          </div>;
   }
 }
 

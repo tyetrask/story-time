@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>StoryTime</title>
-  
-  <script src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.3/moment.min.js'></script>
-  <script src='//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js'></script>
-  
-  <%= stylesheet_link_tag    "application", media: "all" %>
-  <%= javascript_include_tag "application" %>
-  
-  <%= csrf_meta_tags %>
-  
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
-</head>
-<body class='body'>
-  <%= render 'layouts/navigation' %>
-  <%= render 'layouts/notices' %>
-  <%= yield %>
-  <div id='loading-indicator' class='loading-animation'></div>
-  <%= javascript_tag do %>
-    <%= yield :javascript %>
-  <% end %>
-</body>
+
+  <head>
+    <title>StoryTime</title>
+
+    <%= stylesheet_link_tag    "application", media: "all" %>
+    <%= javascript_include_tag "application" %>
+
+    <%= csrf_meta_tags %>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/normalize.css@^4.1.1" rel="stylesheet" />
+    <link href="https://unpkg.com/@blueprintjs/core@^1.12.0/dist/blueprint.css" rel="stylesheet" />
+    <link href="https://unpkg.com/@blueprintjs/datetime@^1.12.0/dist/blueprint.css" rel="stylesheet" />
+
+    <script src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.3/moment.min.js'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
+    <script src="https://unpkg.com/classnames@^2.2"></script>
+    <script src="https://unpkg.com/tether@^1.4"></script>
+    <script src="https://unpkg.com/@blueprintjs/core@^1.12.0"></script>
+    <script src="https://unpkg.com/@blueprintjs/datetime@^1.12.0"></script>
+  </head>
+
+  <body class='body pt-dark'>
+    <%= render 'layouts/notices' %>
+    <%= yield %>
+    <%= javascript_tag do %>
+      <%= yield :javascript %>
+    <% end %>
+  </body>
+
 </html>

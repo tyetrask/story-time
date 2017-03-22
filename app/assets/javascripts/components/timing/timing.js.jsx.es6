@@ -3,6 +3,7 @@ class Timing extends React.Component {
   constructor() {
     super()
     this.state = {
+      isLoading: false,
       me: null,
       meExternal: {name: 'Developer'},
       projects: [],
@@ -34,7 +35,13 @@ class Timing extends React.Component {
 
   componentDidMount() {
     this.calculateScreenHeight();
-    return this.attachControlPanelHandler();
+    this.attachControlPanelHandler();
+    this.bindLoadingEvents();
+  }
+
+  bindLoadingEvents() {
+    $(document).ajaxStop((() => { this.setState({isLoading: false}); }))
+    $(document).ajaxStart((() => { this.setState({isLoading: true}); }));
   }
 
   loadMe() {
@@ -90,8 +97,7 @@ class Timing extends React.Component {
 
   calculateScreenHeight() {
     let windowHeight = $(window).height();
-    let navigationHeight = $('#navigation-container').height();
-    this.setState({screenHeight: (windowHeight - navigationHeight - 20)}); // 20 pixels height for div.spacer-sm
+    this.setState({screenHeight: (windowHeight - 20)}); // 20 pixels height for div.spacer-sm
     $('#stories-container').css('height', this.state.screenHeight);
     return $('#clock-container').css('height', this.state.screenHeight);
   }
@@ -255,8 +261,16 @@ class Timing extends React.Component {
     return this.setState({notifications: notificationSet});
   }
 
+  loadingIndicator() {
+    if (this.state.isLoading) {
+      return <Blueprint.Core.ProgressBar />
+    }
+    return null;
+  }
+
   render() {
     return (<div>
+            <NavigationHeader />
             <TimingControlPanel
               selectedProject={this.state.selectedProject}
               setSelectedProject={this.setSelectedProject}
@@ -264,6 +278,7 @@ class Timing extends React.Component {
               areCompletedStoriesVisible={this.state.areCompletedStoriesVisible}
               setCompletedStoriesVisibility={this.setCompletedStoriesVisibility}
             />
+            {this.loadingIndicator()}
             <div className='spacer-sm'></div>
             <TimingStories
               myWork={this.state.myWork}

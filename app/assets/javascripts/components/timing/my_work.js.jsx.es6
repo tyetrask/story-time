@@ -10,13 +10,16 @@ class TimingMyWork extends React.Component {
               areCompletedStoriesVisible={this.props.areCompletedStoriesVisible}
               />);
       }));
-    return (<div className="panel panel-default">
-             <div className="panel-heading text-center"><strong>My Work</strong></div>
-             <div id="my-work-story-list" className="list-group">
+    return (<div>
+             <div className="pt-callout">
+               <h5>My Work</h5>
+             </div>
+             <div id="my-work-story-list">
                {stories}
              </div>
            </div>);
   }
+
 }
 
 window.TimingMyWork = TimingMyWork;
