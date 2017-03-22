@@ -1,4 +1,4 @@
-## Story Time
+## 📖 Story Time
 
 Story Time is a developer-focused interface to popular project management tracking tools (such as Pivotal Tracker). It has a minimalistic interface allowing the developer to focus on the task at hand. It also adds additional time tracking to use for billing or to provide feedback on story estimation.
 
