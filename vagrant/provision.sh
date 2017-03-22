@@ -38,6 +38,9 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-
 sudo apt-get update
 sudo apt-get install -y postgresql-$POSTGRES_VERSION postgresql-contrib-$POSTGRES_VERSION postgresql-server-dev-$POSTGRES_VERSION
 
+# Create vagrant user in postgres
+sudo -u postgres createuser vagrant -s
+
 # Redis
 # REDIS_VERSION="2.8.13"
 # wget http://download.redis.io/releases/redis-$REDIS_VERSION.tar.gz
