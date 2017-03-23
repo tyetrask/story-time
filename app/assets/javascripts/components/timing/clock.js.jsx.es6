@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { NonIdealState, Tag } from '@blueprintjs/core'
+import { NonIdealState, Tag, Intent } from '@blueprintjs/core'
 var _ = require('lodash');
 
 class TimingClock extends React.Component {
@@ -33,7 +33,10 @@ class TimingClock extends React.Component {
           return this.setState({workTimeUnits: data});
         },
         error(jqXHR, textStatus, errorThrown) {
-          return this.props.pushNotification(`We're sorry. There was an error loading work time units. ${errorThrown}`);
+          return this.props.pushNotification({
+            message: `We're sorry. There was an error loading work time units. ${errorThrown}`,
+            intent: Intent.DANGER
+          });
         }
       });
     }
@@ -58,7 +61,10 @@ class TimingClock extends React.Component {
         return this.setState({workTimeUnits: newWorkTimeUnits});
       },
       error(jqXHR, textStatus, errorThrown) {
-        this.props.pushNotification(`We're sorry. There was an error creating a work time unit. ${errorThrown}`);
+        this.props.pushNotification({
+          message: `We're sorry. There was an error creating a work time unit. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
         return this.props.setWorkingStory(null);
       }
     });
@@ -85,7 +91,10 @@ class TimingClock extends React.Component {
         return this.setState({workTimeUnits});
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.props.pushNotification(`We're sorry. There was an error closing the work time unit. ${errorThrown}`);
+        return this.props.pushNotification({
+          message: `We're sorry. There was an error closing the work time unit. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -103,7 +112,10 @@ class TimingClock extends React.Component {
         return this.setState({workTimeUnits});
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.props.pushNotification(`We're sorry. There was an error deleting the work time unit. ${errorThrown}`);
+        return this.props.pushNotification({
+          message: `We're sorry. There was an error deleting the work time unit. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }

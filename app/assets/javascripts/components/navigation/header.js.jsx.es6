@@ -12,6 +12,14 @@ class NavigationHeader extends React.Component {
 
   }
 
+  signOutOnClick(e) {
+    $.ajax({
+      type: "DELETE",
+      url: "/users/sign_out",
+      success: () => { window.location.href = "/" }
+    });
+  }
+
   settingsMenu() {
     return <Menu>
             <MenuItem text="Change Project">
@@ -25,7 +33,7 @@ class NavigationHeader extends React.Component {
               shouldDismissPopover={false}
             />
             <MenuDivider />
-            <MenuItem text="Sign Out" iconName="log-out" />
+            <MenuItem text="Sign Out" iconName="log-out" onClick={this.signOutOnClick} />
            </Menu>
   }
 

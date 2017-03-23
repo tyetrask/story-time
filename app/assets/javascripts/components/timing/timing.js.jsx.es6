@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ProgressBar, Toaster, Position } from '@blueprintjs/core';
+import { ProgressBar, Toaster, Position, Intent } from '@blueprintjs/core';
 var _ = require('lodash');
 
 class Timing extends React.Component {
@@ -52,7 +52,7 @@ class Timing extends React.Component {
 
   configureNotifier() {
     this.notifier = Toaster.create({
-        position: Position.BOTTOM_RIGHT,
+        position: Position.TOP_LEFT,
     }, document.body);
   }
 
@@ -66,7 +66,10 @@ class Timing extends React.Component {
         return this.setState({me: data}, this.loadExternalMe);
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading your external account. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading your external account. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -81,7 +84,10 @@ class Timing extends React.Component {
         return this.setState({meExternal: data}, this.loadProjects);
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading your external account. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading your external account. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -102,7 +108,10 @@ class Timing extends React.Component {
         }
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading projects. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading projects. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -126,7 +135,10 @@ class Timing extends React.Component {
         return this.loadOpenWorkTimeUnit();
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading your work stories. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading your work stories. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
     return $.ajax({
@@ -142,7 +154,10 @@ class Timing extends React.Component {
         return this.setState({upcoming: upcomingStories}, this.buildEpicList);
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading upcoming stories. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading upcoming stories. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -165,7 +180,10 @@ class Timing extends React.Component {
       context: this,
       success(data) {
         if (data.length > 1) {
-          return this.pushNotification(`We're sorry. More than one open working story was detected. ${errorThrown}`);
+          return this.pushNotification({
+            message: `We're sorry. More than one open working story was detected.`,
+            intent: Intent.DANGER
+          });
         } else if (data.length === 1) {
           let openWorkTimeUnit = data[0];
           if (openWorkTimeUnit.project_id === this.state.selectedProject.id) {
@@ -173,12 +191,18 @@ class Timing extends React.Component {
             return this.setWorkingStory(workingStory);
           } else {
             let openProject = _.find(this.state.projects, {id: openWorkTimeUnit.project_id});
-            return this.pushNotification(`You are currently working on a story in another Project. (${openProject.name})`);
+            return this.pushNotification({
+              message: `You are currently working on a story in another Project. (${openProject.name})`,
+              intent: Intent.WARNING
+            });
           }
         }
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading the open working story. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading the open working story. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -225,7 +249,10 @@ class Timing extends React.Component {
         }
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error updating the story state. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error updating the story state. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -244,7 +271,10 @@ class Timing extends React.Component {
         return this.setState({me: user});
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error updating your user settings. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error updating your user settings. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -253,8 +283,8 @@ class Timing extends React.Component {
     return this.setState({areCompletedStoriesVisible: areCompletedStoriesVisible});
   }
 
-  pushNotification(notificationText) {
-    this.notifier.show({message: notificationText})
+  pushNotification(notification) {
+    this.notifier.show(notification)
   }
 
   loadingIndicator() {

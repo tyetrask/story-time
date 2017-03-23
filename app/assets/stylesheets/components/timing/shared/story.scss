@@ -13,6 +13,8 @@ div.story-card {
     margin-left: -4px;
     z-index: 5;
   }
+  transition: margin-left 0.5s;
+  transition: margin-right 0.5;
   &.selected {
     margin-left: 15px;
     margin-right: -15px;

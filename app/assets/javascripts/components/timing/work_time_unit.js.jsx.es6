@@ -49,7 +49,10 @@ class TimingClockWorkTimeUnit extends React.Component {
         return this.props.updateWorkTimeUnitAfterEdit(this.props.workTimeUnit, data.started_at, data.finished_at, data.total_time_in_seconds);
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.props.pushNotification(`We're sorry. There was an error saving your update to the work time unit. ${errorThrown}`);
+        return this.props.pushNotification({
+          message: `We're sorry. There was an error saving your update to the work time unit. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
     this.props.setEditingWorkTimeUnit(null);
