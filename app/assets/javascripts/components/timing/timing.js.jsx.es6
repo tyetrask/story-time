@@ -262,10 +262,16 @@ class Timing extends React.Component {
   }
 
   loadingIndicator() {
+    let spacerClass = 'spacer-sm'
+    let progressBar = null;
     if (this.state.isLoading) {
-      return <Blueprint.Core.ProgressBar />
+      spacerClass = 'spacer-sm loading-indicator'
+      progressBar = <Blueprint.Core.ProgressBar />
     }
-    return null;
+    return <div>
+            {progressBar}
+            <div className={spacerClass}></div>
+          </div>
   }
 
   render() {
@@ -279,7 +285,6 @@ class Timing extends React.Component {
               setCompletedStoriesVisibility={this.setCompletedStoriesVisibility}
             />
             {this.loadingIndicator()}
-            <div className='spacer-sm'></div>
             <TimingStories
               myWork={this.state.myWork}
               upcoming={this.state.upcoming}
@@ -302,6 +307,7 @@ class Timing extends React.Component {
               notifications={this.state.notifications}
               dismissNotification={this.dismissNotification}
             />
+            <ToastyTown />
            </div>);
   }
 }

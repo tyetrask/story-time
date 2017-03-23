@@ -68,6 +68,9 @@ div.spacer-sm {
   height: 20px;
   padding: 0px;
   margin: 0px;
+  &.loading-indicator {
+    height: 13px;
+  }
 }
 
 /* Notifications */

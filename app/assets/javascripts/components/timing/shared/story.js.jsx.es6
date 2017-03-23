@@ -1,30 +1,32 @@
 class TimingSharedStory extends React.Component {
 
   handleClickedStory() {
-    return this.props.setSelectedStory(this.props.story);
+    if (this.props.selectedStory === this.props.story) {
+      return this.props.setSelectedStory(null);
+    }
+    this.props.setSelectedStory(this.props.story);
   }
 
   storyStateClass() {
-    let baseClass = "list-group-item pivotal-story";
-    if (this.props.selectedStory === this.props.story) { baseClass = baseClass + ' active'; }
+    let baseClass = "story-card pt-card pt-elevation-0 pt-interactive";
+    if (this.props.selectedStory === this.props.story) { baseClass = baseClass + ' selected'; }
     if (this.props.story.current_state === 'started') { return `${baseClass} started`; }
-    if (this.props.story.current_state === 'delivered') { return `${baseClass} started`; }
-    if (this.props.story.current_state === 'finished') { return `${baseClass} started`; }
-    if (this.props.story.current_state === 'rejected') { return `${baseClass} started`; }
     if (this.props.story.current_state === 'accepted') { return `${baseClass} accepted`; }
     return baseClass;
   }
 
-  storyDescription() {
+  storyIcon() {
     if (this.props.story.current_state === 'accepted') {
-      return <p><strike>{this.props.story.name}</strike></p>;
+      return <i className="fa fa-check-square" />
+    } else if (this.props.story.current_state === 'started') {
+      return <i className="fa fa-circle-o-notch fa-spin" />
     }
-    return <p>{this.props.story.name}</p>;
+    return null;
   }
 
   render() {
-    return (<div className="pt-card pt-elevation-0 pt-interactive" style={{padding: 10}} onClick={this.handleClickedStory.bind(this)}>
-            {this.storyDescription()}
+    return (<div className={this.storyStateClass()} style={{padding: 10}} onClick={this.handleClickedStory.bind(this)}>
+            {this.storyIcon()} {this.props.story.name}
            </div>);
   }
 }

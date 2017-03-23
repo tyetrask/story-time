@@ -16,6 +16,7 @@ class TimingClock extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({editingWorkTimeUnit: null});
+    if (nextProps.selectedStory === null) { return; }
     if (this.props.selectedStory != nextProps.selectedStory) {
       return $.ajax({
         type: 'get',
@@ -170,7 +171,14 @@ class TimingClock extends React.Component {
                </div>
              </div>);
     }
-    return null;
+    return <div>
+            <br /><br /><br /><br />
+            <Blueprint.Core.NonIdealState
+             title="No Story Selected"
+             description="Please select a story to begin working"
+             visual="pt-icon-build"
+            />
+           </div>
   }
 }
 
