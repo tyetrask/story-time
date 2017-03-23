@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ProgressBar } from '@blueprintjs/core';
+import { ProgressBar, Toaster, Position } from '@blueprintjs/core';
 
 class Timing extends React.Component {
 
@@ -11,7 +11,6 @@ class Timing extends React.Component {
       me: null,
       meExternal: {name: 'Developer'},
       projects: [],
-      notifications: [],
       resourceInterface: 'pivotal_tracker',
       screenHeight: 1000,
       areCompletedStoriesVisible: false,
@@ -27,10 +26,12 @@ class Timing extends React.Component {
       'setSelectedStory',
       'setWorkingStory',
       'setCompletedStoriesVisibility',
-      'pushNotification',
-      'dismissNotification'
+      'pushNotification'
     ]
     methods.forEach((method) => { this[method] = this[method].bind(this); });
+    this.refHandlers = {
+        toaster: (ref) => { this.toaster = ref },
+    };
   }
 
   componentWillMount() {
@@ -41,6 +42,11 @@ class Timing extends React.Component {
     this.calculateScreenHeight();
     this.attachControlPanelHandler();
     this.bindLoadingEvents();
+    this.toasty = Toaster.create({
+        className: "my-toaster",
+        position: Position.BOTTOM_RIGHT,
+    }, document.body);
+    this.toasty.show({message: "au revoir"})
   }
 
   bindLoadingEvents() {
@@ -254,15 +260,7 @@ class Timing extends React.Component {
   }
 
   pushNotification(notificationText) {
-    let notificationSet = _.clone(this.state.notifications);
-    notificationSet.push(notificationText);
-    return this.setState({notifications: notificationSet});
-  }
-
-  dismissNotification() {
-    let notificationSet = _.clone(this.state.notifications);
-    notificationSet.shift();
-    return this.setState({notifications: notificationSet});
+    this.toasty.show({message: notificationText})
   }
 
   loadingIndicator() {
@@ -307,10 +305,7 @@ class Timing extends React.Component {
               updateStoryState={this.updateStoryState}
               pushNotification={this.pushNotification}
             />
-            <Notifications
-              notifications={this.state.notifications}
-              dismissNotification={this.dismissNotification}
-            />
+            <Toaster ref={this.refHandlers.toaster} />
            </div>);
   }
 }
