@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ProgressBar, Toaster, Position } from '@blueprintjs/core';
+var _ = require('lodash');
 
 class Timing extends React.Component {
 

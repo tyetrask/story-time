@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+var _ = require('lodash');
 
 class TimingUpcoming extends React.Component {
 

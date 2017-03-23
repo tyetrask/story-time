@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { TimePicker, TimePickerPrecision } from '@blueprintjs/datetime'
+import moment from 'moment';
 
 class TimingClockWorkTimeUnit extends React.Component {
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { NonIdealState, Tag } from '@blueprintjs/core'
+var _ = require('lodash');
 
 class TimingClock extends React.Component {
 
