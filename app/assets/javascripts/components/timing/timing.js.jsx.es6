@@ -30,7 +30,7 @@ class Timing extends React.Component {
     ]
     methods.forEach((method) => { this[method] = this[method].bind(this); });
     this.refHandlers = {
-        toaster: (ref) => { this.toaster = ref },
+        notifier: (ref) => { this.notifier = ref },
     };
   }
 
@@ -42,16 +42,18 @@ class Timing extends React.Component {
     this.calculateScreenHeight();
     this.attachControlPanelHandler();
     this.bindLoadingEvents();
-    this.toasty = Toaster.create({
-        className: "my-toaster",
-        position: Position.BOTTOM_RIGHT,
-    }, document.body);
-    this.toasty.show({message: "au revoir"})
+    this.configureNotifier();
   }
 
   bindLoadingEvents() {
     $(document).ajaxStop((() => { this.setState({isLoading: false}); }))
     $(document).ajaxStart((() => { this.setState({isLoading: true}); }));
+  }
+
+  configureNotifier() {
+    this.notifier = Toaster.create({
+        position: Position.BOTTOM_RIGHT,
+    }, document.body);
   }
 
   loadMe() {
@@ -260,7 +262,7 @@ class Timing extends React.Component {
   }
 
   pushNotification(notificationText) {
-    this.toasty.show({message: notificationText})
+    this.notifier.show({message: notificationText})
   }
 
   loadingIndicator() {
@@ -305,7 +307,7 @@ class Timing extends React.Component {
               updateStoryState={this.updateStoryState}
               pushNotification={this.pushNotification}
             />
-            <Toaster ref={this.refHandlers.toaster} />
+            <Toaster ref={this.refHandlers.notifier} />
            </div>);
   }
 }
