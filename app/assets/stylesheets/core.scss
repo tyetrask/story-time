@@ -12,8 +12,6 @@ body.pt-dark {
   background-color: #293742;
 }
 
-
-
 /* Colory-doos. */
 $lightest: #E8D988;
 $light: #EAB536;
@@ -32,223 +30,27 @@ $darkest: #D95600;
 
 /* Container Styling */
 
+#navigation-container {
+  margin: 0 10%;
+}
+
+#timing-container {
+  display: flex;
+  justify-content: center;
+  padding: 0 9%;
+}
+
 #stories-container {
+  flex-grow: 1;
+  width: 50%;
   overflow: auto;
-  padding-top: 10px;
+  padding: 10px 2%;
   margin-bottom: 50px;
 }
 
 #clock-container {
+  flex-grow: 1;
+  width: 50%;
   overflow: auto;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-
-/* Control Panel Styling */
-
-#control-panel-toggle a {
-  cursor: pointer;
-}
-
-#control-panel-container {
-  display: none;
-  margin-bottom: 0px;
-  min-height: 0px;
-
-  a.dropdown-toggle {
-    cursor: pointer;
-  }
-  ul.navbar-nav li {
-    cursor: pointer;
-  }
-}
-
-div.spacer-sm {
-  height: 20px;
-  padding: 0px;
-  margin: 0px;
-  &.loading-indicator {
-    height: 13px;
-  }
-}
-
-/* Notifications */
-
-#notification-container {
-  z-index: 50;
-  position: fixed;
-  bottom: 0;
-  left: 5%;
-  padding: 15px;
-  width: 400px;
-  opacity: 0.8;
-
-  border: 1px solid $dark;
-  color: $medium;
-  background: white;
-  font-size: 120%;
-
-  p.notification-text {
-    padding: 20px 20px 5px 20px;
-  }
-
-  i.fa-times {
-    cursor: pointer;
-  }
-
-  &.hidden {
-    display: none;
-  }
-}
-
-
-/* Form Styling */
-
-input.simple {
-  display: block;
-  font-weight: 500;
-  margin: 0;
-  -webkit-appearance: none;
-  width: 100%;
-  font-size: 1.5em;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  height: 100%;
-  border: none;
-  padding: 1rem 1.3rem;
-  color: #2a5669;
-  border-left: 0.3rem solid #fff;
-  outline: none;
-  &.small {
-    display: inline-block;
-    width: 12%;
-  }
-}
-
-p.simple-divider, span.simple-divider {
-  font-weight: 500;
-  margin: 0;
-  font-size: 1.5em;
-  height: 100%;
-  padding: 1rem 1.3rem;
-  color: #2a5669;
-}
-
-input:focus.simple {
-  border-left: 0.3rem solid lighten($medium, 20%);
-}
-
-input[type='submit'].simple {
-  font-weight: 500;
-  -webkit-transition: background 300ms ease-in-out, color 300ms ease-in-out;
-  transition: background 300ms ease-in-out, color 300ms ease-in-out;
-  background: lighten($medium, 30%);
-  border: none;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  color: #FFFFFF;
-  display: block;
-  font-size: 1.3em;
-  text-align: left;
-  text-transform: uppercase;
-  cursor: pointer;
-  width: 100%;
-  padding: 1rem 1.5rem;
-  &.small {
-    display: inline-block;
-    width: 14%;
-  }
-}
-
-input[type='submit']:hover.simple {
-  background: lighten($medium, 20%);
-}
-
-
-
-/* Burning Fire Icon Animation */
-
-i.fa-fire.burning-animation {
-  color: red;
-  transition: color 0.8s;
-  -webkit-animation: burning-flame-loop 4s infinite;
-  -moz-animation: burning-flame-loop 4s infinite;
-  animation: burning-flame-loop 4s infinite;
-}
-
-@-webkit-keyframes burning-flame-loop {
-  0% { color: red; }
-  10% { color: orange; }
-  15% { color: red; }
-  20% { color: orange; }
-  22% { color: red; }
-  25% { color: #480000; }
-  30% { color: #FF6633;}
-  40% { color: red; }
-  41% { color: white; }
-  42% { color: orange; }
-  44% { color: red; }
-  45% { color: red; }
-  65% { color: orange; }
-  75% { color: red; }
-  78% { color: orange; }
-  80% { color: red; }
-  85% { color: #480000; }
-  87% { color: #FF6633;}
-  90% { color: red; }
-  91% { color: white; }
-  92% { color: orange; }
-  94% { color: red; }
-  100% { color: orange; }
-}
-@-moz-keyframes burning-flame-loop {
-  0% { color: red; }
-  10% { color: orange; }
-  15% { color: red; }
-  20% { color: orange; }
-  22% { color: red; }
-  25% { color: #480000; }
-  30% { color: #FF6633;}
-  40% { color: red; }
-  41% { color: white; }
-  42% { color: orange; }
-  44% { color: red; }
-  45% { color: red; }
-  65% { color: orange; }
-  75% { color: red; }
-  78% { color: orange; }
-  80% { color: red; }
-  85% { color: #480000; }
-  87% { color: #FF6633;}
-  90% { color: red; }
-  91% { color: white; }
-  92% { color: orange; }
-  94% { color: red; }
-  100% { color: orange; }
-}
-@keyframes burning-flame-loop {
-  0% { color: red; }
-  10% { color: orange; }
-  15% { color: red; }
-  20% { color: orange; }
-  22% { color: red; }
-  25% { color: #480000; }
-  30% { color: #FF6633;}
-  40% { color: red; }
-  41% { color: white; }
-  42% { color: orange; }
-  44% { color: red; }
-  45% { color: red; }
-  65% { color: orange; }
-  75% { color: red; }
-  78% { color: orange; }
-  80% { color: red; }
-  85% { color: #480000; }
-  87% { color: #FF6633;}
-  90% { color: red; }
-  91% { color: white; }
-  92% { color: orange; }
-  94% { color: red; }
-  100% { color: orange; }
+  padding: 10px 2%;
 }

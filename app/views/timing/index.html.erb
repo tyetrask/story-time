@@ -1,7 +1,7 @@
-<div id='timing-container' class='row'></div>
+<div id='react-target-timing'></div>
 
 <%- content_for :javascript do -%>
   $(document).ready(function(){
-    ReactDOM.render(React.createElement(Timing), document.getElementById('timing-container'));
+    ReactDOM.render(React.createElement(Timing), document.getElementById('react-target-timing'));
   });
 <%- end -%>

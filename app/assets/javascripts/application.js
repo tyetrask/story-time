@@ -11,7 +11,6 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery_ujs
 //= require_tree .
 var React = window.React = global.React = require('react');
 var ReactDOM = window.ReactDOM = global.ReactDOM = require('react-dom');

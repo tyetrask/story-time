@@ -161,7 +161,7 @@ class TimingClock extends React.Component {
                                 Start Work
                               </a>;
       }
-      return (<div key="clock-container-full" id="clock-container" className="col-xs-6">
+      return (<div key="clock-full" id="clock-container">
                <div>
                  <div className="pt-card pt-elevation-2">
                    <h5>{this.props.selectedStory.name}</h5>
@@ -175,13 +175,19 @@ class TimingClock extends React.Component {
                </div>
              </div>);
     }
-    return <div>
-            <br /><br /><br /><br />
-            <NonIdealState
-             title="No Story Selected"
-             description="Please select a story to begin working"
-             visual="pt-icon-build"
-            />
+    return <div key="clock-empty" id="clock-container">
+            <div>
+              <div className="pt-card pt-elevation-0">
+                <br /><br /><br /><br />
+                <NonIdealState
+                 title="No Story Selected"
+                 description="Please select a story to begin working"
+                 visual="pt-icon-build"
+                />
+                <br /><br /><br /><br /><br />
+              </div>
+            </div>
+
            </div>
   }
 }

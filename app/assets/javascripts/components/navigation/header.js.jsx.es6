@@ -1,26 +1,53 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Button, Popover, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 
 class NavigationHeader extends React.Component {
 
+  changeProjectOnClick(e) {
+
+  }
+
+  hideCompletedStoriesOnClick(e) {
+
+  }
+
+  settingsMenu() {
+    return <Menu>
+            <MenuItem text="Change Project">
+              <MenuItem text="Project 1" />
+              <MenuItem text="Project 2" />
+              <MenuItem text="Project 3 TODO" />
+            </MenuItem>
+            <MenuItem
+              onClick={this.hideCompletedStoriesOnClick}
+              text="Hide Completed Stories"
+              shouldDismissPopover={false}
+            />
+            <MenuDivider />
+            <MenuItem text="Sign Out" iconName="log-out" />
+           </Menu>
+  }
+
   render() {
     return (<nav className="pt-navbar">
-            <div style={{margin: '0 9%'}}>
+            <div id="navigation-container">
               <div className="pt-navbar-group pt-align-left">
                 <div className="pt-navbar-heading">
                   <i className='fa fa-book'></i> StoryTime <small><span id='alpha-label' className='label label-danger'>alpha</span></small>
                 </div>
               </div>
               <div className="pt-navbar-group pt-align-right">
-                <button className="pt-button pt-minimal pt-active">
+                <Button active={true}>
                   <i className='fa fa-fire'></i> Do Work!
-                </button>
-                <button className="pt-button pt-minimal">
+                </Button>
+                <Button>
                   <i className='fa fa-paper-plane-o'></i> Reports
-                </button>
+                </Button>
                 <span className="pt-navbar-divider"></span>
-                <button className="pt-button pt-minimal pt-icon-cog"></button>
-                <button className="pt-button pt-minimal pt-icon-user"></button>
+                <Popover content={this.settingsMenu()} position={Position.BOTTOM}>
+                  <Button iconName="user" />
+                </Popover>
               </div>
             </div>
           </nav>);

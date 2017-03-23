@@ -40,7 +40,6 @@ class Timing extends React.Component {
 
   componentDidMount() {
     this.calculateScreenHeight();
-    this.attachControlPanelHandler();
     this.bindLoadingEvents();
     this.configureNotifier();
   }
@@ -112,14 +111,6 @@ class Timing extends React.Component {
     this.setState({screenHeight: (windowHeight - 20)}); // 20 pixels height for div.spacer-sm
     $('#stories-container').css('height', this.state.screenHeight);
     return $('#clock-container').css('height', this.state.screenHeight);
-  }
-
-  attachControlPanelHandler() {
-    // TODO: Probably reactify this a bit more at some point.
-    return $('#control-panel-toggle a').click(function(e) {
-      $('#control-panel-container').slideToggle();
-      return $('#control-panel-toggle').toggleClass('active');
-    });
   }
 
   loadStories() {
@@ -281,32 +272,27 @@ class Timing extends React.Component {
   render() {
     return (<div>
             <NavigationHeader />
-            <TimingControlPanel
-              selectedProject={this.state.selectedProject}
-              setSelectedProject={this.setSelectedProject}
-              projects={this.state.projects}
-              areCompletedStoriesVisible={this.state.areCompletedStoriesVisible}
-              setCompletedStoriesVisibility={this.setCompletedStoriesVisibility}
-            />
             {this.loadingIndicator()}
-            <TimingStories
-              myWork={this.state.myWork}
-              upcoming={this.state.upcoming}
-              epicList={this.state.epicList}
-              selectedStory={this.state.selectedStory}
-              setSelectedStory={this.setSelectedStory}
-              areCompletedStoriesVisible={this.state.areCompletedStoriesVisible}
-            />
-            <TimingClock
-              meExternal={this.state.meExternal}
-              selectedStory={this.state.selectedStory}
-              selectedProject={this.state.selectedProject}
-              workingStory={this.state.workingStory}
-              setWorkingStory={this.setWorkingStory}
-              setSelectedStory={this.setSelectedStory}
-              updateStoryState={this.updateStoryState}
-              pushNotification={this.pushNotification}
-            />
+            <div id="timing-container">
+              <TimingStories
+                myWork={this.state.myWork}
+                upcoming={this.state.upcoming}
+                epicList={this.state.epicList}
+                selectedStory={this.state.selectedStory}
+                setSelectedStory={this.setSelectedStory}
+                areCompletedStoriesVisible={this.state.areCompletedStoriesVisible}
+              />
+              <TimingClock
+                meExternal={this.state.meExternal}
+                selectedStory={this.state.selectedStory}
+                selectedProject={this.state.selectedProject}
+                workingStory={this.state.workingStory}
+                setWorkingStory={this.setWorkingStory}
+                setSelectedStory={this.setSelectedStory}
+                updateStoryState={this.updateStoryState}
+                pushNotification={this.pushNotification}
+              />
+            </div>
             <Toaster ref={this.refHandlers.notifier} />
            </div>);
   }

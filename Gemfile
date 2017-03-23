@@ -10,6 +10,10 @@ gem "pg"
 gem 'sprockets-es6'
 
 # Use NPM Packages
+# References:
+# https://collectiveidea.com/blog/archives/2016/04/13/rails-react-npm-without-the-pain
+# https://collectiveidea.com/blog/archives/2016/03/09/modern-javascript-and-rails
+# https://github.com/browserify-rails/browserify-rails
 gem 'browserify-rails'
 
 # SASS for stylesheets

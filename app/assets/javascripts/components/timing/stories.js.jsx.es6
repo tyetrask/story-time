@@ -6,7 +6,7 @@ class TimingStories extends React.Component {
   render() {
     const viewingMyWork = false;
     if (viewingMyWork) {
-      return (<div id="stories-container" className="col-xs-4 col-xs-offset-1">
+      return (<div id="stories-container">
                <TimingMyWork
                  myWork={this.props.myWork}
                  selectedStory={this.props.selectedStory}
@@ -15,7 +15,7 @@ class TimingStories extends React.Component {
                />
              </div>);
     }
-    return (<div id="stories-container" className="col-xs-4 col-xs-offset-1">
+    return (<div id="stories-container">
              <TimingUpcoming
               upcoming={this.props.upcoming}
               epicList={this.props.epicList}
