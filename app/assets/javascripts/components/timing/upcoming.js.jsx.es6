@@ -38,22 +38,17 @@ class TimingUpcoming extends React.Component {
                />;
         }
       }));
-    return (<div className="panel panel-default">
-             <div className="panel-heading text-center">
-               <strong>Upcoming</strong>
-               <div className="dropdown pull-right">
-                 <a className="dropdown-toggle" data-toggle="dropdown">{this.filterMenuDisplayText()} <b className="caret"></b></a>
-                 <ul className="dropdown-menu" role="menu">
-                   <li><a onClick={this.handleClearEpicFilter.bind(this)}>(Clear Filter)</a></li>
-                   {epicOptions}
-                 </ul>
-               </div>
+    return (<div>
+             <div className="pt-callout">
+               <h5>Upcoming</h5>
              </div>
-             <div id="upcoming-story-list" className="list-group">
+             <br />
+             <div id="upcoming-story-list">
                {stories}
              </div>
            </div>);
   }
+
 }
 
 window.TimingUpcoming = TimingUpcoming;
