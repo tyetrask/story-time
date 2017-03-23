@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { TimePicker, TimePickerPrecision } from '@blueprintjs/datetime'
 
 class TimingClockWorkTimeUnit extends React.Component {
 
@@ -102,16 +103,16 @@ class TimingClockWorkTimeUnit extends React.Component {
     let editForm;
     if (this.props.workTimeUnit === this.props.editingWorkTimeUnit) {
       editForm = <div>
-                  <Blueprint.Datetime.TimePicker
+                  <TimePicker
                     value={this.state.startedAtFormValue}
                     onChange={this.startedAtOnChange}
-                    precision={Blueprint.Datetime.TimePickerPrecision.SECOND}
+                    precision={TimePickerPrecision.SECOND}
                     showArrowButtons={true}
                   />
-                  <Blueprint.Datetime.TimePicker
+                  <TimePicker
                     value={this.state.finishedAtFormValue}
                     onChange={this.finishedAtOnChange}
-                    precision={Blueprint.Datetime.TimePickerPrecision.SECOND}
+                    precision={TimePickerPrecision.SECOND}
                     showArrowButtons={true}
                   />
                   <a className="pt-button" onClick={this.handleEditSaveClick}>Save</a>

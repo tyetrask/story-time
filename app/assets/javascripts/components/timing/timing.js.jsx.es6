@@ -270,7 +270,7 @@ class Timing extends React.Component {
     let progressBar = null;
     if (this.state.isLoading) {
       spacerClass = 'spacer-sm loading-indicator'
-      progressBar = <Blueprint.Core.ProgressBar />
+      progressBar = <ProgressBar />
     }
     return <div>
             {progressBar}
@@ -311,7 +311,6 @@ class Timing extends React.Component {
               notifications={this.state.notifications}
               dismissNotification={this.dismissNotification}
             />
-            <ToastyTown />
            </div>);
   }
 }

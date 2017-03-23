@@ -12,17 +12,16 @@
     <%= csrf_meta_tags %>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://unpkg.com/normalize.css@^4.1.1" rel="stylesheet" />
     <link href="https://unpkg.com/@blueprintjs/core@^1.11.0/dist/blueprint.css" rel="stylesheet" />
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/@blueprintjs/datetime@^1.8.0/dist/blueprint.css" rel="stylesheet" />
 
     <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
   </head>
-  <body class='body'>
-    <%= render 'layouts/navigation' %>
+  <body class='body pt-dark'>
     <%= render 'layouts/notices' %>
     <%= yield %>
-    <div id='loading-indicator' class='loading-animation'></div>
     <%= javascript_tag do %>
       <%= yield :javascript %>
     <% end %>

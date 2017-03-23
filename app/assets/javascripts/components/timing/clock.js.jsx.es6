@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { NonIdealState, Tag } from '@blueprintjs/core'
 
 class TimingClock extends React.Component {
 
@@ -146,7 +147,7 @@ class TimingClock extends React.Component {
                                     pushNotification={this.props.pushNotification}
                                   />);
         }));
-      let labels = this.props.selectedStory.labels.map(label => <Blueprint.Core.Tag key={label.id}>{label.name}</Blueprint.Core.Tag>);
+      let labels = this.props.selectedStory.labels.map(label => <Tag key={label.id}>{label.name}</Tag>);
       if (this.props.workingStory === this.props.selectedStory) {
         startStopWorkButton = <a onClick={this.handleStopWork.bind(this)} className="pt-button pt-fill">
                                 Stop Work
@@ -176,7 +177,7 @@ class TimingClock extends React.Component {
     }
     return <div>
             <br /><br /><br /><br />
-            <Blueprint.Core.NonIdealState
+            <NonIdealState
              title="No Story Selected"
              description="Please select a story to begin working"
              visual="pt-icon-build"
