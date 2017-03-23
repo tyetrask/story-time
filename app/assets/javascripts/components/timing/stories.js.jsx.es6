@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 class TimingStories extends React.Component {
 
   render() {

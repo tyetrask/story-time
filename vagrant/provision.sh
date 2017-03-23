@@ -41,6 +41,11 @@ sudo apt-get install -y postgresql-$POSTGRES_VERSION postgresql-contrib-$POSTGRE
 # Create vagrant user in postgres
 sudo -u postgres createuser vagrant -s
 
+# Install Node, NPM
+sudo apt-get purge -y nodejs npm
+curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
+sudo apt-get install -y nodejs
+
 # Redis
 # REDIS_VERSION="2.8.13"
 # wget http://download.redis.io/releases/redis-$REDIS_VERSION.tar.gz

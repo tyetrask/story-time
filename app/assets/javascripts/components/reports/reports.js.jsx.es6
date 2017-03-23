@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 class Reports extends React.Component {
 
   render() {

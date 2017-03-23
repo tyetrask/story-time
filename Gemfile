@@ -12,6 +12,9 @@ gem 'react-rails', '~> 1.10.0'
 # Use ES6
 gem 'sprockets-es6'
 
+# Use NPM Packages
+gem 'browserify-rails'
+
 # SASS for stylesheets
 gem 'sass-rails'
 
@@ -30,11 +33,11 @@ gem 'devise'
 # Use pry for debugging!
 gem 'pry', group: [:development, :test]
 
-group :development do
-  gem 'web-console', '~> 2.0'
-end
-
-group :doc do
-  # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'sdoc', require: false
-end
+# group :development do
+#   gem 'web-console', '~> 2.0'
+# end
+#
+# group :doc do
+#   # bundle exec rake doc:rails generates the API under doc/api.
+#   gem 'sdoc', require: false
+# end

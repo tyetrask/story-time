@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 class TimingClockWorkTimeUnit extends React.Component {
 
   constructor() {

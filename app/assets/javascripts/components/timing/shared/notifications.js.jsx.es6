@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 class Notifications extends React.Component {
 
   constructor() {

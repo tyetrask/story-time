@@ -1,0 +1,19 @@
+{
+  "name": "story-time",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A developer-focused interface to popular project management tracking tools.",
+  "dependencies": {
+    "@blueprintjs/core": "^1.13.0",
+    "browserify": "~10.2.4",
+    "browserify-incremental": "^3.0.1",
+    "react": "^15.4.2",
+    "react-addons-css-transition-group": "^15.4.2",
+    "react-dom": "^15.4.2"
+  },
+  "engines": {
+    "node": ">= 5.1"
+  },
+  "author": "Tye Trask",
+  "license": "BSD-3-Clause"
+}

@@ -1,3 +1,7 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { ProgressBar } from '@blueprintjs/core';
+
 class Timing extends React.Component {
 
   constructor() {
