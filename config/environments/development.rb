@@ -26,8 +26,4 @@ StoryTime::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
-
-  # Uses big ol' ReactJS version for extra info during development.
-  config.react.variant = :development
-  config.react.addons = true
 end

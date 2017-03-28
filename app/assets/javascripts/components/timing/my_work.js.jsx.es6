@@ -1,7 +1,10 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 class TimingMyWork extends React.Component {
 
   render() {
-    let stories = this.props.myWork.map((story => {
+    let stories = this.props.stories.map((story => {
       return (<TimingSharedStory
               key={story.id}
               story={story}
@@ -10,13 +13,11 @@ class TimingMyWork extends React.Component {
               areCompletedStoriesVisible={this.props.areCompletedStoriesVisible}
               />);
       }));
-    return (<div className="panel panel-default">
-             <div className="panel-heading text-center"><strong>My Work</strong></div>
-             <div id="my-work-story-list" className="list-group">
-               {stories}
-             </div>
-           </div>);
+    return <div>
+             {stories}
+           </div>;
   }
+
 }
 
 window.TimingMyWork = TimingMyWork;

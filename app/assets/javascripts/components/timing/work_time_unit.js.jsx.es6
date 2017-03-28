@@ -1,31 +1,23 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Button } from '@blueprintjs/core';
+import { TimePicker, TimePickerPrecision } from '@blueprintjs/datetime';
+import moment from 'moment';
+
 class TimingClockWorkTimeUnit extends React.Component {
 
   constructor() {
     super()
     this.state = {
-      dateMonthFormValue: null,
-      dateDayFormValue: null,
-      dateYearFormValue: null,
-      startedAtHourFormValue: null,
-      startedAtMinuteFormValue: null,
-      startedAtAMPMFormValue: null,
-      finishedAtHourFormValue: null,
-      finishedAtMinuteFormValue: null,
-      finishedAtAMPMFormValue: null
+      startedAtFormValue: null,
+      finishedAtFormValue: null
     };
     let methods = [
       'handleEditClick',
       'handleEditSaveClick',
       'handleDeleteClick',
-      'handleEditDateMonthOnChange',
-      'handleEditDateDayOnChange',
-      'handleEditDateYearOnChange',
-      'handleEditStartedAtHourOnChange',
-      'handleEditStartedAtMinuteOnChange',
-      'handleEditStartedAtAMPMOnChange',
-      'handleEditFinishedAtHourOnChange',
-      'handleEditFinishedAtMinuteOnChange',
-      'handleEditFinishedAtAMPMOnChange'
+      'startedAtOnChange',
+      'finishedAtOnChange'
     ]
     methods.forEach((method) => { this[method] = this[method].bind(this); });
   }
@@ -33,102 +25,41 @@ class TimingClockWorkTimeUnit extends React.Component {
   handleEditClick() {
     if (!this.props.workTimeUnit.finished_at) { return; }
     this.setState({
-      dateMonthFormValue: moment(this.props.workTimeUnit.started_at).format('MM'),
-      dateDayFormValue: moment(this.props.workTimeUnit.started_at).format('DD'),
-      dateYearFormValue: moment(this.props.workTimeUnit.started_at).format('YYYY'),
-      startedAtHourFormValue: moment(this.props.workTimeUnit.started_at).format('hh'),
-      startedAtMinuteFormValue: moment(this.props.workTimeUnit.started_at).format('mm'),
-      startedAtAMPMFormValue: moment(this.props.workTimeUnit.started_at).format('a'),
-      finishedAtHourFormValue: moment(this.props.workTimeUnit.finished_at).format('hh'),
-      finishedAtMinuteFormValue: moment(this.props.workTimeUnit.finished_at).format('mm'),
-      finishedAtAMPMFormValue: moment(this.props.workTimeUnit.finished_at).format('a')
+      startedAtFormValue: moment(this.props.workTimeUnit.started_at).toDate(),
+      finishedAtFormValue: moment(this.props.workTimeUnit.finished_at).toDate()
     });
     return this.props.setEditingWorkTimeUnit(this.props.workTimeUnit);
   }
 
-  handleEditDateMonthOnChange(e) {
-    if (!_.contains(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'], e.target.value)) { return; }
-    return this.setState({dateMonthFormValue: e.target.value});
+  startedAtOnChange(date) {
+    this.setState({startedAtFormValue: date})
   }
 
-  handleEditDateDayOnChange(e) {
-    if (!_.contains(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'], e.target.value)) { return; }
-    return this.setState({dateDayFormValue: e.target.value});
-  }
-
-  handleEditDateYearOnChange(e) {
-    if (!_.contains(['201', '2014', '2015', '2016', '2017', '2018', '2019'], e.target.value)) { return; }
-    return this.setState({dateYearFormValue: e.target.value});
-  }
-
-  handleEditStartedAtHourOnChange(e) {
-    if (!_.contains(['', '0', '1', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'], e.target.value)) { return; }
-    return this.setState({startedAtHourFormValue: e.target.value});
-  }
-
-  handleEditStartedAtMinuteOnChange(e) {
-    if (!_.contains(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'], e.target.value)) { return; }
-    return this.setState({startedAtMinuteFormValue: e.target.value});
-  }
-
-  handleEditStartedAtAMPMOnChange(e) {
-    if (!_.contains(['', 'a', 'am', 'p', 'pm'], e.target.value)) { return; }
-    return this.setState({startedAtAMPMFormValue: e.target.value});
-  }
-
-  handleEditFinishedAtHourOnChange(e) {
-    if (!_.contains(['', '0', '1', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'], e.target.value)) { return; }
-    return this.setState({finishedAtHourFormValue: e.target.value});
-  }
-
-  handleEditFinishedAtMinuteOnChange(e) {
-    if (!_.contains(['', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'], e.target.value)) { return; }
-    return this.setState({finishedAtMinuteFormValue: e.target.value});
-  }
-
-  handleEditFinishedAtAMPMOnChange(e) {
-    if (!_.contains(['', 'a', 'am', 'p', 'pm'], e.target.value)) { return; }
-    return this.setState({finishedAtAMPMFormValue: e.target.value});
+  finishedAtOnChange(date) {
+    this.setState({finishedAtFormValue: date})
   }
 
   handleEditSaveClick() {
-    let month = parseInt(this.state.dateMonthFormValue) - 1;
-    let day = parseInt(this.state.dateDayFormValue);
-    let year = parseInt(this.state.dateYearFormValue);
-    let newStartedAt = new Date(this.props.workTimeUnit.started_at);
-    let newFinishedAt = new Date(this.props.workTimeUnit.finished_at);
-    newStartedAt.setFullYear(year, month, day);
-    newFinishedAt.setFullYear(year, month, day);
-    newStartedAt.setHours(parseInt(this.state.startedAtHourFormValue) + (this.state.startedAtAMPMFormValue === 'pm' ? 12 : 0));
-    let newStartedAtMinutes = (this.state.startedAtMinuteFormValue === '' ? 0 : parseInt(this.state.startedAtMinuteFormValue));
-    newStartedAt.setMinutes(newStartedAtMinutes);
-    newFinishedAt.setHours(parseInt(this.state.finishedAtHourFormValue) + (this.state.finishedAtAMPMFormValue === 'pm' ? 12 : 0));
-    let newFinishedAtMinutes = (this.state.finishedAtMinuteFormValue === '' ? 0 : parseInt(this.state.finishedAtMinuteFormValue));
-    newFinishedAt.setMinutes(newFinishedAtMinutes);
     $.ajax({
       type: 'patch',
       dataType: 'json',
-      data: {id: this.props.workTimeUnit.id, work_time_unit: {started_at: newStartedAt, finished_at: newFinishedAt}},
+      data: {id: this.props.workTimeUnit.id, work_time_unit: {started_at: this.state.startedAtFormValue, finished_at: this.state.finishedAtFormValue}},
       url: `/work_time_units/${this.props.workTimeUnit.id}`,
       context: this,
       success(data) {
-        return this.props.updateWorkTimeUnitAfterEdit(this.props.workTimeUnit, newStartedAt, newFinishedAt, data.total_time_in_seconds);
+        return this.props.updateWorkTimeUnitAfterEdit(this.props.workTimeUnit, data.started_at, data.finished_at, data.total_time_in_seconds);
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.props.pushNotification(`We're sorry. There was an error saving your update to the work time unit. ${errorThrown}`);
+        return this.props.pushNotification({
+          message: `We're sorry. There was an error saving your update to the work time unit. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
     this.props.setEditingWorkTimeUnit(null);
     return this.setState({
-      dateMonthFormValue: null,
-      dateDayFormValue: null,
-      dateYearFormValue: null,
-      startedAtHourFormValue: null,
-      startedAtMinuteFormValue: null,
-      startedAtAMPMFormValue: null,
-      finishedAtHourFormValue: null,
-      finishedAtMinuteFormValue: null,
-      finishedAtAMPMFormValue: null
+      startedAtFormValue: null,
+      finishedAtFormValue: null
     });
   }
 
@@ -167,43 +98,63 @@ class TimingClockWorkTimeUnit extends React.Component {
 
   buttonClass(buttonType) {
     let cssClass = 'fa';
-    if (buttonType === 'edit') { cssClass += ' fa-pencil'; }
-    if (buttonType === 'delete') { cssClass += ' fa-trash'; }
-    if (!this.props.workTimeUnit.finished_at) { cssClass += ' disabled'; }
+    if (buttonType === 'edit') {
+      cssClass += ' fa-pencil';
+    } else if (buttonType === 'delete') {
+      cssClass += ' fa-trash';
+    }
     return cssClass;
+  }
+
+  buttonProps(buttonType) {
+    let props = {};
+    if (buttonType === 'edit') {
+      props.onClick = this.handleEditClick;
+    } else if (buttonType === 'delete') {
+      props.onClick = this.handleDeleteClick;
+    }
+    if (!this.props.workTimeUnit.finished_at) {
+      props.disabled = true;
+    }
+    return props;
   }
 
   render() {
     let editForm;
     if (this.props.workTimeUnit === this.props.editingWorkTimeUnit) {
       editForm = <div>
-                  <div>
-                    <input className="simple small" placeholder="mm" onChange={this.handleEditDateMonthOnChange} value={this.state.dateMonthFormValue} />
-                    <input className="simple small" placeholder="dd" onChange={this.handleEditDateDayOnChange} value={this.state.dateDayFormValue} />
-                    <input className="simple small" placeholder="yyyy" onChange={this.handleEditDateYearOnChange} value={this.state.dateYearFormValue} />
-                  </div>
-                  <div>
-                    <input autoFocus className="simple small" placeholder="hh" onChange={this.handleEditStartedAtHourOnChange} value={this.state.startedAtHourFormValue} />
-                    <input className="simple small" placeholder="mm" onChange={this.handleEditStartedAtMinuteOnChange} value={this.state.startedAtMinuteFormValue} />
-                    <input className="simple small" placeholder="mm" onChange={this.handleEditStartedAtAMPMOnChange} value={this.state.startedAtAMPMFormValue} />
-                    <span className="simple-divider">til</span>
-                    <input className="simple small" placeholder="hh" onChange={this.handleEditFinishedAtHourOnChange} value={this.state.finishedAtHourFormValue} />
-                    <input className="simple small" placeholder="mm" onChange={this.handleEditFinishedAtMinuteOnChange} value={this.state.finishedAtMinuteFormValue} />
-                    <input className="simple small" placeholder="mm" onChange={this.handleEditFinishedAtAMPMOnChange} value={this.state.finishedAtAMPMFormValue} />
-                    <input className="simple small" type="submit" value="update" onClick={this.handleEditSaveClick} />
-                  </div>
+                  <TimePicker
+                    value={this.state.startedAtFormValue}
+                    onChange={this.startedAtOnChange}
+                    precision={TimePickerPrecision.SECOND}
+                    showArrowButtons={true}
+                  />
+                  <TimePicker
+                    value={this.state.finishedAtFormValue}
+                    onChange={this.finishedAtOnChange}
+                    precision={TimePickerPrecision.SECOND}
+                    showArrowButtons={true}
+                  />
+                  <a className="pt-button" onClick={this.handleEditSaveClick}>Save</a>
                 </div>;
     } else {
       editForm = null;
     }
-    return <a className='list-group-item work-time-unit'>
-      <p><i onClick={this.handleEditClick} className={this.buttonClass('edit')}></i> <i onClick={this.handleDeleteClick} className={this.buttonClass('delete')}></i> Developer: {this.props.workTimeUnit.user_id}
-        <span className='pull-right'>
-          {this.startedAtFormatted()} - {this.finishedAtFormatted()} <small>{this.totalTimeInSecondsFormatted()}</small>
-        </span>
-      </p>
-      {editForm}
-    </a>;
+    return <div className='pt-card pt-elevation-1 work-time-unit'>
+            <p>
+              <Button {...this.buttonProps('edit')}>
+                <i className={this.buttonClass('edit')}></i>
+              </Button>
+              <Button {...this.buttonProps('delete')}>
+                <i className={this.buttonClass('delete')}></i>
+              </Button>
+              <span> {this.startedAtFormatted()} - {this.finishedAtFormatted()} <small>{this.totalTimeInSecondsFormatted()}</small></span>
+              <span className='pull-right'>
+                Developer: {this.props.workTimeUnit.user_id}
+              </span>
+            </p>
+            {editForm}
+          </div>;
   }
 }
 

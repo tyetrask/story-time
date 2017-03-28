@@ -1,19 +1,13 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 class Reports extends React.Component {
 
   render() {
     return (<div>
             <br />
-            <div className="row">
-              <div className="col-sm-8 col-sm-offset-2">
-                <div className="panel panel-default">
-                  <div className="panel-heading">
-                    <h1>Report</h1>
-                  </div>
-                  <div className="panel-body">
-                    <p className="text-center">No Accepted Stories This Week.</p>
-                  </div>
-                </div>
-              </div>
+            <div className="pt-card">
+              <p className="text-center">No Accepted Stories This Week.</p>
             </div>
           </div>);
   }

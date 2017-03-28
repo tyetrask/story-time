@@ -1,0 +1,83 @@
+i.fa-fire.burning-animation {
+  color: red;
+  transition: color 0.8s;
+  -webkit-animation: burning-flame-loop 4s infinite;
+  -moz-animation: burning-flame-loop 4s infinite;
+  animation: burning-flame-loop 4s infinite;
+}
+
+@-webkit-keyframes burning-flame-loop {
+  0% { color: red; }
+  10% { color: orange; }
+  15% { color: red; }
+  20% { color: orange; }
+  22% { color: red; }
+  25% { color: #480000; }
+  30% { color: #FF6633;}
+  40% { color: red; }
+  41% { color: white; }
+  42% { color: orange; }
+  44% { color: red; }
+  45% { color: red; }
+  65% { color: orange; }
+  75% { color: red; }
+  78% { color: orange; }
+  80% { color: red; }
+  85% { color: #480000; }
+  87% { color: #FF6633;}
+  90% { color: red; }
+  91% { color: white; }
+  92% { color: orange; }
+  94% { color: red; }
+  100% { color: orange; }
+}
+@-moz-keyframes burning-flame-loop {
+  0% { color: red; }
+  10% { color: orange; }
+  15% { color: red; }
+  20% { color: orange; }
+  22% { color: red; }
+  25% { color: #480000; }
+  30% { color: #FF6633;}
+  40% { color: red; }
+  41% { color: white; }
+  42% { color: orange; }
+  44% { color: red; }
+  45% { color: red; }
+  65% { color: orange; }
+  75% { color: red; }
+  78% { color: orange; }
+  80% { color: red; }
+  85% { color: #480000; }
+  87% { color: #FF6633;}
+  90% { color: red; }
+  91% { color: white; }
+  92% { color: orange; }
+  94% { color: red; }
+  100% { color: orange; }
+}
+@keyframes burning-flame-loop {
+  0% { color: red; }
+  10% { color: orange; }
+  15% { color: red; }
+  20% { color: orange; }
+  22% { color: red; }
+  25% { color: #480000; }
+  30% { color: #FF6633;}
+  40% { color: red; }
+  41% { color: white; }
+  42% { color: orange; }
+  44% { color: red; }
+  45% { color: red; }
+  65% { color: orange; }
+  75% { color: red; }
+  78% { color: orange; }
+  80% { color: red; }
+  85% { color: #480000; }
+  87% { color: #FF6633;}
+  90% { color: red; }
+  91% { color: white; }
+  92% { color: orange; }
+  94% { color: red; }
+  100% { color: orange; }
+}

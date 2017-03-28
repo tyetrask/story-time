@@ -1,3 +1,8 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { NonIdealState, Tag, Intent } from '@blueprintjs/core'
+var _ = require('lodash');
+
 class TimingClock extends React.Component {
 
   constructor() {
@@ -16,6 +21,7 @@ class TimingClock extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({editingWorkTimeUnit: null});
+    if (nextProps.selectedStory === null) { return; }
     if (this.props.selectedStory != nextProps.selectedStory) {
       return $.ajax({
         type: 'get',
@@ -27,7 +33,10 @@ class TimingClock extends React.Component {
           return this.setState({workTimeUnits: data});
         },
         error(jqXHR, textStatus, errorThrown) {
-          return this.props.pushNotification(`We're sorry. There was an error loading work time units. ${errorThrown}`);
+          return this.props.pushNotification({
+            message: `We're sorry. There was an error loading work time units. ${errorThrown}`,
+            intent: Intent.DANGER
+          });
         }
       });
     }
@@ -52,7 +61,10 @@ class TimingClock extends React.Component {
         return this.setState({workTimeUnits: newWorkTimeUnits});
       },
       error(jqXHR, textStatus, errorThrown) {
-        this.props.pushNotification(`We're sorry. There was an error creating a work time unit. ${errorThrown}`);
+        this.props.pushNotification({
+          message: `We're sorry. There was an error creating a work time unit. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
         return this.props.setWorkingStory(null);
       }
     });
@@ -79,7 +91,10 @@ class TimingClock extends React.Component {
         return this.setState({workTimeUnits});
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.props.pushNotification(`We're sorry. There was an error closing the work time unit. ${errorThrown}`);
+        return this.props.pushNotification({
+          message: `We're sorry. There was an error closing the work time unit. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -97,7 +112,10 @@ class TimingClock extends React.Component {
         return this.setState({workTimeUnits});
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.props.pushNotification(`We're sorry. There was an error deleting the work time unit. ${errorThrown}`);
+        return this.props.pushNotification({
+          message: `We're sorry. There was an error deleting the work time unit. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -142,47 +160,48 @@ class TimingClock extends React.Component {
                                     pushNotification={this.props.pushNotification}
                                   />);
         }));
-      let labels = this.props.selectedStory.labels.map(label => <span key={label.id} className='label label-default'>{label.name}</span>);
+      let labels = this.props.selectedStory.labels.map(label => <Tag key={label.id}>{label.name}</Tag>);
       if (this.props.workingStory === this.props.selectedStory) {
-        startStopWorkButton = <a onClick={this.handleStopWork.bind(this)} className="list-group-item no-padding">
-                                <input type="submit" className="simple" value="Stop Work" />
+        startStopWorkButton = <a onClick={this.handleStopWork.bind(this)} className="pt-button pt-fill">
+                                Stop Work
                               </a>;
       } else if (this.props.workingStory) {
-        startStopWorkButton = <a onClick={this.handleGoToStory.bind(this)} className="list-group-item no-padding">
-                                <input type="submit" className="simple" value="(Go To Currently Open Story)" />
+        startStopWorkButton = <a onClick={this.handleGoToStory.bind(this)} className="pt-button pt-fill">
+                                (Go To Currently Open Story)
                               </a>;
       } else {
-        startStopWorkButton = <a onClick={this.handleStartWork.bind(this)} className="list-group-item no-padding">
-                                <input type="submit" className="simple" value="Start Work" />
+        startStopWorkButton = <a onClick={this.handleStartWork.bind(this)} className="pt-button pt-fill">
+                                Start Work
                               </a>;
       }
-      return (<div key="clock-container-full" id="clock-container" className="col-xs-6">
-               <div className="panel panel-primary">
-                 <div className="panel-heading text-center">
-                   Clock
-                 </div>
-                 <div className="list-group">
-                   <a className="list-group-item">
-                     <p>{this.props.selectedStory.name}</p>
-                     <p><small>{this.props.selectedStory.description}</small></p>
-                     <p>Estimation: {this.props.selectedStory.estimate} <span className='pull-right'>{labels}</span></p>
-                   </a>
-                   <a className="list-group-item no-padding">
-                     <input className="simple" placeholder="comment" />
-                   </a>
+      return (<div key="clock-full" id="clock-container">
+               <div>
+                 <div className="pt-card pt-elevation-2">
+                   <h5>{this.props.selectedStory.name}</h5>
+                   <p>{this.props.selectedStory.description}</p>
+                   <p>Estimation: {this.props.selectedStory.estimate} <span className='pull-right'>{labels}</span></p>
+                   <br />
                    {workTimeUnits}
+                   <br />
                    {startStopWorkButton}
                  </div>
                </div>
              </div>);
-    } else {
-      return (<div key="clock-container-empty" id="clock-container" className="col-xs-6">
-               <div className="panel panel-primary">
-                 <div className="panel-heading text-center">Clock</div>
-                 <div className="list-group"></div>
-               </div>
-             </div>);
     }
+    return <div key="clock-empty" id="clock-container">
+            <div>
+              <div className="pt-card pt-elevation-0">
+                <br /><br /><br /><br />
+                <NonIdealState
+                 title="No Story Selected"
+                 description="Please select a story to begin working"
+                 visual="pt-icon-build"
+                />
+                <br /><br /><br /><br /><br />
+              </div>
+            </div>
+
+           </div>
   }
 }
 

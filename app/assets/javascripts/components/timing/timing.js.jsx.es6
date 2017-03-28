@@ -1,12 +1,17 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { ProgressBar, Toaster, Position, Intent } from '@blueprintjs/core';
+var _ = require('lodash');
+
 class Timing extends React.Component {
 
   constructor() {
     super()
     this.state = {
+      isLoading: false,
       me: null,
       meExternal: {name: 'Developer'},
       projects: [],
-      notifications: [],
       resourceInterface: 'pivotal_tracker',
       screenHeight: 1000,
       areCompletedStoriesVisible: false,
@@ -22,10 +27,12 @@ class Timing extends React.Component {
       'setSelectedStory',
       'setWorkingStory',
       'setCompletedStoriesVisibility',
-      'pushNotification',
-      'dismissNotification'
+      'pushNotification'
     ]
     methods.forEach((method) => { this[method] = this[method].bind(this); });
+    this.refHandlers = {
+        notifier: (ref) => { this.notifier = ref },
+    };
   }
 
   componentWillMount() {
@@ -34,7 +41,19 @@ class Timing extends React.Component {
 
   componentDidMount() {
     this.calculateScreenHeight();
-    return this.attachControlPanelHandler();
+    this.bindLoadingEvents();
+    this.configureNotifier();
+  }
+
+  bindLoadingEvents() {
+    $(document).ajaxStop((() => { this.setState({isLoading: false}); }))
+    $(document).ajaxStart((() => { this.setState({isLoading: true}); }));
+  }
+
+  configureNotifier() {
+    this.notifier = Toaster.create({
+        position: Position.TOP_LEFT,
+    }, document.body);
   }
 
   loadMe() {
@@ -47,7 +66,10 @@ class Timing extends React.Component {
         return this.setState({me: data}, this.loadExternalMe);
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading your external account. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading your external account. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -62,7 +84,10 @@ class Timing extends React.Component {
         return this.setState({meExternal: data}, this.loadProjects);
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading your external account. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading your external account. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -83,25 +108,19 @@ class Timing extends React.Component {
         }
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading projects. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading projects. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
 
   calculateScreenHeight() {
     let windowHeight = $(window).height();
-    let navigationHeight = $('#navigation-container').height();
-    this.setState({screenHeight: (windowHeight - navigationHeight - 20)}); // 20 pixels height for div.spacer-sm
+    this.setState({screenHeight: (windowHeight - 20)}); // 20 pixels height for div.spacer-sm
     $('#stories-container').css('height', this.state.screenHeight);
     return $('#clock-container').css('height', this.state.screenHeight);
-  }
-
-  attachControlPanelHandler() {
-    // TODO: Probably reactify this a bit more at some point.
-    return $('#control-panel-toggle a').click(function(e) {
-      $('#control-panel-container').slideToggle();
-      return $('#control-panel-toggle').toggleClass('active');
-    });
   }
 
   loadStories() {
@@ -116,7 +135,10 @@ class Timing extends React.Component {
         return this.loadOpenWorkTimeUnit();
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading your work stories. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading your work stories. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
     return $.ajax({
@@ -132,7 +154,10 @@ class Timing extends React.Component {
         return this.setState({upcoming: upcomingStories}, this.buildEpicList);
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading upcoming stories. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading upcoming stories. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -155,7 +180,10 @@ class Timing extends React.Component {
       context: this,
       success(data) {
         if (data.length > 1) {
-          return this.pushNotification(`We're sorry. More than one open working story was detected. ${errorThrown}`);
+          return this.pushNotification({
+            message: `We're sorry. More than one open working story was detected.`,
+            intent: Intent.DANGER
+          });
         } else if (data.length === 1) {
           let openWorkTimeUnit = data[0];
           if (openWorkTimeUnit.project_id === this.state.selectedProject.id) {
@@ -163,12 +191,18 @@ class Timing extends React.Component {
             return this.setWorkingStory(workingStory);
           } else {
             let openProject = _.find(this.state.projects, {id: openWorkTimeUnit.project_id});
-            return this.pushNotification(`You are currently working on a story in another Project. (${openProject.name})`);
+            return this.pushNotification({
+              message: `You are currently working on a story in another Project. (${openProject.name})`,
+              intent: Intent.WARNING
+            });
           }
         }
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error loading the open working story. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error loading the open working story. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -215,7 +249,10 @@ class Timing extends React.Component {
         }
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error updating the story state. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error updating the story state. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -234,7 +271,10 @@ class Timing extends React.Component {
         return this.setState({me: user});
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification(`We're sorry. There was an error updating your user settings. ${errorThrown}`);
+        return this.pushNotification({
+          message: `We're sorry. There was an error updating your user settings. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
       }
     });
   }
@@ -243,50 +283,48 @@ class Timing extends React.Component {
     return this.setState({areCompletedStoriesVisible: areCompletedStoriesVisible});
   }
 
-  pushNotification(notificationText) {
-    let notificationSet = _.clone(this.state.notifications);
-    notificationSet.push(notificationText);
-    return this.setState({notifications: notificationSet});
+  pushNotification(notification) {
+    this.notifier.show(notification)
   }
 
-  dismissNotification() {
-    let notificationSet = _.clone(this.state.notifications);
-    notificationSet.shift();
-    return this.setState({notifications: notificationSet});
+  loadingIndicator() {
+    let spacerClass = 'spacer-sm'
+    let progressBar = null;
+    if (this.state.isLoading) {
+      spacerClass = 'spacer-sm loading-indicator'
+      progressBar = <ProgressBar value={Math.random()} />
+    }
+    return <div>
+            {progressBar}
+            <div className={spacerClass}></div>
+          </div>
   }
 
   render() {
     return (<div>
-            <TimingControlPanel
-              selectedProject={this.state.selectedProject}
-              setSelectedProject={this.setSelectedProject}
-              projects={this.state.projects}
-              areCompletedStoriesVisible={this.state.areCompletedStoriesVisible}
-              setCompletedStoriesVisibility={this.setCompletedStoriesVisibility}
-            />
-            <div className='spacer-sm'></div>
-            <TimingStories
-              myWork={this.state.myWork}
-              upcoming={this.state.upcoming}
-              epicList={this.state.epicList}
-              selectedStory={this.state.selectedStory}
-              setSelectedStory={this.setSelectedStory}
-              areCompletedStoriesVisible={this.state.areCompletedStoriesVisible}
-            />
-            <TimingClock
-              meExternal={this.state.meExternal}
-              selectedStory={this.state.selectedStory}
-              selectedProject={this.state.selectedProject}
-              workingStory={this.state.workingStory}
-              setWorkingStory={this.setWorkingStory}
-              setSelectedStory={this.setSelectedStory}
-              updateStoryState={this.updateStoryState}
-              pushNotification={this.pushNotification}
-            />
-            <Notifications
-              notifications={this.state.notifications}
-              dismissNotification={this.dismissNotification}
-            />
+            <NavigationHeader toggleTheme={this.props.toggleTheme} />
+            {this.loadingIndicator()}
+            <div id="timing-container">
+              <TimingStories
+                myWork={this.state.myWork}
+                upcoming={this.state.upcoming}
+                epicList={this.state.epicList}
+                selectedStory={this.state.selectedStory}
+                setSelectedStory={this.setSelectedStory}
+                areCompletedStoriesVisible={this.state.areCompletedStoriesVisible}
+              />
+              <TimingClock
+                meExternal={this.state.meExternal}
+                selectedStory={this.state.selectedStory}
+                selectedProject={this.state.selectedProject}
+                workingStory={this.state.workingStory}
+                setWorkingStory={this.setWorkingStory}
+                setSelectedStory={this.setSelectedStory}
+                updateStoryState={this.updateStoryState}
+                pushNotification={this.pushNotification}
+              />
+            </div>
+            <Toaster ref={this.refHandlers.notifier} />
            </div>);
   }
 }

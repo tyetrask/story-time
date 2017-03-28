@@ -1,21 +1,7 @@
-<br /><br /><br /><br />
-<div class='row'>
-  <div class='col-sm-4'></div>
-  
-  <div class='col-sm-4'>
-    <div class='panel panel-default'>
-      <div class='panel-body'>
-        <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-          <div><%= f.email_field :email, class: 'simple', autofocus: true, placeholder: 'email' %></div>
-          <div><%= f.password_field :password, class: 'simple', placeholder: 'password' %></div>
-          <div><%= f.submit 'Sign In', class: 'simple' %></div>
-          <br />
-          <% if devise_mapping.rememberable? -%>
-            <div>keep me signed in:&nbsp;&nbsp;<%= f.check_box :remember_me %></div>
-          <% end %>
-        <% end %>
-      </div>
-  </div>
-  
-  <div class='col-sm-4'></div>
-</div>
+<div id='react-target-login'></div>
+
+<%- content_for :javascript do -%>
+  $(document).ready(function(){
+    ReactDOM.render(React.createElement(StoryTime), document.getElementById('react-target-login'));
+  });
+<%- end -%>
