@@ -39,7 +39,6 @@ class Timing extends React.Component {
   }
 
   componentDidMount() {
-    this.calculateScreenHeight();
     this.bindLoadingEvents();
     this.configureNotifier();
   }
@@ -113,13 +112,6 @@ class Timing extends React.Component {
         });
       }
     });
-  }
-
-  calculateScreenHeight() {
-    let windowHeight = $(window).height();
-    this.setState({screenHeight: (windowHeight - 20)}); // 20 pixels height for div.spacer-sm
-    $('#stories-container').css('height', this.state.screenHeight);
-    return $('#clock-container').css('height', this.state.screenHeight);
   }
 
   loadStories() {
