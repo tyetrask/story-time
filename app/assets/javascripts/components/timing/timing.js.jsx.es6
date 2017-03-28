@@ -15,11 +15,10 @@ class Timing extends React.Component {
       resourceInterface: 'pivotal_tracker',
       screenHeight: 1000,
       areCompletedStoriesVisible: false,
-      myWork: [],
-      upcoming: [],
       epicList: [],
       selectedProject: null,
       selectedStory: null,
+      stories: [],
       workingStory: null
     };
     let methods = [
@@ -124,34 +123,17 @@ class Timing extends React.Component {
   }
 
   loadStories() {
-    this.setState({myWork: [], upcoming: []});
+    this.setState({stories: []});
     $.ajax({
-      type: 'get',
-      dataType: 'json',
-      url: `/story_interface/${this.state.resourceInterface}/projects/${this.state.selectedProject.id}/my_work`,
-      context: this,
-      success(data) {
-        this.setState({myWork: data});
-        return this.loadOpenWorkTimeUnit();
-      },
-      error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification({
-          message: `We're sorry. There was an error loading your work stories. ${errorThrown}`,
-          intent: Intent.DANGER
-        });
-      }
-    });
-    return $.ajax({
       type: 'get',
       dataType: 'json',
       url: `/story_interface/${this.state.resourceInterface}/projects/${this.state.selectedProject.id}/iterations`,
       context: this,
       success(data) {
-        let upcomingStories = [];
-        data.map(iteration =>
-          iteration.stories.map(pivotal_story => upcomingStories.push(pivotal_story))
-        );
-        return this.setState({upcoming: upcomingStories}, this.buildEpicList);
+        let stories = _.flatten(data.map(iteration =>
+          iteration.stories.map(pivotal_story => pivotal_story)
+        ));
+        return this.setState({stories: stories}, this.buildEpicList);
       },
       error(jqXHR, textStatus, errorThrown) {
         return this.pushNotification({
@@ -164,11 +146,11 @@ class Timing extends React.Component {
 
   buildEpicList() {
     let epicList = [];
-    this.state.upcoming.map(story =>
+    this.state.stories.map(story =>
       story.labels.map(label => epicList.push(label.name))
     );
     epicList = _.uniq(epicList);
-    return this.setState({epicList});
+    return this.setState({epicList}, this.loadOpenWorkTimeUnit);
   }
 
   loadOpenWorkTimeUnit() {
@@ -187,7 +169,7 @@ class Timing extends React.Component {
         } else if (data.length === 1) {
           let openWorkTimeUnit = data[0];
           if (openWorkTimeUnit.project_id === this.state.selectedProject.id) {
-            let workingStory = _.find(_.union(this.state.myWork, this.state.upcoming), {id: data[0].story_id});
+            let workingStory = _.find(_.union(this.state.stories, {id: data[0].story_id}));
             return this.setWorkingStory(workingStory);
           } else {
             let openProject = _.find(this.state.projects, {id: openWorkTimeUnit.project_id});
@@ -234,16 +216,6 @@ class Timing extends React.Component {
         let storySet;
         let modifiedStory = _.clone(story);
         modifiedStory.current_state = newState;
-        if (_.contains(this.state.myWork, story)) {
-          storySet = _.clone(this.state.myWork);
-          storySet[storySet.indexOf(story)] = modifiedStory;
-          this.setState({myWork: storySet});
-        }
-        if (_.contains(this.state.upcoming, story)) {
-          storySet = _.clone(this.upcoming.myWork);
-          storySet[storySet.indexOf(story)] = modifiedStory;
-          this.setState({upcoming: storySet});
-        }
         if (story === this.state.selectedStory) {
           return this.setState({selectedStory: modifiedStory});
         }
@@ -306,8 +278,8 @@ class Timing extends React.Component {
             {this.loadingIndicator()}
             <div id="timing-container">
               <TimingStories
-                myWork={this.state.myWork}
-                upcoming={this.state.upcoming}
+                meExternal={this.state.meExternal}
+                stories={this.state.stories}
                 epicList={this.state.epicList}
                 selectedStory={this.state.selectedStory}
                 setSelectedStory={this.setSelectedStory}

@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button } from '@blueprintjs/core'
+var _ = require('lodash');
 
 class TimingStories extends React.Component {
 
@@ -22,39 +23,44 @@ class TimingStories extends React.Component {
   storiesHeader() {
     if (this.state.viewing === 'my work') {
       return <div className="pt-callout">
-              <Button text="My Work" active={true} onClick={this.toggleViewing.bind(this)} />
-              <Button text="Upcoming" active={false} onClick={this.toggleViewing.bind(this)} />
+              <div className="pt-button-group">
+                <Button text="My Work" active={true} onClick={this.toggleViewing.bind(this)} />
+                <Button text="Upcoming" active={false} onClick={this.toggleViewing.bind(this)} />
+              </div>
              </div>
     } else {
       return <div className="pt-callout">
-              <Button text="My Work" active={false} onClick={this.toggleViewing.bind(this)} />
-              <Button text="Upcoming" active={true} onClick={this.toggleViewing.bind(this)} />
+              <div className="pt-button-group">
+                <Button text="My Work" active={false} onClick={this.toggleViewing.bind(this)} />
+                <Button text="Upcoming" active={true} onClick={this.toggleViewing.bind(this)} />
+              </div>
              </div>
     }
   }
 
-  render() {
+  filteredStories() {
     if (this.state.viewing === 'my work') {
-      return (<div id="stories-container">
-               {this.storiesHeader()}
-               <br />
-               <TimingMyWork
-                 stories={this.props.myWork}
-                 selectedStory={this.props.selectedStory}
-                 setSelectedStory={this.props.setSelectedStory}
-                 areCompletedStoriesVisible={this.props.areCompletedStoriesVisible}
-               />
-             </div>);
+      return _.filter(this.props.stories, (story) => { return story.owner_ids.includes(this.props.meExternal.id) })
     }
-    return (<div id="stories-container">
-             {this.storiesHeader()}
-             <br />
-             <TimingMyWork
-              stories={this.props.upcoming}
+    return this.props.stories
+  }
+
+  render() {
+    let stories = this.filteredStories().map((story => {
+      return (<TimingSharedStory
+              key={story.id}
+              story={story}
               selectedStory={this.props.selectedStory}
               setSelectedStory={this.props.setSelectedStory}
               areCompletedStoriesVisible={this.props.areCompletedStoriesVisible}
-             />
+              />);
+      }));
+    return (<div id="stories-container">
+             {this.storiesHeader()}
+             <br />
+             <div>
+              {stories}
+             </div>
            </div>);
   }
 
