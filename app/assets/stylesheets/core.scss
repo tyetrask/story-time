@@ -1,3 +1,12 @@
+/* Colory-doos. */
+$background-dark: #293742;
+$background-light: #f5f8fa;
+$lightest: #E8D988;
+$light: #EAB536;
+$medium: #D98809;
+$dark: #D46704;
+$darkest: #D95600;
+
 html, body {
   height: 100%;
 }
@@ -5,30 +14,16 @@ html, body {
 body.body {
   font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial;
   overflow: hidden;
-  background-color: #f5f8fa;
-}
-
-body.pt-dark {
-  background-color: #293742;
-}
-
-/* Colory-doos. */
-$lightest: #E8D988;
-$light: #EAB536;
-$medium: #D98809;
-$dark: #D46704;
-$darkest: #D95600;
-
-/* Navigation Styling */
-
-#alpha-label {
-  position: relative;
-  left: 0px;
-  top: -10px;
-  font-size: 45%;
 }
 
 /* Container Styling */
+
+#app-container {
+  background-color: $background-light;
+  &.pt-dark {
+    background-color: $background-dark;
+  }
+}
 
 #navigation-container {
   margin: 0 10%;
@@ -65,6 +60,15 @@ $darkest: #D95600;
       margin-bottom: 10px;
     }
   }
+}
+
+/* Misc */
+
+#alpha-label {
+  position: relative;
+  left: 0px;
+  top: -10px;
+  font-size: 85%;
 }
 
 div.spacer-sm {

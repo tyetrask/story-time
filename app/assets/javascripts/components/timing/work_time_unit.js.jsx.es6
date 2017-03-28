@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { TimePicker, TimePickerPrecision } from '@blueprintjs/datetime'
+import { Button } from '@blueprintjs/core';
+import { TimePicker, TimePickerPrecision } from '@blueprintjs/datetime';
 import moment from 'moment';
 
 class TimingClockWorkTimeUnit extends React.Component {
@@ -97,10 +98,25 @@ class TimingClockWorkTimeUnit extends React.Component {
 
   buttonClass(buttonType) {
     let cssClass = 'fa';
-    if (buttonType === 'edit') { cssClass += ' fa-pencil'; }
-    if (buttonType === 'delete') { cssClass += ' fa-trash'; }
-    if (!this.props.workTimeUnit.finished_at) { cssClass += ' disabled'; }
+    if (buttonType === 'edit') {
+      cssClass += ' fa-pencil';
+    } else if (buttonType === 'delete') {
+      cssClass += ' fa-trash';
+    }
     return cssClass;
+  }
+
+  buttonProps(buttonType) {
+    let props = {};
+    if (buttonType === 'edit') {
+      props.onClick = this.handleEditClick;
+    } else if (buttonType === 'delete') {
+      props.onClick = this.handleDeleteClick;
+    }
+    if (!this.props.workTimeUnit.finished_at) {
+      props.disabled = true;
+    }
+    return props;
   }
 
   render() {
@@ -126,12 +142,12 @@ class TimingClockWorkTimeUnit extends React.Component {
     }
     return <div className='pt-card pt-elevation-1 work-time-unit'>
             <p>
-              <a className="pt-button">
-                <i onClick={this.handleEditClick} className={this.buttonClass('edit')}></i>
-              </a>
-              <a className="pt-button">
-                <i onClick={this.handleDeleteClick} className={this.buttonClass('delete')}></i>
-              </a>
+              <Button {...this.buttonProps('edit')}>
+                <i className={this.buttonClass('edit')}></i>
+              </Button>
+              <Button {...this.buttonProps('delete')}>
+                <i className={this.buttonClass('delete')}></i>
+              </Button>
               <span> {this.startedAtFormatted()} - {this.finishedAtFormatted()} <small>{this.totalTimeInSecondsFormatted()}</small></span>
               <span className='pull-right'>
                 Developer: {this.props.workTimeUnit.user_id}

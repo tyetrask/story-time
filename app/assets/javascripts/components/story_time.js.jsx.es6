@@ -6,42 +6,68 @@ class StoryTime extends React.Component {
   constructor() {
     super()
     this.state = {
-      userIsAuthenticated: false
+      userAuthenticationState: 0,
+      theme: 'light'
     }
+    let methods = [
+      'toggleTheme'
+    ]
+    methods.forEach((method) => { this[method] = this[method].bind(this); });
   }
 
   componentWillMount() {
-    this.userIsLoggedIn()
+    this.verifyUserAuthenticationState()
   }
 
-  userIsLoggedIn() {
+  verifyUserAuthenticationState() {
     $.ajax({
       type: "GET",
       url: "/users/me",
       context: this,
-      success: () => { this.setState({userIsAuthenticated: true}) }
+      success: () => { this.setState({userAuthenticationState: 2}) },
+      error: () => { this.setState({userAuthenticationState: 1}) }
     });
   }
 
-  componentForRoute() {
-    if (this.state.userIsAuthenticated) {
-      console.log("user authed")
-      console.log(window.location.pathname)
-      switch (window.location.pathname) {
-        case "/":
-          return <Timing />
-        case "/reports":
-          return <Reports />
-        default:
-          return <Login />
-      }
+  toggleTheme() {
+    if (this.state.theme === 'light') {
+      this.setState({theme: 'dark'});
     } else {
-      return <Login />
+      this.setState({theme: 'light'})
+    }
+  }
+
+  containerClass() {
+    if (this.state.theme === 'dark') {
+      return 'pt-dark';
+    }
+    return '';
+  }
+
+  componentForRoute() {
+    switch (this.state.userAuthenticationState) {
+      case 0:
+        return <Empty />;
+      case 1:
+        return <SignIn />
+      case 2:
+        switch (window.location.pathname) {
+          case "/":
+            return <Timing toggleTheme={this.toggleTheme} />
+          case "/reports":
+            return <Reports />
+          default:
+            return <Empty />;
+        }
+      default:
+        return <Empty />;
     }
   }
 
   render() {
-    return this.componentForRoute();
+    return <div id="app-container" className={this.containerClass()}>
+            {this.componentForRoute()}
+           </div>;
   }
 }
 

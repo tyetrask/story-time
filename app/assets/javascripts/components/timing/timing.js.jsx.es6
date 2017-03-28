@@ -292,7 +292,7 @@ class Timing extends React.Component {
     let progressBar = null;
     if (this.state.isLoading) {
       spacerClass = 'spacer-sm loading-indicator'
-      progressBar = <ProgressBar />
+      progressBar = <ProgressBar value={Math.random()} />
     }
     return <div>
             {progressBar}
@@ -302,7 +302,7 @@ class Timing extends React.Component {
 
   render() {
     return (<div>
-            <NavigationHeader />
+            <NavigationHeader toggleTheme={this.props.toggleTheme} />
             {this.loadingIndicator()}
             <div id="timing-container">
               <TimingStories

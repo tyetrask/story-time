@@ -39,15 +39,9 @@ class TimingUpcoming extends React.Component {
                />;
         }
       }));
-    return (<div>
-             <div className="pt-callout">
-               <h5>Upcoming</h5>
-             </div>
-             <br />
-             <div id="upcoming-story-list">
-               {stories}
-             </div>
-           </div>);
+    return <div id="upcoming-story-list">
+             {stories}
+           </div>;
   }
 
 }

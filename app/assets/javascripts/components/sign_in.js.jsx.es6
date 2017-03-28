@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-class Login extends React.Component {
+class SignIn extends React.Component {
 
   authenticityToken() {
     return document.head.querySelector("[name=csrf-token]").content
@@ -40,4 +40,4 @@ class Login extends React.Component {
   }
 }
 
-window.Login = Login;
+window.SignIn = SignIn;

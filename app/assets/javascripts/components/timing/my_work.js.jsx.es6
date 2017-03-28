@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 class TimingMyWork extends React.Component {
 
   render() {
-    let stories = this.props.myWork.map((story => {
+    let stories = this.props.stories.map((story => {
       return (<TimingSharedStory
               key={story.id}
               story={story}
@@ -13,14 +13,9 @@ class TimingMyWork extends React.Component {
               areCompletedStoriesVisible={this.props.areCompletedStoriesVisible}
               />);
       }));
-    return (<div>
-             <div className="pt-callout">
-               <h5>My Work</h5>
-             </div>
-             <div id="my-work-story-list">
-               {stories}
-             </div>
-           </div>);
+    return <div>
+             {stories}
+           </div>;
   }
 
 }

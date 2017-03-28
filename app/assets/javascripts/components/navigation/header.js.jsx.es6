@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button, Popover, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Button, Popover, Position, Menu, MenuItem, MenuDivider, Tab2, Tabs2 } from '@blueprintjs/core';
 
 class NavigationHeader extends React.Component {
 
@@ -23,14 +23,17 @@ class NavigationHeader extends React.Component {
   settingsMenu() {
     return <Menu>
             <MenuItem text="Change Project">
-              <MenuItem text="Project 1" />
-              <MenuItem text="Project 2" />
-              <MenuItem text="Project 3 TODO" />
+              <MenuItem text="..." disabled={true} />
             </MenuItem>
+            <MenuItem
+              text="Toggle Theme"
+              onClick={this.props.toggleTheme}
+            />
             <MenuItem
               onClick={this.hideCompletedStoriesOnClick}
               text="Hide Completed Stories"
               shouldDismissPopover={false}
+              disabled={true}
             />
             <MenuDivider />
             <MenuItem text="Sign Out" iconName="log-out" onClick={this.signOutOnClick} />
@@ -42,16 +45,14 @@ class NavigationHeader extends React.Component {
             <div id="navigation-container">
               <div className="pt-navbar-group pt-align-left">
                 <div className="pt-navbar-heading">
-                  <i className='fa fa-book'></i> StoryTime <small><span id='alpha-label' className='label label-danger'>alpha</span></small>
+                  <i className='fa fa-book'></i> StoryTime <small><span id='alpha-label' className='pt-tag pt-minimal pt-intent-danger'>alpha</span></small>
                 </div>
               </div>
               <div className="pt-navbar-group pt-align-right">
-                <Button active={true}>
-                  <i className='fa fa-fire'></i> Do Work!
-                </Button>
-                <Button>
-                  <i className='fa fa-paper-plane-o'></i> Reports
-                </Button>
+                <Tabs2 id="tc">
+                  <Tab2 id="dw" title={<span><i className='fa fa-fire'></i> Do Work!</span>} />
+                  <Tab2 id="rp" title={<span><i className='fa fa-paper-plane-o'></i> Reports</span>} disabled={true} />
+                </Tabs2>
                 <span className="pt-navbar-divider"></span>
                 <Popover content={this.settingsMenu()} position={Position.BOTTOM}>
                   <Button iconName="user" />
