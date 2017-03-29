@@ -1,29 +1,11 @@
 class WorkTimeUnitsController < ApplicationController
   before_action :set_scope, only: [:index]
-  before_action :set_work_time_unit, only: [:show, :edit, :update, :destroy]
+  before_action :set_work_time_unit, only: [:update, :destroy]
 
-  # GET /work_time_units
-  # GET /work_time_units.json
   def index
     @work_time_units
   end
 
-  # GET /work_time_units/1
-  # GET /work_time_units/1.json
-  def show
-  end
-
-  # GET /work_time_units/new
-  def new
-    @work_time_unit = WorkTimeUnit.new
-  end
-
-  # GET /work_time_units/1/edit
-  def edit
-  end
-
-  # POST /work_time_units
-  # POST /work_time_units.json
   def create
     @work_time_unit = WorkTimeUnit.new(work_time_unit_params)
     respond_to do |format|
@@ -37,8 +19,6 @@ class WorkTimeUnitsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /work_time_units/1
-  # PATCH/PUT /work_time_units/1.json
   def update
     respond_to do |format|
       if @work_time_unit.update(work_time_unit_params)
@@ -51,8 +31,6 @@ class WorkTimeUnitsController < ApplicationController
     end
   end
 
-  # DELETE /work_time_units/1
-  # DELETE /work_time_units/1.json
   def destroy
     @work_time_unit.destroy
     respond_to do |format|
@@ -62,7 +40,7 @@ class WorkTimeUnitsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
     def set_work_time_unit
       @work_time_unit = WorkTimeUnit.find(params[:id])
     end

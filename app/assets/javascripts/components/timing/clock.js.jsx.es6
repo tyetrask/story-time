@@ -11,35 +11,39 @@ class TimingClock extends React.Component {
       workTimeUnits: [],
       editingWorkTimeUnit: null
     };
-    let methods = [
+    let methodsToBind = [
       'setEditingWorkTimeUnit',
       'deleteWorkTimeUnit',
       'updateWorkTimeUnitAfterEdit'
     ]
-    methods.forEach((method) => { this[method] = this[method].bind(this); });
+    methodsToBind.forEach((method) => { this[method] = this[method].bind(this); });
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({editingWorkTimeUnit: null});
     if (nextProps.selectedStoryID === null) { return; }
     if (this.props.selectedStoryID != nextProps.selectedStoryID) {
-      return $.ajax({
-        type: 'get',
-        dataType: 'json',
-        data: {work_time_unit: {project_id: nextProps.selectedProjectID, story_id: nextProps.selectedStoryID} },
-        url: '/work_time_units/',
-        context: this,
-        success(data) {
-          return this.setState({workTimeUnits: data});
-        },
-        error(jqXHR, textStatus, errorThrown) {
-          return this.props.pushNotification({
-            message: `We're sorry. There was an error loading work time units. ${errorThrown}`,
-            intent: Intent.DANGER
-          });
-        }
-      });
+      this.setState({workTimeUnits: []}, this.loadWorkTimeUnits.bind(this, nextProps))
     }
+  }
+
+  loadWorkTimeUnits(nextProps) {
+    $.ajax({
+      type: 'get',
+      dataType: 'json',
+      data: {work_time_unit: {project_id: nextProps.selectedProjectID, story_id: nextProps.selectedStoryID} },
+      url: '/work_time_units/',
+      context: this,
+      success(data) {
+        return this.setState({workTimeUnits: data});
+      },
+      error(jqXHR, textStatus, errorThrown) {
+        return this.props.pushNotification({
+          message: `We're sorry. There was an error loading work time units. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
+      }
+    });
   }
 
   handleStartWork() {
@@ -52,7 +56,14 @@ class TimingClock extends React.Component {
     return $.ajax({
       type: 'post',
       dataType: 'json',
-      data: {work_time_unit: {user_id: this.props.meExternal.id, project_id: this.props.selectedProjectID, story_id: this.props.selectedStoryID, started_at: startedAt}},
+      data: {
+        work_time_unit: {
+          user_id: this.props.meExternal.id,
+          project_id: this.props.selectedProjectID,
+          story_id: this.props.selectedStoryID,
+          started_at: startedAt
+        }
+      },
       url: '/work_time_units/',
       context: this,
       success(data) {

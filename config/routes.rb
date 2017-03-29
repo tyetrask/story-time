@@ -3,7 +3,7 @@ StoryTime::Application.routes.draw do
 
   root to: "timing#index"
 
-  resources :reports, only: [:index]
+  resources :reports, only: []
 
   resources :story_interface, only: [] do
     collection do
@@ -12,7 +12,6 @@ StoryTime::Application.routes.draw do
       get ':resource_interface/projects', to: 'story_interface#projects'
       get ':resource_interface/projects/:project_id/epics', to: 'story_interface#epics'
       get ':resource_interface/projects/:project_id/iterations', to: 'story_interface#iterations'
-      get ':resource_interface/projects/:project_id/my_work', to: 'story_interface#my_work'
       get ':resource_interface/projects/:project_id/stories', to: 'story_interface#stories'
       get ':resource_interface/projects/:project_id/stories/:story_id', to: 'story_interface#story'
       patch ':resource_interface/projects/:project_id/stories/:story_id', to: 'story_interface#patch_story'
@@ -21,12 +20,12 @@ StoryTime::Application.routes.draw do
 
   resources :timing, only: [:index]
 
-  resources :users do
+  resources :users, only: [:index, :create, :update, :destroy] do
     collection do
       get :me
     end
   end
 
-  resources :work_time_units
+  resources :work_time_units, only: [:index, :create, :update, :destroy]
 
 end

@@ -36,13 +36,6 @@ class StoryInterfaceController < ApplicationController
     end
   end
 
-  def my_work
-    @my_work = @resource_interface.get_my_work(story_interface_params[:project_id])
-    respond_to do |format|
-      format.json { render json: @my_work }
-    end
-  end
-
   def stories
     @stories = @resource_interface.get_stories(story_interface_params[:project_id], {}) # Add ability to qualify options.
     respond_to do |format|

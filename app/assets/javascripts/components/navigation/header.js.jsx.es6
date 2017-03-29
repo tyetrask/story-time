@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button, Popover, Position, Menu, MenuItem, MenuDivider, Tab2, Tabs2 } from '@blueprintjs/core';
+import { Button, Popover, Position, Menu, MenuItem, MenuDivider, Spinner, Tab2, Tabs2 } from '@blueprintjs/core';
 
 class NavigationHeader extends React.Component {
 
@@ -40,12 +40,19 @@ class NavigationHeader extends React.Component {
            </Menu>
   }
 
+  titleIcon() {
+    if (this.props.isLoading) {
+      return <Spinner className="pt-super-small" />;
+    }
+    return <i className='fa fa-book'></i>;
+  }
+
   render() {
     return (<nav className="pt-navbar">
             <div id="navigation-container">
               <div className="pt-navbar-group pt-align-left">
                 <div className="pt-navbar-heading">
-                  <i className='fa fa-book'></i> StoryTime <small><span id='alpha-label' className='pt-tag pt-minimal pt-intent-danger'>alpha</span></small>
+                  {this.titleIcon()} Story Time
                 </div>
               </div>
               <div className="pt-navbar-group pt-align-right">

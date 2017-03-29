@@ -1,38 +1,18 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:update, :destroy]
   before_action :check_policy, except: [:me]
 
-  # GET /users
-  # GET /users.json
   def index
     @users = User.all
   end
 
-  # GET /users/1
-  # GET /users/1.json
-  def show
-    redirect_to edit_user_path(@user)
-  end
-  
   def me
     @user = current_user
     respond_to do |format|
-      format.html { redirect_to @user }
       format.json { render json: @user }
     end
   end
 
-  # GET /users/new
-  def new
-    @user = User.new
-  end
-
-  # GET /users/1/edit
-  def edit
-  end
-
-  # POST /users
-  # POST /users.json
   def create
     @user = User.new(user_params)
     respond_to do |format|
@@ -46,8 +26,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # PATCH/PUT /users/1
-  # PATCH/PUT /users/1.json
   def update
     respond_to do |format|
       if @user.update(user_params_with_settings)
@@ -60,8 +38,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # DELETE /users/1
-  # DELETE /users/1.json
   def destroy
     @user.destroy
     respond_to do |format|
@@ -71,12 +47,12 @@ class UsersController < ApplicationController
   end
 
   private
-    
+
     def check_policy
       return true if current_user.is_admin
       redirect_to root_path, notice: 'You do not have permission to modify users.' if !@user || current_user.id != @user.id
     end
-    
+
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])
@@ -86,7 +62,7 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:email, :password, :pivotal_api_token, :concentration_mode, :approved, :settings)
     end
-    
+
     def user_params_with_settings
       user_params_clean = params[:user]
       # TODO: don't allow scary params for user.settings

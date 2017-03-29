@@ -1,6 +1,7 @@
 {
   "name": "story-time",
   "version": "1.0.0",
+  "author": "Tye Trask",
   "private": true,
   "description": "A developer-focused interface to popular project management tracking tools.",
   "dependencies": {
@@ -16,7 +17,5 @@
   },
   "engines": {
     "node": ">= 5.1"
-  },
-  "author": "Tye Trask",
-  "license": "BSD-3-Clause"
+  }
 }

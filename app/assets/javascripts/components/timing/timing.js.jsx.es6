@@ -239,23 +239,13 @@ class Timing extends React.Component {
     this.notifier.show(notification)
   }
 
-  loadingIndicator() {
-    let spacerClass = 'spacer-sm'
-    let progressBar = null;
-    if (this.state.isLoading) {
-      spacerClass = 'spacer-sm loading-indicator'
-      progressBar = <ProgressBar value={Math.random()} />
-    }
-    return <div>
-            {progressBar}
-            <div className={spacerClass}></div>
-          </div>
-  }
-
   render() {
     return (<div>
-            <NavigationHeader toggleTheme={this.props.toggleTheme} />
-            {this.loadingIndicator()}
+            <NavigationHeader
+              isLoading={this.state.isLoading}
+              toggleTheme={this.props.toggleTheme}
+            />
+            <div className="spacer-sm"></div>
             <div id="timing-container">
               <TimingStories
                 meExternal={this.state.meExternal}

@@ -34,16 +34,6 @@ module PivotalTracker
       https_get_request("#{@base_api_url}/projects/#{project_id}/stories/#{story_id}")
     end
 
-    def get_my_work(project_id)
-      my_id = get_me[:id]
-      my_work = []
-      current_backlog_stories = get_iterations(project_id, 'current_backlog', 1)[0][:stories]
-      current_backlog_stories.each do |story|
-        my_work << story if story[:owner_ids] && story[:owner_ids].include?(my_id)
-      end
-      my_work
-    end
-
     def get_me
       https_get_request("#{@base_api_url}/me")
     end
