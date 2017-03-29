@@ -13,25 +13,23 @@ class Timing extends React.Component {
       meExternal: {name: 'Developer'},
       projects: [],
       resourceInterface: 'pivotal_tracker',
-      screenHeight: 1000,
       areCompletedStoriesVisible: false,
-      epicList: [],
-      selectedProject: null,
-      selectedStory: null,
+      selectedProjectID: null,
+      selectedStoryID: null,
       stories: [],
-      workingStory: null
+      workingStoryID: null
     };
-    let methods = [
-      'setSelectedProject',
-      'setSelectedStory',
-      'setWorkingStory',
-      'setCompletedStoriesVisibility',
-      'pushNotification'
-    ]
-    methods.forEach((method) => { this[method] = this[method].bind(this); });
     this.refHandlers = {
         notifier: (ref) => { this.notifier = ref },
     };
+    let methodsToBind = [
+      'setSelectedProjectID',
+      'setSelectedStoryID',
+      'setWorkingStoryID',
+      'setCompletedStoriesVisibility',
+      'pushNotification'
+    ]
+    methodsToBind.forEach((method) => { this[method] = this[method].bind(this); });
   }
 
   componentWillMount() {
@@ -99,10 +97,10 @@ class Timing extends React.Component {
       success(data) {
         this.setState({projects: data});
         if (this.state.me.settings.last_viewed_project_id) {
-          let last_viewed_project = _.find(this.state.projects, {id: parseInt(this.state.me.settings.last_viewed_project_id)});
-          return this.setSelectedProject(last_viewed_project);
+          let lastViewedProject = _.find(this.state.projects, {id: parseInt(this.state.me.settings.last_viewed_project_id)});
+          return this.setSelectedProjectID(lastViewedProject.id);
         } else {
-          return this.setSelectedProject(this.state.projects[0]);
+          return this.setSelectedProjectID(this.state.projects[0].id);
         }
       },
       error(jqXHR, textStatus, errorThrown) {
@@ -119,13 +117,13 @@ class Timing extends React.Component {
     $.ajax({
       type: 'get',
       dataType: 'json',
-      url: `/story_interface/${this.state.resourceInterface}/projects/${this.state.selectedProject.id}/iterations`,
+      url: `/story_interface/${this.state.resourceInterface}/projects/${this.state.selectedProjectID}/iterations`,
       context: this,
       success(data) {
         let stories = _.flatten(data.map(iteration =>
           iteration.stories.map(pivotal_story => pivotal_story)
         ));
-        return this.setState({stories: stories}, this.buildEpicList);
+        return this.setState({stories: stories}, this.loadOpenWorkTimeUnit);
       },
       error(jqXHR, textStatus, errorThrown) {
         return this.pushNotification({
@@ -134,15 +132,6 @@ class Timing extends React.Component {
         });
       }
     });
-  }
-
-  buildEpicList() {
-    let epicList = [];
-    this.state.stories.map(story =>
-      story.labels.map(label => epicList.push(label.name))
-    );
-    epicList = _.uniq(epicList);
-    return this.setState({epicList}, this.loadOpenWorkTimeUnit);
   }
 
   loadOpenWorkTimeUnit() {
@@ -160,12 +149,14 @@ class Timing extends React.Component {
           });
         } else if (data.length === 1) {
           let openWorkTimeUnit = data[0];
-          if (openWorkTimeUnit.project_id === this.state.selectedProject.id) {
-            let workingStory = _.find(_.union(this.state.stories, {id: data[0].story_id}));
-            return this.setWorkingStory(workingStory);
+          if (openWorkTimeUnit.project_id === this.state.selectedProjectID) {
+            let workingStory = _.find(this.state.stories, {id: data[0].story_id});
+            if (workingStory) {
+              this.setWorkingStoryID(workingStory.id);
+            }
           } else {
             let openProject = _.find(this.state.projects, {id: openWorkTimeUnit.project_id});
-            return this.pushNotification({
+            this.pushNotification({
               message: `You are currently working on a story in another Project. (${openProject.name})`,
               intent: Intent.WARNING
             });
@@ -181,21 +172,20 @@ class Timing extends React.Component {
     });
   }
 
-  setSelectedProject(project) {
-    this.setState({selectedProject: project, selectedStory: null}, this.loadStories);
-    return this.updateUserSettings({last_viewed_project_id: project.id});
+  setSelectedProjectID(projectID) {
+    this.setState({selectedProjectID: projectID, selectedStoryID: null}, this.loadStories);
+    return this.updateUserSettings({last_viewed_project_id: projectID});
   }
 
-  setSelectedStory(story) {
-    return this.setState({selectedStory: story});
+  setSelectedStoryID(storyID) {
+    return this.setState({selectedStoryID: storyID});
   }
 
-  setWorkingStory(story) {
-    this.setState({workingStory: story});
-    if (story) { return $('i.fa-fire').addClass('burning-animation'); } else { return $('i.fa-fire').removeClass('burning-animation'); }
+  setWorkingStoryID(storyID) {
+    this.setState({workingStoryID: storyID});
   }
 
-  updateStoryState(story, newState) {
+  updateStoryState(storyID, newState) {
     // TODO: Add user to the list of owner_ids for the story, if going from unstarted -> started
     return false; // Remove when ready to implement.
     return $.ajax({
@@ -205,12 +195,10 @@ class Timing extends React.Component {
       url: `/story_interface/${this.state.resourceInterface}/projects/${story.project_id}/stories/${story.id}`,
       context: this,
       success(data) {
-        let storySet;
-        let modifiedStory = _.clone(story);
-        modifiedStory.current_state = newState;
-        if (story === this.state.selectedStory) {
-          return this.setState({selectedStory: modifiedStory});
-        }
+        let stories = _.cloneDeep(this.state.stories)
+        story = _.find(stories, {id: storyID})
+        stories[stories.indexOf(story)] = data
+        this.setState({stories: stories})
       },
       error(jqXHR, textStatus, errorThrown) {
         return this.pushNotification({
@@ -272,18 +260,18 @@ class Timing extends React.Component {
               <TimingStories
                 meExternal={this.state.meExternal}
                 stories={this.state.stories}
-                epicList={this.state.epicList}
-                selectedStory={this.state.selectedStory}
-                setSelectedStory={this.setSelectedStory}
+                selectedStoryID={this.state.selectedStoryID}
+                setSelectedStoryID={this.setSelectedStoryID}
                 areCompletedStoriesVisible={this.state.areCompletedStoriesVisible}
               />
               <TimingClock
                 meExternal={this.state.meExternal}
-                selectedStory={this.state.selectedStory}
-                selectedProject={this.state.selectedProject}
-                workingStory={this.state.workingStory}
-                setWorkingStory={this.setWorkingStory}
-                setSelectedStory={this.setSelectedStory}
+                selectedStoryID={this.state.selectedStoryID}
+                selectedProjectID={this.state.selectedProjectID}
+                stories={this.state.stories}
+                workingStoryID={this.state.workingStoryID}
+                setWorkingStoryID={this.setWorkingStoryID}
+                setSelectedStoryID={this.setSelectedStoryID}
                 updateStoryState={this.updateStoryState}
                 pushNotification={this.pushNotification}
               />

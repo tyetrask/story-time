@@ -4,15 +4,15 @@ import ReactDOM from 'react-dom';
 class TimingSharedStory extends React.Component {
 
   handleClickedStory() {
-    if (this.props.selectedStory && this.props.selectedStory.id === this.props.story.id) {
-      return this.props.setSelectedStory(null);
+    if (this.props.selectedStoryID === this.props.story.id) {
+      return this.props.setSelectedStoryID(null);
     }
-    this.props.setSelectedStory(this.props.story);
+    this.props.setSelectedStoryID(this.props.story.id);
   }
 
   storyStateClass() {
     let baseClass = "story-card pt-card pt-elevation-0 pt-interactive";
-    if (this.props.selectedStory && this.props.selectedStory.id === this.props.story.id) { baseClass = baseClass + ' selected'; }
+    if (this.props.selectedStoryID === this.props.story.id) { baseClass = baseClass + ' selected'; }
     if (this.props.story.current_state === 'started') { return `${baseClass} started`; }
     if (this.props.story.current_state === 'accepted') { return `${baseClass} accepted`; }
     return baseClass;

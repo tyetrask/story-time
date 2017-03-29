@@ -26,7 +26,6 @@ class WorkTimeUnitsController < ApplicationController
   # POST /work_time_units.json
   def create
     @work_time_unit = WorkTimeUnit.new(work_time_unit_params)
-
     respond_to do |format|
       if @work_time_unit.save
         format.html { redirect_to @work_time_unit, notice: 'Work time unit was successfully created.' }
@@ -67,7 +66,7 @@ class WorkTimeUnitsController < ApplicationController
     def set_work_time_unit
       @work_time_unit = WorkTimeUnit.find(params[:id])
     end
-    
+
     def set_scope
       @work_time_units = WorkTimeUnit.all
       @work_time_units = @work_time_units.where(project_id: work_time_unit_params[:project_id], story_id: work_time_unit_params[:story_id]) if work_time_unit_params[:story_id] and work_time_unit_params[:project_id]

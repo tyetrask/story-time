@@ -50,8 +50,8 @@ class TimingStories extends React.Component {
       return (<TimingSharedStory
               key={story.id}
               story={story}
-              selectedStory={this.props.selectedStory}
-              setSelectedStory={this.props.setSelectedStory}
+              selectedStoryID={this.props.selectedStoryID}
+              setSelectedStoryID={this.props.setSelectedStoryID}
               areCompletedStoriesVisible={this.props.areCompletedStoriesVisible}
               />);
       }));
