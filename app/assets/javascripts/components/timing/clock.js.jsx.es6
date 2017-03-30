@@ -32,7 +32,7 @@ class TimingClock extends React.Component {
       type: 'get',
       dataType: 'json',
       data: {work_time_unit: {project_id: nextProps.selectedProjectID, story_id: nextProps.selectedStoryID} },
-      url: '/work_time_units/',
+      url: '/work_time_units',
       context: this,
       success(data) {
         return this.setState({workTimeUnits: data});
@@ -48,23 +48,24 @@ class TimingClock extends React.Component {
 
   handleStartWork() {
     this.props.setWorkingStoryID(this.props.selectedStoryID);
-    return this.openWorkTimeUnit();
+    return this.createWorkTimeUnit();
   }
 
-  openWorkTimeUnit() {
+  createWorkTimeUnit() {
     let startedAt = new Date();
     return $.ajax({
       type: 'post',
       dataType: 'json',
       data: {
         work_time_unit: {
-          user_id: this.props.meExternal.id,
+          integration_id: this.props.selectedIntegrationID,
+          integration_user_id: this.props.currentUserExternal.id,
           project_id: this.props.selectedProjectID,
           story_id: this.props.selectedStoryID,
           started_at: startedAt
         }
       },
-      url: '/work_time_units/',
+      url: '/work_time_units',
       context: this,
       success(data) {
         let newWorkTimeUnits = _.clone(this.state.workTimeUnits);

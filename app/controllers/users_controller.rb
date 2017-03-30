@@ -1,16 +1,13 @@
 class UsersController < ApplicationController
+  before_action :check_policy, except: [:current_user]
   before_action :set_user, only: [:update, :destroy]
-  before_action :check_policy, except: [:me]
 
   def index
     @users = User.all
   end
 
-  def me
+  def current__user
     @user = current_user
-    respond_to do |format|
-      format.json { render json: @user }
-    end
   end
 
   def create

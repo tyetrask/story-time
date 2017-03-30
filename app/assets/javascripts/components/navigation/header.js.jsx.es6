@@ -4,8 +4,20 @@ import { Button, Popover, Position, Menu, MenuItem, MenuDivider, Spinner, Tab2, 
 
 class NavigationHeader extends React.Component {
 
-  changeProjectOnClick(e) {
+  constructor() {
+    super()
+    this.state = {
+      isLoading: false
+    }
+  }
 
+  componentDidMount() {
+    this.bindLoadingEvents();
+  }
+
+  bindLoadingEvents() {
+    $(document).ajaxStop((() => { this.setState({isLoading: false}); }))
+    $(document).ajaxStart((() => { this.setState({isLoading: true}); }));
   }
 
   hideCompletedStoriesOnClick(e) {
@@ -22,7 +34,10 @@ class NavigationHeader extends React.Component {
 
   settingsMenu() {
     return <Menu>
-            <MenuItem text="Change Project">
+            <MenuItem text="Switch Integration">
+              <MenuItem text="..." disabled />
+            </MenuItem>
+            <MenuItem text="Switch Project">
               <MenuItem text="..." disabled={true} />
             </MenuItem>
             <MenuItem
@@ -41,7 +56,7 @@ class NavigationHeader extends React.Component {
   }
 
   titleIcon() {
-    if (this.props.isLoading) {
+    if (this.state.isLoading) {
       return <Spinner className="pt-super-small" />;
     }
     return <i className='fa fa-book'></i>;

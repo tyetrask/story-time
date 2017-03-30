@@ -3,26 +3,30 @@ StoryTime::Application.routes.draw do
 
   root to: "timing#index"
 
-  resources :reports, only: []
-
-  resources :story_interface, only: [] do
-    collection do
-      get ':resource_interface/me', to: 'story_interface#me'
-      get ':resource_interface/my_notifications', to: 'story_interface#my_notifications'
-      get ':resource_interface/projects', to: 'story_interface#projects'
-      get ':resource_interface/projects/:project_id/epics', to: 'story_interface#epics'
-      get ':resource_interface/projects/:project_id/iterations', to: 'story_interface#iterations'
-      get ':resource_interface/projects/:project_id/stories', to: 'story_interface#stories'
-      get ':resource_interface/projects/:project_id/stories/:story_id', to: 'story_interface#story'
-      patch ':resource_interface/projects/:project_id/stories/:story_id', to: 'story_interface#patch_story'
+  resources :integrations, only: [:index, :create, :update, :destroy] do
+    member do
+      resources :external_resources, only: [] do
+        collection do
+          get :current__user # Double underscore to avoid interference with Devise current_user alias
+          get :notifications
+          get :projects
+          get 'projects/:project_id/epics', to: 'external_resources#epics'
+          get 'projects/:project_id/iterations', to: 'external_resources#iterations'
+          get 'projects/:project_id/stories', to: 'external_resources#stories'
+          get 'projects/:project_id/stories/:story_id', to: 'external_resources#story'
+          patch 'projects/:project_id/stories/:story_id', to: 'external_resources#patch_story'
+        end
+      end
     end
   end
+
+  resources :reports, only: []
 
   resources :timing, only: [:index]
 
   resources :users, only: [:index, :create, :update, :destroy] do
     collection do
-      get :me
+      get :current__user # Double underscore to avoid interference with Devise current_user alias
     end
   end
 

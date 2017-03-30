@@ -8,12 +8,10 @@ class Timing extends React.Component {
   constructor() {
     super()
     this.state = {
-      isLoading: false,
-      me: null,
-      meExternal: {name: 'Developer'},
+      currentUser: null,
+      currentUserExternal: {name: 'Developer'},
       projects: [],
-      resourceInterface: 'pivotal_tracker',
-      areCompletedStoriesVisible: false,
+      selectedIntegrationID: null,
       selectedProjectID: null,
       selectedStoryID: null,
       stories: [],
@@ -26,24 +24,17 @@ class Timing extends React.Component {
       'setSelectedProjectID',
       'setSelectedStoryID',
       'setWorkingStoryID',
-      'setCompletedStoriesVisibility',
       'pushNotification'
     ]
     methodsToBind.forEach((method) => { this[method] = this[method].bind(this); });
   }
 
   componentWillMount() {
-    this.loadMe()
+    this.loadCurrentUser()
   }
 
   componentDidMount() {
-    this.bindLoadingEvents();
     this.configureNotifier();
-  }
-
-  bindLoadingEvents() {
-    $(document).ajaxStop((() => { this.setState({isLoading: false}); }))
-    $(document).ajaxStart((() => { this.setState({isLoading: true}); }));
   }
 
   configureNotifier() {
@@ -52,14 +43,24 @@ class Timing extends React.Component {
     }, document.body);
   }
 
-  loadMe() {
+  loadCurrentUser() {
     $.ajax({
       type: 'get',
       dataType: 'json',
-      url: `/users/me`,
+      url: `/users/current__user`,
       context: this,
       success(data) {
-        return this.setState({me: data}, this.loadExternalMe);
+        let selectedIntegrationID = null;
+        let currentUser = data.user
+        if (currentUser.integrations.length > 0) {
+          // TODO Save "last" selected integration to database
+          selectedIntegrationID = currentUser.integrations[0].id
+        }
+        this.setState({
+          currentUser: currentUser,
+          selectedIntegrationID: selectedIntegrationID
+          }, this.loadCurrentUserExternal
+        );
       },
       error(jqXHR, textStatus, errorThrown) {
         return this.pushNotification({
@@ -70,14 +71,14 @@ class Timing extends React.Component {
     });
   }
 
-  loadExternalMe() {
+  loadCurrentUserExternal() {
     $.ajax({
       type: 'get',
       dataType: 'json',
-      url: `/story_interface/${this.state.resourceInterface}/me`,
+      url: `/integrations/${this.state.selectedIntegrationID}/external_resources/current__user`,
       context: this,
       success(data) {
-        return this.setState({meExternal: data}, this.loadProjects);
+        return this.setState({currentUserExternal: data}, this.loadProjects);
       },
       error(jqXHR, textStatus, errorThrown) {
         return this.pushNotification({
@@ -92,12 +93,12 @@ class Timing extends React.Component {
     $.ajax({
       type: 'get',
       dataType: 'json',
-      url: `/story_interface/${this.state.resourceInterface}/projects`,
+      url: `/integrations/${this.state.selectedIntegrationID}/external_resources/projects`,
       context: this,
       success(data) {
         this.setState({projects: data});
-        if (this.state.me.settings.last_viewed_project_id) {
-          let lastViewedProject = _.find(this.state.projects, {id: parseInt(this.state.me.settings.last_viewed_project_id)});
+        if (this.state.currentUser.settings.last_viewed_project_id) {
+          let lastViewedProject = _.find(this.state.projects, {id: parseInt(this.state.currentUser.settings.last_viewed_project_id)});
           return this.setSelectedProjectID(lastViewedProject.id);
         } else {
           return this.setSelectedProjectID(this.state.projects[0].id);
@@ -117,7 +118,7 @@ class Timing extends React.Component {
     $.ajax({
       type: 'get',
       dataType: 'json',
-      url: `/story_interface/${this.state.resourceInterface}/projects/${this.state.selectedProjectID}/iterations`,
+      url: `/integrations/${this.state.selectedIntegrationID}/external_resources/projects/${this.state.selectedProjectID}/iterations`,
       context: this,
       success(data) {
         let stories = _.flatten(data.map(iteration =>
@@ -138,7 +139,7 @@ class Timing extends React.Component {
     return $.ajax({
       type: 'get',
       dataType: 'json',
-      data: {open_work_time_units: true, work_time_unit: {user_id: this.state.meExternal.id} },
+      data: {open_work_time_units: true, work_time_unit: {integration_user_id: this.state.currentUserExternal.id} },
       url: "/work_time_units",
       context: this,
       success(data) {
@@ -148,14 +149,14 @@ class Timing extends React.Component {
             intent: Intent.DANGER
           });
         } else if (data.length === 1) {
-          let openWorkTimeUnit = data[0];
-          if (openWorkTimeUnit.project_id === this.state.selectedProjectID) {
+          let workTimeUnit = data[0];
+          if (workTimeUnit.project_id === this.state.selectedProjectID) {
             let workingStory = _.find(this.state.stories, {id: data[0].story_id});
             if (workingStory) {
               this.setWorkingStoryID(workingStory.id);
             }
           } else {
-            let openProject = _.find(this.state.projects, {id: openWorkTimeUnit.project_id});
+            let openProject = _.find(this.state.projects, {id: workTimeUnit.project_id});
             this.pushNotification({
               message: `You are currently working on a story in another Project. (${openProject.name})`,
               intent: Intent.WARNING
@@ -191,8 +192,8 @@ class Timing extends React.Component {
     return $.ajax({
       type: 'patch',
       dataType: 'json',
-      data: {new_story_params: {current_state: newState}},
-      url: `/story_interface/${this.state.resourceInterface}/projects/${story.project_id}/stories/${story.id}`,
+      data: {story: {current_state: newState}},
+      url: `/integrations/${this.state.selectedIntegrationID}/external_resources/projects/${story.project_id}/stories/${story.id}`,
       context: this,
       success(data) {
         let stories = _.cloneDeep(this.state.stories)
@@ -215,12 +216,12 @@ class Timing extends React.Component {
       type: 'patch',
       dataType: 'json',
       data: {user: {settings: userSettings}},
-      url: `/users/${this.state.me.id}`,
+      url: `/users/${this.state.currentUser.id}`,
       context: this,
       success(data) {
-        let user = _.clone(this.state.me);
-        user.settings = userSettings;
-        return this.setState({me: user});
+        let currentUser = _.clone(this.state.currentUser);
+        currentUser.settings = userSettings;
+        return this.setState({currentUser: currentUser});
       },
       error(jqXHR, textStatus, errorThrown) {
         return this.pushNotification({
@@ -231,10 +232,6 @@ class Timing extends React.Component {
     });
   }
 
-  setCompletedStoriesVisibility(areCompletedStoriesVisible) {
-    return this.setState({areCompletedStoriesVisible: areCompletedStoriesVisible});
-  }
-
   pushNotification(notification) {
     this.notifier.show(notification)
   }
@@ -242,20 +239,19 @@ class Timing extends React.Component {
   render() {
     return (<div>
             <NavigationHeader
-              isLoading={this.state.isLoading}
               toggleTheme={this.props.toggleTheme}
             />
             <div className="spacer-sm"></div>
             <div id="timing-container">
               <TimingStories
-                meExternal={this.state.meExternal}
+                currentUserExternal={this.state.currentUserExternal}
                 stories={this.state.stories}
                 selectedStoryID={this.state.selectedStoryID}
                 setSelectedStoryID={this.setSelectedStoryID}
-                areCompletedStoriesVisible={this.state.areCompletedStoriesVisible}
               />
               <TimingClock
-                meExternal={this.state.meExternal}
+                currentUserExternal={this.state.currentUserExternal}
+                selectedIntegrationID={this.state.selectedIntegrationID}
                 selectedStoryID={this.state.selectedStoryID}
                 selectedProjectID={this.state.selectedProjectID}
                 stories={this.state.stories}

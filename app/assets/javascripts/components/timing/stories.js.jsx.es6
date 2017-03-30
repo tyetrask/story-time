@@ -40,7 +40,7 @@ class TimingStories extends React.Component {
 
   filteredStories() {
     if (this.state.viewing === 'my work') {
-      return _.filter(this.props.stories, (story) => { return story.owner_ids.includes(this.props.meExternal.id) })
+      return _.filter(this.props.stories, (story) => { return story.owner_ids.includes(this.props.currentUserExternal.id) })
     }
     return this.props.stories
   }
@@ -52,7 +52,6 @@ class TimingStories extends React.Component {
               story={story}
               selectedStoryID={this.props.selectedStoryID}
               setSelectedStoryID={this.props.setSelectedStoryID}
-              areCompletedStoriesVisible={this.props.areCompletedStoriesVisible}
               />);
       }));
     return (<div id="stories-container">

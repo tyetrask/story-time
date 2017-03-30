@@ -10,15 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141027173453) do
+ActiveRecord::Schema.define(version: 20170329221912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "integrations", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "service_type"
+    t.string   "username"
+    t.string   "token"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email"
     t.string   "password"
-    t.string   "pivotal_api_token"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "encrypted_password",     default: "",    null: false
@@ -39,7 +47,7 @@ ActiveRecord::Schema.define(version: 20141027173453) do
   end
 
   create_table "work_time_units", force: :cascade do |t|
-    t.string   "user_id"
+    t.string   "integration_user_id"
     t.integer  "story_id"
     t.datetime "started_at"
     t.datetime "finished_at"
@@ -47,6 +55,7 @@ ActiveRecord::Schema.define(version: 20141027173453) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "project_id"
+    t.integer  "integration_id"
   end
 
 end

@@ -6,7 +6,7 @@ class StoryTime extends React.Component {
   constructor() {
     super()
     this.state = {
-      userAuthenticationState: 0,
+      userAuthenticationState: 0, // 0: no attempt, 1: error, 2: authenticated
       theme: 'light'
     }
     let methods = [
@@ -22,7 +22,7 @@ class StoryTime extends React.Component {
   verifyUserAuthenticationState() {
     $.ajax({
       type: "GET",
-      url: "/users/me",
+      url: "/users/current__user",
       context: this,
       success: () => { this.setState({userAuthenticationState: 2}) },
       error: () => { this.setState({userAuthenticationState: 1}) }
