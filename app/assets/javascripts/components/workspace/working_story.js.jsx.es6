@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { NonIdealState, Tag, Intent } from '@blueprintjs/core'
+import { EditableText, NonIdealState, Tag, Intent } from '@blueprintjs/core'
 var _ = require('lodash');
 
-class TimingClock extends React.Component {
+class WorkingStory extends React.Component {
 
   constructor() {
     super()
@@ -166,10 +166,10 @@ class TimingClock extends React.Component {
       selectedStory = _.find(this.props.stories, {id: this.props.selectedStoryID})
     }
     if (selectedStory) {
-      let startStopWorkButton;
+      let storyControls;
       let workTimeUnits = [];
       this.state.workTimeUnits.map((workTimeUnit => {
-        return workTimeUnits.push(<TimingClockWorkTimeUnit
+        return workTimeUnits.push(<WorkingStoryWorkTimeUnit
                                     key={workTimeUnit.id}
                                     workTimeUnit={workTimeUnit}
                                     editingWorkTimeUnit={this.state.editingWorkTimeUnit}
@@ -181,28 +181,49 @@ class TimingClock extends React.Component {
         }));
       let labels = selectedStory.labels.map(label => <Tag key={label.id}>{label.name}</Tag>);
       if (this.props.workingStoryID === this.props.selectedStoryID) {
-        startStopWorkButton = <a onClick={this.handleStopWork.bind(this)} className="pt-button pt-fill">
+        storyControls = <a onClick={this.handleStopWork.bind(this)} className="pt-button pt-fill">
                                 Stop Work
                               </a>;
       } else if (this.props.workingStoryID) {
-        startStopWorkButton = <a onClick={this.handleGoToStory.bind(this)} className="pt-button pt-fill">
+        storyControls = <a onClick={this.handleGoToStory.bind(this)} className="pt-button pt-fill">
                                 (Go To Currently Open Story)
                               </a>;
       } else {
-        startStopWorkButton = <a onClick={this.handleStartWork.bind(this)} className="pt-button pt-fill">
+        storyControls = <a onClick={this.handleStartWork.bind(this)} className="pt-button pt-fill">
                                 Start Work
                               </a>;
       }
       return (<div key="clock-full" id="clock-container">
                <div>
                  <div className="pt-card pt-elevation-2">
-                   <h5>{selectedStory.name}</h5>
-                   <p>{selectedStory.description}</p>
-                   <p>Estimation: {selectedStory.estimate} <span className='pull-right'>{labels}</span></p>
+                   <h5>
+                    <EditableText
+                      value={selectedStory.name}
+                      disabled={true}
+                    />
+                   </h5>
+                   <EditableText
+                     multiline
+                     minLines={2}
+                     maxLines={5}
+                     placeholder="Add description..."
+                     value={selectedStory.description}
+                     disabled={true}
+                   />
+                   <br />
+                   <div>
+                    Estimation: <EditableText
+                                  maxLength={3}
+                                  value={selectedStory.estimate}
+                                  placeholder="Add estimate..."
+                                  disabled={true}
+                                />
+                    <span className='pull-right'><p>{labels}</p></span>
+                   </div>
                    <br />
                    {workTimeUnits}
                    <br />
-                   {startStopWorkButton}
+                   {storyControls}
                  </div>
                </div>
              </div>);
@@ -224,4 +245,4 @@ class TimingClock extends React.Component {
   }
 }
 
-window.TimingClock = TimingClock;
+window.WorkingStory = WorkingStory;

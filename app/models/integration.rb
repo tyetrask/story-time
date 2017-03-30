@@ -12,9 +12,10 @@ class Integration < ApplicationRecord
   validates :token, presence: true
 
   def resource_interface
-    if service_type == 'pivotaltracker.com'
+    case service_type
+    when 'pivotaltracker.com'
       PivotalTrackerV5.new(token)
-    elsif service_type == 'jira.atlassian.com'
+    when 'jira.atlassian.com'
       raise 'Not implemented'
     else
       raise "Unknown service type '#{service_type}'"

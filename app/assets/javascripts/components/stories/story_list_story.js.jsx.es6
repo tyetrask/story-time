@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-class TimingSharedStory extends React.Component {
+class StoryListStory extends React.Component {
 
   handleClickedStory() {
     if (this.props.selectedStoryID === this.props.story.id) {
@@ -34,4 +34,4 @@ class TimingSharedStory extends React.Component {
   }
 }
 
-window.TimingSharedStory = TimingSharedStory;
+window.StoryListStory = StoryListStory;

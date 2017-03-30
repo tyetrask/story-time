@@ -4,7 +4,7 @@ import { Button } from '@blueprintjs/core';
 import { TimePicker, TimePickerPrecision } from '@blueprintjs/datetime';
 import moment from 'moment';
 
-class TimingClockWorkTimeUnit extends React.Component {
+class WorkingStoryWorkTimeUnit extends React.Component {
 
   constructor() {
     super()
@@ -160,4 +160,4 @@ class TimingClockWorkTimeUnit extends React.Component {
   }
 }
 
-window.TimingClockWorkTimeUnit = TimingClockWorkTimeUnit;
+window.WorkingStoryWorkTimeUnit = WorkingStoryWorkTimeUnit;

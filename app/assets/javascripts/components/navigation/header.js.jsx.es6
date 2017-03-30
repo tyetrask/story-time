@@ -20,8 +20,33 @@ class NavigationHeader extends React.Component {
     $(document).ajaxStart((() => { this.setState({isLoading: true}); }));
   }
 
-  hideCompletedStoriesOnClick(e) {
+  integrationMenuItems() {
+    if (!this.props.currentUser) {
+      return [];
+    }
+    return this.props.currentUser.integrations.map( integration => <MenuItem
+                                                        key={integration.id}
+                                                        text={integration.service_type}
+                                                        onClick={this.switchIntegrationOnClick.bind(this, integration.id)}
+                                                       />
+    )
+  }
 
+  projectMenuItems() {
+    return this.props.projects.map( project => <MenuItem
+                                                key={project.id}
+                                                text={project.name}
+                                                onClick={this.switchProjectOnClick.bind(this, project.id)}
+                                               />
+    )
+  }
+
+  switchIntegrationOnClick(integrationID) {
+    this.props.setSelectedIntegrationID(integrationID)
+  }
+
+  switchProjectOnClick(projectID) {
+    this.props.setSelectedProjectID(projectID)
   }
 
   signOutOnClick(e) {
@@ -35,20 +60,14 @@ class NavigationHeader extends React.Component {
   settingsMenu() {
     return <Menu>
             <MenuItem text="Switch Integration">
-              <MenuItem text="..." disabled />
+              {this.integrationMenuItems()}
             </MenuItem>
             <MenuItem text="Switch Project">
-              <MenuItem text="..." disabled={true} />
+              {this.projectMenuItems()}
             </MenuItem>
             <MenuItem
               text="Toggle Theme"
               onClick={this.props.toggleTheme}
-            />
-            <MenuItem
-              onClick={this.hideCompletedStoriesOnClick}
-              text="Hide Completed Stories"
-              shouldDismissPopover={false}
-              disabled={true}
             />
             <MenuDivider />
             <MenuItem text="Sign Out" iconName="log-out" onClick={this.signOutOnClick} />

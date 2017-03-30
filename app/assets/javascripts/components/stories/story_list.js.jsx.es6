@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 import { Button } from '@blueprintjs/core'
 var _ = require('lodash');
 
-class TimingStories extends React.Component {
+class StoryList extends React.Component {
 
   constructor() {
     super()
     this.state = {
-      viewing: 'my work'
+      viewing: 'upcoming'
     }
   }
 
@@ -47,7 +47,7 @@ class TimingStories extends React.Component {
 
   render() {
     let stories = this.filteredStories().map((story => {
-      return (<TimingSharedStory
+      return (<StoryListStory
               key={story.id}
               story={story}
               selectedStoryID={this.props.selectedStoryID}
@@ -65,4 +65,4 @@ class TimingStories extends React.Component {
 
 }
 
-window.TimingStories = TimingStories;
+window.StoryList = StoryList;

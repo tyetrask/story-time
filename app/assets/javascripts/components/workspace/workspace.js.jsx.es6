@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 import { ProgressBar, Toaster, Position, Intent } from '@blueprintjs/core';
 var _ = require('lodash');
 
-class Timing extends React.Component {
+class Workspace extends React.Component {
 
   constructor() {
     super()
     this.state = {
       currentUser: null,
-      currentUserExternal: {name: 'Developer'},
+      currentUserExternal: null,
       projects: [],
       selectedIntegrationID: null,
       selectedProjectID: null,
@@ -21,6 +21,7 @@ class Timing extends React.Component {
         notifier: (ref) => { this.notifier = ref },
     };
     let methodsToBind = [
+      'setSelectedIntegrationID',
       'setSelectedProjectID',
       'setSelectedStoryID',
       'setWorkingStoryID',
@@ -64,7 +65,7 @@ class Timing extends React.Component {
         );
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification({
+        this.pushNotification({
           message: `We're sorry. There was an error loading your external account. ${errorThrown}`,
           intent: Intent.DANGER
         });
@@ -82,10 +83,10 @@ class Timing extends React.Component {
       url: `/integrations/${this.state.selectedIntegrationID}/external_resources/current__user`,
       context: this,
       success(data) {
-        return this.setState({currentUserExternal: data}, this.loadProjects);
+        this.setState({currentUserExternal: data}, this.loadProjects);
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification({
+        this.pushNotification({
           message: `We're sorry. There was an error loading your external account. ${errorThrown}`,
           intent: Intent.DANGER
         });
@@ -103,13 +104,13 @@ class Timing extends React.Component {
         this.setState({projects: data});
         if (this.state.currentUser.settings.last_viewed_project_id) {
           let lastViewedProject = _.find(this.state.projects, {id: parseInt(this.state.currentUser.settings.last_viewed_project_id)});
-          return this.setSelectedProjectID(lastViewedProject.id);
+          this.setSelectedProjectID(lastViewedProject.id);
         } else {
-          return this.setSelectedProjectID(this.state.projects[0].id);
+          this.setSelectedProjectID(this.state.projects[0].id);
         }
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification({
+        this.pushNotification({
           message: `We're sorry. There was an error loading projects. ${errorThrown}`,
           intent: Intent.DANGER
         });
@@ -128,10 +129,10 @@ class Timing extends React.Component {
         let stories = _.flatten(data.map(iteration =>
           iteration.stories.map(pivotal_story => pivotal_story)
         ));
-        return this.setState({stories: stories}, this.loadOpenWorkTimeUnit);
+        this.setState({stories: stories}, this.loadOpenWorkTimeUnit);
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification({
+        this.pushNotification({
           message: `We're sorry. There was an error loading upcoming stories. ${errorThrown}`,
           intent: Intent.DANGER
         });
@@ -140,7 +141,7 @@ class Timing extends React.Component {
   }
 
   loadOpenWorkTimeUnit() {
-    return $.ajax({
+    $.ajax({
       type: 'get',
       dataType: 'json',
       data: {open_work_time_units: true, work_time_unit: {integration_user_id: this.state.currentUserExternal.id} },
@@ -148,7 +149,7 @@ class Timing extends React.Component {
       context: this,
       success(data) {
         if (data.length > 1) {
-          return this.pushNotification({
+          this.pushNotification({
             message: `We're sorry. More than one open working story was detected.`,
             intent: Intent.DANGER
           });
@@ -169,7 +170,7 @@ class Timing extends React.Component {
         }
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification({
+        this.pushNotification({
           message: `We're sorry. There was an error loading the open working story. ${errorThrown}`,
           intent: Intent.DANGER
         });
@@ -177,13 +178,17 @@ class Timing extends React.Component {
     });
   }
 
+  setSelectedIntegrationID(integrationID) {
+    this.setState({setSelectedIntegrationID: integrationID, selectedProjectID: null, selectedStoryID: null}, this.loadCurrentUserExternal)
+  }
+
   setSelectedProjectID(projectID) {
     this.setState({selectedProjectID: projectID, selectedStoryID: null}, this.loadStories);
-    return this.updateUserSettings({last_viewed_project_id: projectID});
+    this.updateUserSettings({last_viewed_project_id: projectID});
   }
 
   setSelectedStoryID(storyID) {
-    return this.setState({selectedStoryID: storyID});
+    this.setState({selectedStoryID: storyID});
   }
 
   setWorkingStoryID(storyID) {
@@ -210,7 +215,7 @@ class Timing extends React.Component {
         this.setState({stories: stories})
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification({
+        this.pushNotification({
           message: `We're sorry. There was an error updating the story state. ${errorThrown}`,
           intent: Intent.DANGER
         });
@@ -220,7 +225,7 @@ class Timing extends React.Component {
 
   updateUserSettings(userSettings) {
     // TODO: Don't steamroll user settings whenever this is called. merge?
-    return $.ajax({
+    $.ajax({
       type: 'patch',
       dataType: 'json',
       data: {user: {settings: userSettings}},
@@ -229,10 +234,10 @@ class Timing extends React.Component {
       success(data) {
         let currentUser = _.clone(this.state.currentUser);
         currentUser.settings = userSettings;
-        return this.setState({currentUser: currentUser});
+        this.setState({currentUser: currentUser});
       },
       error(jqXHR, textStatus, errorThrown) {
-        return this.pushNotification({
+        this.pushNotification({
           message: `We're sorry. There was an error updating your user settings. ${errorThrown}`,
           intent: Intent.DANGER
         });
@@ -247,17 +252,21 @@ class Timing extends React.Component {
   render() {
     return (<div>
             <NavigationHeader
+              currentUser={this.state.currentUser}
+              projects={this.state.projects}
+              setSelectedIntegrationID={this.setSelectedIntegrationID}
+              setSelectedProjectID={this.setSelectedProjectID}
               toggleTheme={this.props.toggleTheme}
             />
             <div className="spacer-sm"></div>
             <div id="timing-container">
-              <TimingStories
+              <StoryList
                 currentUserExternal={this.state.currentUserExternal}
                 stories={this.state.stories}
                 selectedStoryID={this.state.selectedStoryID}
                 setSelectedStoryID={this.setSelectedStoryID}
               />
-              <TimingClock
+              <WorkingStory
                 currentUserExternal={this.state.currentUserExternal}
                 selectedIntegrationID={this.state.selectedIntegrationID}
                 selectedStoryID={this.state.selectedStoryID}
@@ -275,4 +284,4 @@ class Timing extends React.Component {
   }
 }
 
-window.Timing = Timing;
+window.Workspace = Workspace;

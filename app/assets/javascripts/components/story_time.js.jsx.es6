@@ -53,7 +53,7 @@ class StoryTime extends React.Component {
       case 2:
         switch (window.location.pathname) {
           case "/":
-            return <Timing toggleTheme={this.toggleTheme} />
+            return <Workspace toggleTheme={this.toggleTheme} />
           case "/reports":
             return <Reports />
           default:
