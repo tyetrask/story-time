@@ -58,10 +58,5 @@ sudo apt-get install -y nodejs
 # rm -rf redis-$REDIS_VERSION
 # rm redis-$REDIS_VERSION.tar.gz
 
-# Bundle install app
-pushd /vagrant
-bundle install
-popd
-
 # Clean
 sudo apt-get clean
