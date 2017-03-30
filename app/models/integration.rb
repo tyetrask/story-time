@@ -4,7 +4,7 @@ class Integration < ApplicationRecord
 
   ALLOWED_SERVICE_TYPES = [
     'pivotaltracker.com',
-    'jira.com'
+    'jira.atlassian.com'
   ]
 
   validates :user_id, presence: true
@@ -14,7 +14,7 @@ class Integration < ApplicationRecord
   def resource_interface
     if service_type == 'pivotaltracker.com'
       PivotalTrackerV5.new(token)
-    elsif service_type == 'jira.com'
+    elsif service_type == 'jira.atlassian.com'
       raise 'Not implemented'
     else
       raise "Unknown service type '#{service_type}'"

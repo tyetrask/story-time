@@ -70,7 +70,7 @@ class TimingClock extends React.Component {
       success(data) {
         let newWorkTimeUnits = _.clone(this.state.workTimeUnits);
         newWorkTimeUnits.push(data);
-        return this.setState({workTimeUnits: newWorkTimeUnits});
+        return this.setState({workTimeUnits: newWorkTimeUnits}, this.updateStoryStateIfNeeded);
       },
       error(jqXHR, textStatus, errorThrown) {
         this.props.pushNotification({
@@ -80,6 +80,13 @@ class TimingClock extends React.Component {
         return this.props.setWorkingStoryID(null);
       }
     });
+  }
+
+  updateStoryStateIfNeeded() {
+    let story = _.find(this.props.stories, {id: this.props.selectedStoryID})
+    if (story && story.current_state === 'unstarted') {
+      this.props.updateStoryState(this.props.selectedStoryID, 'started');
+    }
   }
 
   handleStopWork() {
@@ -134,10 +141,6 @@ class TimingClock extends React.Component {
 
   handleGoToStory() {
     return this.props.setSelectedStoryID(this.props.workingStoryID);
-  }
-
-  handleChangeStoryState() {
-    return this.props.updateStoryState(this.props.selectedStoryID, 'started');
   }
 
   setEditingWorkTimeUnit(workTimeUnit) {

@@ -58,7 +58,7 @@ class ExternalResourcesController < ApplicationController
       if @story = @integration.resource_interface.patch_story(
           external_resource_params[:project_id],
           external_resource_params[:story_id],
-          params[:story]
+          story_params.to_h
         )
         format.json { render json: @story }
       else
@@ -75,6 +75,10 @@ class ExternalResourcesController < ApplicationController
 
     def external_resource_params
       params.permit(:project_id, :story_id)
+    end
+
+    def story_params
+      params.require(:story).permit(:current_state, owner_ids: [])
     end
 
 end

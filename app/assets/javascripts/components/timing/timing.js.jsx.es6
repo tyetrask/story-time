@@ -24,7 +24,8 @@ class Timing extends React.Component {
       'setSelectedProjectID',
       'setSelectedStoryID',
       'setWorkingStoryID',
-      'pushNotification'
+      'pushNotification',
+      'updateStoryState'
     ]
     methodsToBind.forEach((method) => { this[method] = this[method].bind(this); });
   }
@@ -39,7 +40,7 @@ class Timing extends React.Component {
 
   configureNotifier() {
     this.notifier = Toaster.create({
-        position: Position.TOP_LEFT,
+      position: Position.TOP_LEFT,
     }, document.body);
   }
 
@@ -72,6 +73,9 @@ class Timing extends React.Component {
   }
 
   loadCurrentUserExternal() {
+    if (this.state.selectedIntegrationID === null) {
+      return;
+    }
     $.ajax({
       type: 'get',
       dataType: 'json',
@@ -187,12 +191,16 @@ class Timing extends React.Component {
   }
 
   updateStoryState(storyID, newState) {
-    // TODO: Add user to the list of owner_ids for the story, if going from unstarted -> started
-    return false; // Remove when ready to implement.
-    return $.ajax({
+    let story = _.find(this.state.stories, {id: storyID})
+    $.ajax({
       type: 'patch',
       dataType: 'json',
-      data: {story: {current_state: newState}},
+      data: {
+        story: {
+          current_state: newState,
+          owner_ids: [this.state.currentUserExternal.id]
+        }
+      },
       url: `/integrations/${this.state.selectedIntegrationID}/external_resources/projects/${story.project_id}/stories/${story.id}`,
       context: this,
       success(data) {
