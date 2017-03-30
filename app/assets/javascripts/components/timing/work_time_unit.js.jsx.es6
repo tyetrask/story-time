@@ -152,7 +152,7 @@ class TimingClockWorkTimeUnit extends React.Component {
               </div>
               <span> {this.totalTimeInSecondsFormatted()} <small>({this.startedAtFormatted()} - {this.finishedAtFormatted()})</small></span>
               <span className='pull-right'>
-                Developer: {this.props.workTimeUnit.user_id}
+                Developer: {this.props.workTimeUnit.integration_user_id}
               </span>
             </div>
             {editForm}
