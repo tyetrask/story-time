@@ -179,11 +179,11 @@ class Workspace extends React.Component {
   }
 
   setSelectedIntegrationID(integrationID) {
-    this.setState({setSelectedIntegrationID: integrationID, selectedProjectID: null, selectedStoryID: null}, this.loadCurrentUserExternal)
+    this.setState({setSelectedIntegrationID: integrationID, selectedProjectID: null, workingStoryID: null, selectedStoryID: null}, this.loadCurrentUserExternal)
   }
 
   setSelectedProjectID(projectID) {
-    this.setState({selectedProjectID: projectID, selectedStoryID: null}, this.loadStories);
+    this.setState({selectedProjectID: projectID, workingStoryID: null, selectedStoryID: null}, this.loadStories);
     this.updateUserSettings({last_viewed_project_id: projectID});
   }
 

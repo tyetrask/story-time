@@ -78,7 +78,7 @@ class PivotalTrackerV5
 
     # Perform Request
     response = http.request(request)
-    raise if response.code.to_i != 200
+    raise "Pivotal Tracker Responded With: #{response.code}" if response.code.to_i != 200
 
     # Return JSON
     parsed_json = JSON.parse(response.body, symbolize_names: true)
