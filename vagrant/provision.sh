@@ -17,12 +17,12 @@ RUBY_VERSION_GENERAL="2.3"
 sudo wget ftp://ftp.ruby-lang.org/pub/ruby/$RUBY_VERSION_GENERAL/ruby-$RUBY_VERSION.tar.gz
 sudo apt-get install -y build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison nodejs subversion
 tar xvfz ruby-$RUBY_VERSION.tar.gz
-cd ruby-$RUBY_VERSION
+pushd ruby-$RUBY_VERSION
 ./configure
 make
 sudo make install
 sudo gem update --system
-cd ..
+popd
 rm -f ruby-$RUBY_VERSION.tar.gz
 rm -rf ruby-$RUBY_VERSION
 
@@ -57,10 +57,6 @@ sudo apt-get install -y nodejs
 # cd ..
 # rm -rf redis-$REDIS_VERSION
 # rm redis-$REDIS_VERSION.tar.gz
-
-# Bundle install app
-cd /vagrant
-bundle install
 
 # Clean
 sudo apt-get clean

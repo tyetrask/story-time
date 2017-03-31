@@ -1,15 +1,52 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button, Popover, Position, Menu, MenuItem, MenuDivider, Tab2, Tabs2 } from '@blueprintjs/core';
+import { Button, Popover, Position, Menu, MenuItem, MenuDivider, Spinner, Tab2, Tabs2 } from '@blueprintjs/core';
 
 class NavigationHeader extends React.Component {
 
-  changeProjectOnClick(e) {
-
+  constructor() {
+    super()
+    this.state = {
+      isLoading: false
+    }
   }
 
-  hideCompletedStoriesOnClick(e) {
+  componentDidMount() {
+    this.bindLoadingEvents();
+  }
 
+  bindLoadingEvents() {
+    $(document).ajaxStop((() => { this.setState({isLoading: false}); }))
+    $(document).ajaxStart((() => { this.setState({isLoading: true}); }));
+  }
+
+  integrationMenuItems() {
+    if (!this.props.currentUser) {
+      return [];
+    }
+    return this.props.currentUser.integrations.map( integration => <MenuItem
+                                                        key={integration.id}
+                                                        text={integration.service_type}
+                                                        onClick={this.switchIntegrationOnClick.bind(this, integration.id)}
+                                                       />
+    )
+  }
+
+  projectMenuItems() {
+    return this.props.projects.map( project => <MenuItem
+                                                key={project.id}
+                                                text={project.name}
+                                                onClick={this.switchProjectOnClick.bind(this, project.id)}
+                                               />
+    )
+  }
+
+  switchIntegrationOnClick(integrationID) {
+    this.props.setSelectedIntegrationID(integrationID)
+  }
+
+  switchProjectOnClick(projectID) {
+    this.props.setSelectedProjectID(projectID)
   }
 
   signOutOnClick(e) {
@@ -22,22 +59,26 @@ class NavigationHeader extends React.Component {
 
   settingsMenu() {
     return <Menu>
-            <MenuItem text="Change Project">
-              <MenuItem text="..." disabled={true} />
+            <MenuItem text="Switch Integration">
+              {this.integrationMenuItems()}
+            </MenuItem>
+            <MenuItem text="Switch Project">
+              {this.projectMenuItems()}
             </MenuItem>
             <MenuItem
               text="Toggle Theme"
               onClick={this.props.toggleTheme}
             />
-            <MenuItem
-              onClick={this.hideCompletedStoriesOnClick}
-              text="Hide Completed Stories"
-              shouldDismissPopover={false}
-              disabled={true}
-            />
             <MenuDivider />
             <MenuItem text="Sign Out" iconName="log-out" onClick={this.signOutOnClick} />
            </Menu>
+  }
+
+  titleIcon() {
+    if (this.state.isLoading) {
+      return <Spinner className="pt-super-small" />;
+    }
+    return <i className='fa fa-book'></i>;
   }
 
   render() {
@@ -45,7 +86,7 @@ class NavigationHeader extends React.Component {
             <div id="navigation-container">
               <div className="pt-navbar-group pt-align-left">
                 <div className="pt-navbar-heading">
-                  <i className='fa fa-book'></i> StoryTime <small><span id='alpha-label' className='pt-tag pt-minimal pt-intent-danger'>alpha</span></small>
+                  {this.titleIcon()} Story Time
                 </div>
               </div>
               <div className="pt-navbar-group pt-align-right">

@@ -6,7 +6,7 @@ class StoryTime extends React.Component {
   constructor() {
     super()
     this.state = {
-      userAuthenticationState: 0,
+      userAuthenticationState: 0, // 0: no attempt, 1: error, 2: authenticated
       theme: 'light'
     }
     let methods = [
@@ -22,7 +22,7 @@ class StoryTime extends React.Component {
   verifyUserAuthenticationState() {
     $.ajax({
       type: "GET",
-      url: "/users/me",
+      url: "/users/current__user",
       context: this,
       success: () => { this.setState({userAuthenticationState: 2}) },
       error: () => { this.setState({userAuthenticationState: 1}) }
@@ -53,7 +53,7 @@ class StoryTime extends React.Component {
       case 2:
         switch (window.location.pathname) {
           case "/":
-            return <Timing toggleTheme={this.toggleTheme} />
+            return <Workspace toggleTheme={this.toggleTheme} />
           case "/reports":
             return <Reports />
           default:

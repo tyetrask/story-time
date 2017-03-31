@@ -12,9 +12,3 @@ test:
   database: story_time_test
   pool: 5
   timeout: 5000
-
-production:
-  adapter: postgresql
-  database: story_time
-  pool: 5
-  timeout: 5000

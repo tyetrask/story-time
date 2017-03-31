@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { NonIdealState, Tag, Intent } from '@blueprintjs/core'
+import { EditableText, NonIdealState, Tag, Intent } from '@blueprintjs/core'
 var _ = require('lodash');
 
-class TimingClock extends React.Component {
+class WorkingStory extends React.Component {
 
   constructor() {
     super()
@@ -11,67 +11,86 @@ class TimingClock extends React.Component {
       workTimeUnits: [],
       editingWorkTimeUnit: null
     };
-    let methods = [
+    let methodsToBind = [
       'setEditingWorkTimeUnit',
       'deleteWorkTimeUnit',
       'updateWorkTimeUnitAfterEdit'
     ]
-    methods.forEach((method) => { this[method] = this[method].bind(this); });
+    methodsToBind.forEach((method) => { this[method] = this[method].bind(this); });
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({editingWorkTimeUnit: null});
-    if (nextProps.selectedStory === null) { return; }
-    if (this.props.selectedStory != nextProps.selectedStory) {
-      return $.ajax({
-        type: 'get',
-        dataType: 'json',
-        data: {work_time_unit: {project_id: nextProps.selectedProject.id, story_id: nextProps.selectedStory.id} },
-        url: '/work_time_units/',
-        context: this,
-        success(data) {
-          return this.setState({workTimeUnits: data});
-        },
-        error(jqXHR, textStatus, errorThrown) {
-          return this.props.pushNotification({
-            message: `We're sorry. There was an error loading work time units. ${errorThrown}`,
-            intent: Intent.DANGER
-          });
-        }
-      });
+    if (nextProps.selectedStoryID === null) { return; }
+    if (this.props.selectedStoryID != nextProps.selectedStoryID) {
+      this.setState({workTimeUnits: []}, this.loadWorkTimeUnits.bind(this, nextProps))
     }
   }
 
-  handleStartWork() {
-    this.props.setWorkingStory(this.props.selectedStory);
-    return this.openWorkTimeUnit();
+  loadWorkTimeUnits(nextProps) {
+    $.ajax({
+      type: 'get',
+      dataType: 'json',
+      data: {work_time_unit: {project_id: nextProps.selectedProjectID, story_id: nextProps.selectedStoryID} },
+      url: '/work_time_units',
+      context: this,
+      success(data) {
+        return this.setState({workTimeUnits: data});
+      },
+      error(jqXHR, textStatus, errorThrown) {
+        return this.props.pushNotification({
+          message: `We're sorry. There was an error loading work time units. ${errorThrown}`,
+          intent: Intent.DANGER
+        });
+      }
+    });
   }
 
-  openWorkTimeUnit() {
+  handleStartWork() {
+    this.props.setWorkingStoryID(this.props.selectedStoryID);
+    return this.createWorkTimeUnit();
+  }
+
+  createWorkTimeUnit() {
     let startedAt = new Date();
     return $.ajax({
       type: 'post',
       dataType: 'json',
-      data: {work_time_unit: {user_id: this.props.meExternal.id, project_id: this.props.selectedProject.id, story_id: this.props.selectedStory.id, started_at: startedAt}},
-      url: '/work_time_units/',
+      data: {
+        work_time_unit: {
+          integration_id: this.props.selectedIntegrationID,
+          integration_user_id: this.props.currentUserExternal.id,
+          project_id: this.props.selectedProjectID,
+          story_id: this.props.selectedStoryID,
+          started_at: startedAt
+        }
+      },
+      url: '/work_time_units',
       context: this,
       success(data) {
         let newWorkTimeUnits = _.clone(this.state.workTimeUnits);
         newWorkTimeUnits.push(data);
-        return this.setState({workTimeUnits: newWorkTimeUnits});
+        return this.setState({workTimeUnits: newWorkTimeUnits}, this.updateStoryStateIfNeeded);
       },
       error(jqXHR, textStatus, errorThrown) {
         this.props.pushNotification({
           message: `We're sorry. There was an error creating a work time unit. ${errorThrown}`,
           intent: Intent.DANGER
         });
-        return this.props.setWorkingStory(null);
+        return this.props.setWorkingStoryID(null);
       }
     });
   }
 
+  updateStoryStateIfNeeded() {
+    let story = _.find(this.props.stories, {id: this.props.selectedStoryID})
+    if (story && story.current_state === 'unstarted') {
+      this.props.updateStoryState(this.props.selectedStoryID, 'started');
+    }
+  }
+
   handleStopWork() {
-    this.props.setWorkingStory(null);
+    this.props.setWorkingStoryID(null);
     return this.closeWorkTimeUnit();
   }
 
@@ -121,11 +140,7 @@ class TimingClock extends React.Component {
   }
 
   handleGoToStory() {
-    return this.props.setSelectedStory(this.props.workingStory);
-  }
-
-  handleChangeStoryState() {
-    return this.props.updateStoryState(this.props.selectedStory, 'started');
+    return this.props.setSelectedStoryID(this.props.workingStoryID);
   }
 
   setEditingWorkTimeUnit(workTimeUnit) {
@@ -146,11 +161,15 @@ class TimingClock extends React.Component {
   }
 
   render() {
-    if (this.props.selectedStory) {
-      let startStopWorkButton;
+    let selectedStory;
+    if (this.props.selectedStoryID) {
+      selectedStory = _.find(this.props.stories, {id: this.props.selectedStoryID})
+    }
+    if (selectedStory) {
+      let storyControls;
       let workTimeUnits = [];
       this.state.workTimeUnits.map((workTimeUnit => {
-        return workTimeUnits.push(<TimingClockWorkTimeUnit
+        return workTimeUnits.push(<WorkingStoryWorkTimeUnit
                                     key={workTimeUnit.id}
                                     workTimeUnit={workTimeUnit}
                                     editingWorkTimeUnit={this.state.editingWorkTimeUnit}
@@ -160,30 +179,51 @@ class TimingClock extends React.Component {
                                     pushNotification={this.props.pushNotification}
                                   />);
         }));
-      let labels = this.props.selectedStory.labels.map(label => <Tag key={label.id}>{label.name}</Tag>);
-      if (this.props.workingStory === this.props.selectedStory) {
-        startStopWorkButton = <a onClick={this.handleStopWork.bind(this)} className="pt-button pt-fill">
+      let labels = selectedStory.labels.map(label => <Tag key={label.id}>{label.name}</Tag>);
+      if (this.props.workingStoryID === this.props.selectedStoryID) {
+        storyControls = <a onClick={this.handleStopWork.bind(this)} className="pt-button pt-fill">
                                 Stop Work
                               </a>;
-      } else if (this.props.workingStory) {
-        startStopWorkButton = <a onClick={this.handleGoToStory.bind(this)} className="pt-button pt-fill">
+      } else if (this.props.workingStoryID) {
+        storyControls = <a onClick={this.handleGoToStory.bind(this)} className="pt-button pt-fill">
                                 (Go To Currently Open Story)
                               </a>;
       } else {
-        startStopWorkButton = <a onClick={this.handleStartWork.bind(this)} className="pt-button pt-fill">
+        storyControls = <a onClick={this.handleStartWork.bind(this)} className="pt-button pt-fill">
                                 Start Work
                               </a>;
       }
       return (<div key="clock-full" id="clock-container">
                <div>
                  <div className="pt-card pt-elevation-2">
-                   <h5>{this.props.selectedStory.name}</h5>
-                   <p>{this.props.selectedStory.description}</p>
-                   <p>Estimation: {this.props.selectedStory.estimate} <span className='pull-right'>{labels}</span></p>
+                   <h5>
+                    <EditableText
+                      value={selectedStory.name}
+                      disabled={true}
+                    />
+                   </h5>
+                   <EditableText
+                     multiline
+                     minLines={2}
+                     maxLines={5}
+                     placeholder="Add description..."
+                     value={selectedStory.description}
+                     disabled={true}
+                   />
+                   <br />
+                   <div>
+                    Estimation: <EditableText
+                                  maxLength={3}
+                                  value={selectedStory.estimate}
+                                  placeholder="Add estimate..."
+                                  disabled={true}
+                                />
+                    <span className='pull-right'><p>{labels}</p></span>
+                   </div>
                    <br />
                    {workTimeUnits}
                    <br />
-                   {startStopWorkButton}
+                   {storyControls}
                  </div>
                </div>
              </div>);
@@ -205,4 +245,4 @@ class TimingClock extends React.Component {
   }
 }
 
-window.TimingClock = TimingClock;
+window.WorkingStory = WorkingStory;

@@ -4,7 +4,7 @@ import { Button } from '@blueprintjs/core';
 import { TimePicker, TimePickerPrecision } from '@blueprintjs/datetime';
 import moment from 'moment';
 
-class TimingClockWorkTimeUnit extends React.Component {
+class WorkingStoryWorkTimeUnit extends React.Component {
 
   constructor() {
     super()
@@ -82,11 +82,11 @@ class TimingClockWorkTimeUnit extends React.Component {
 
   totalTimeInSecondsFormatted() {
     if (this.props.workTimeUnit.total_time_in_seconds > 3600) {
-      return `(${this.roundNumber((this.props.workTimeUnit.total_time_in_seconds / 60 / 60))} hours)`;
+      return `${this.roundNumber((this.props.workTimeUnit.total_time_in_seconds / 60 / 60))} hours`;
     } else if (this.props.workTimeUnit.total_time_in_seconds > 90) {
-      return `(${this.roundNumber((this.props.workTimeUnit.total_time_in_seconds / 60))} minutes)`;
+      return `${this.roundNumber((this.props.workTimeUnit.total_time_in_seconds / 60))} minutes`;
     } else if (this.props.workTimeUnit.total_time_in_seconds > 0) {
-      return `(${this.roundNumber((this.props.workTimeUnit.total_time_in_seconds))} seconds)`;
+      return `${this.roundNumber((this.props.workTimeUnit.total_time_in_seconds))} seconds`;
     } else {
       return "";
     }
@@ -141,21 +141,23 @@ class TimingClockWorkTimeUnit extends React.Component {
       editForm = null;
     }
     return <div className='pt-card pt-elevation-1 work-time-unit'>
-            <p>
-              <Button {...this.buttonProps('edit')}>
-                <i className={this.buttonClass('edit')}></i>
-              </Button>
-              <Button {...this.buttonProps('delete')}>
-                <i className={this.buttonClass('delete')}></i>
-              </Button>
-              <span> {this.startedAtFormatted()} - {this.finishedAtFormatted()} <small>{this.totalTimeInSecondsFormatted()}</small></span>
+            <div>
+              <div className="pt-button-group">
+                <Button {...this.buttonProps('edit')}>
+                  <i className={this.buttonClass('edit')}></i>
+                </Button>
+                <Button {...this.buttonProps('delete')}>
+                  <i className={this.buttonClass('delete')}></i>
+                </Button>
+              </div>
+              <span> {this.totalTimeInSecondsFormatted()} <small>({this.startedAtFormatted()} - {this.finishedAtFormatted()})</small></span>
               <span className='pull-right'>
-                Developer: {this.props.workTimeUnit.user_id}
+                Developer: {this.props.workTimeUnit.integration_user_id}
               </span>
-            </p>
+            </div>
             {editForm}
           </div>;
   }
 }
 
-window.TimingClockWorkTimeUnit = TimingClockWorkTimeUnit;
+window.WorkingStoryWorkTimeUnit = WorkingStoryWorkTimeUnit;
