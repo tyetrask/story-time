@@ -10,6 +10,7 @@ class StoryTime extends React.Component {
       theme: 'light'
     }
     let methods = [
+      'navigateTo',
       'toggleTheme'
     ]
     methods.forEach((method) => { this[method] = this[method].bind(this); });
@@ -44,6 +45,11 @@ class StoryTime extends React.Component {
     return '';
   }
 
+  navigateTo(route) {
+    history.pushState(null, 'Story Time', route)
+    this.forceUpdate()
+  }
+
   componentForRoute() {
     switch (this.state.userAuthenticationState) {
       case 0:
@@ -53,9 +59,16 @@ class StoryTime extends React.Component {
       case 2:
         switch (window.location.pathname) {
           case "/":
-            return <Workspace toggleTheme={this.toggleTheme} />
+            return <Workspace
+                    toggleTheme={this.toggleTheme}
+                    navigateTo={this.navigateTo}
+                   />
           case "/reports":
             return <Reports />
+          case "/users":
+            return <ManageUsers />
+          case "/profile":
+            return <Profile />
           default:
             return <Empty />;
         }

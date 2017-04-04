@@ -31,12 +31,9 @@ class Workspace extends React.Component {
     methodsToBind.forEach((method) => { this[method] = this[method].bind(this); });
   }
 
-  componentWillMount() {
-    this.loadCurrentUser()
-  }
-
   componentDidMount() {
     this.configureNotifier();
+    this.loadCurrentUser();
   }
 
   configureNotifier() {
@@ -55,7 +52,7 @@ class Workspace extends React.Component {
         let selectedIntegrationID = null;
         let currentUser = data.user
         if (currentUser.integrations.length > 0) {
-          // TODO Save "last" selected integration to database
+          // TODO Save "last" selected integration to user.settings
           selectedIntegrationID = currentUser.integrations[0].id
         }
         this.setState({
@@ -253,6 +250,7 @@ class Workspace extends React.Component {
     return (<div>
             <NavigationHeader
               currentUser={this.state.currentUser}
+              navigateTo={this.props.navigateTo}
               projects={this.state.projects}
               setSelectedIntegrationID={this.setSelectedIntegrationID}
               setSelectedProjectID={this.setSelectedProjectID}

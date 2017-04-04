@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button, Popover, Position, Menu, MenuItem, MenuDivider, Spinner, Tab2, Tabs2 } from '@blueprintjs/core';
+import { Button, Popover, Intent, Position, Menu, MenuItem, MenuDivider, Spinner, Tab2, Tabs2 } from '@blueprintjs/core';
 
 class NavigationHeader extends React.Component {
 
@@ -49,6 +49,14 @@ class NavigationHeader extends React.Component {
     this.props.setSelectedProjectID(projectID)
   }
 
+  changeTab(newTabId, prevTabId) {
+    if (newTabId === 'ws') {
+      this.props.navigateTo('/')
+    } else if (newTabId === 'rp') {
+      this.props.navigateTo('/reports')
+    }
+  }
+
   signOutOnClick(e) {
     $.ajax({
       type: "DELETE",
@@ -70,7 +78,22 @@ class NavigationHeader extends React.Component {
               onClick={this.props.toggleTheme}
             />
             <MenuDivider />
-            <MenuItem text="Sign Out" iconName="log-out" onClick={this.signOutOnClick} />
+            <MenuItem
+              text="Manage Users"
+              onClick={this.props.navigateTo.bind(this, '/users')}
+            />
+            <MenuItem
+              iconName="user"
+              text="Profile"
+              onClick={this.props.navigateTo.bind(this, '/profile')}
+            />
+            <MenuDivider />
+            <MenuItem
+              iconName="log-out"
+              text="Sign Out"
+              intent={Intent.DANGER}
+              onClick={this.signOutOnClick}
+            />
            </Menu>
   }
 
@@ -90,13 +113,13 @@ class NavigationHeader extends React.Component {
                 </div>
               </div>
               <div className="pt-navbar-group pt-align-right">
-                <Tabs2 id="tc">
-                  <Tab2 id="dw" title={<span><i className='fa fa-fire'></i> Do Work!</span>} />
-                  <Tab2 id="rp" title={<span><i className='fa fa-paper-plane-o'></i> Reports</span>} disabled={true} />
+                <Tabs2 id="tc" onChange={this.changeTab.bind(this)}>
+                  <Tab2 id="ws" title={<span><i className='fa fa-fire'></i> Do Work!</span>} />
+                  <Tab2 id="rp" title={<span><i className='fa fa-paper-plane-o'></i> Reports</span>} />
                 </Tabs2>
                 <span className="pt-navbar-divider"></span>
                 <Popover content={this.settingsMenu()} position={Position.BOTTOM}>
-                  <Button iconName="user" />
+                  <Button iconName="cog" />
                 </Popover>
               </div>
             </div>
