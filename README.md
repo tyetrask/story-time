@@ -4,6 +4,9 @@ Story Time is a developer-focused interface to popular project management tracki
 
 This project is currently using Ruby 2.3, Rails 5.0, and React 15.4.
 
+⚠️ This application is in development. The project is being [tracked in Pivotal Tracker](https://www.pivotaltracker.com/n/projects/1993005).
+
+
 To create the development environment:
 ```
 $ vagrant up
@@ -18,14 +21,3 @@ And finally, start the development server:
 ```
 $ rails s
 ```
-
-<!--
-TODO Complete the following information:
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
--->
