@@ -9,7 +9,7 @@ class WorkTimeUnit < ApplicationRecord
   validates :finished_at, uniqueness: {scope: :integration, message: "There is another open Work Time Unit for this developer/project."}, if: Proc.new { |wtu| wtu.finished_at.nil? }
 
   before_save :align_start_and_finish_date, if: Proc.new { |wtu| wtu.started_at && wtu.finished_at }
-  before_save :update_total_time_in_seconds
+  before_save :update_total_time_in_seconds, if: Proc.new { |wtu| wtu.started_at && wtu.finished_at }
 
   private
 
